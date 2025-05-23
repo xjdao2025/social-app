@@ -33,8 +33,6 @@ module.exports = function (_config) {
     : undefined
   const UPDATES_ENABLED = !!UPDATES_CHANNEL
 
-  const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
-
   return {
     expo: {
       version: VERSION,
@@ -198,14 +196,6 @@ module.exports = function (_config) {
         [
           'react-native-edge-to-edge',
           {android: {enforceNavigationBarContrast: false}},
-        ],
-        USE_SENTRY && [
-          '@sentry/react-native/expo',
-          {
-            organization: 'blueskyweb',
-            project: 'app',
-            url: 'https://sentry.io',
-          },
         ],
         [
           'expo-build-properties',
