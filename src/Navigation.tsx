@@ -29,7 +29,7 @@ import {
   type SearchTabNavigatorParams,
 } from '#/lib/routes/types'
 import {type RouteParams, type State} from '#/lib/routes/types'
-import {attachRouteToLogEvents, logEvent} from '#/lib/statsig/statsig'
+import {logEvent} from '#/lib/statsig/statsig'
 import {bskyTitle} from '#/lib/strings/headings'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
@@ -765,7 +765,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
           prevLoggedRouteName.current = getCurrentRouteName()
         }}
         onReady={() => {
-          attachRouteToLogEvents(getCurrentRouteName)
           logModuleInitTime()
           onReady()
           logger.metric('router:navigate', {})
