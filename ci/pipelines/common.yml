@@ -3,7 +3,7 @@ build-web:
   tags:
     - hk-runner
   script:
-    - npm install yarn -g --cache .npm --prefer-offline
+    - if ! command -v yarn &> /dev/null; then npm install yarn -g --cache .npm --prefer-offline; fi
     - yarn install --cache-folder .yarn -prefer-offline
     - npm run build-web
   artifacts:
