@@ -11,7 +11,7 @@ variables:
   # 如: rivtrust/rivdap/nft-frontend
   IMAGE_NAME: "$RIVTOWER_REGISTRY_ADDRESS/xiangjiandao/social-app"
   # chart仓库地址
-  CHART_REPO: "https://$RIVTOWER_REGISTRY_ADDRESS/chartrepo/web5"
+  CHART_REPO: "https://$RIVTOWER_REGISTRY_ADDRESS/chartrepo/xiangjiandao"
   # 仓库名
   CHART_REPO_NAME: "xiangjiandao"
   # chart name
