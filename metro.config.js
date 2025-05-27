@@ -1,27 +1,43 @@
 // Learn more https://docs.expo.io/guides/customizing-metro
-const {getSentryExpoConfig} = require('@sentry/react-native/metro')
-const cfg = getSentryExpoConfig(__dirname)
 
-cfg.resolver.sourceExts = process.env.RN_SRC_EXT
-  ? process.env.RN_SRC_EXT.split(',').concat(cfg.resolver.sourceExts)
-  : cfg.resolver.sourceExts
-
-if (cfg.resolver.resolveRequest) {
-  throw Error('Update this override because it is conflicting now.')
+const cfg = {
+  resolver: {
+    sourceExts: process.env.RN_SRC_EXT
+      ? process.env.RN_SRC_EXT.split(',').concat([
+          'js',
+          'json',
+          'jsx',
+          'ts',
+          'tsx',
+        ])
+      : ['js', 'json', 'jsx', 'ts', 'tsx'],
+    assetExts: ['woff2', 'ttf', 'png', 'jpg', 'jpeg', 'svg', 'gif'],
+    unstable_enablePackageExports: false,
+  },
+  transformer: {
+    getTransformOptions: async () => ({
+      transform: {
+        experimentalImportSupport: true,
+        inlineRequires: true,
+        nonInlinedRequires: [
+          'React',
+          'react',
+          'react-compiler-runtime',
+          'react/jsx-dev-runtime',
+          'react/jsx-runtime',
+          'react-native',
+        ],
+      },
+    }),
+  },
 }
 
 if (process.env.BSKY_PROFILE) {
-  cfg.cacheVersion += ':PROFILE'
+  cfg.cacheVersion = (cfg.cacheVersion || '') + ':PROFILE'
 }
 
-cfg.resolver.assetExts = [...cfg.resolver.assetExts, 'woff2']
-
-// Enabled by default in RN 0.79+, but this breaks Lingui + others
-cfg.resolver.unstable_enablePackageExports = false
-
 cfg.resolver.resolveRequest = (context, moduleName, platform) => {
-  // HACK: manually resolve a few packages that use `exports` in `package.json`.
-  // A proper solution is to enable `unstable_enablePackageExports` but this needs careful testing.
+  // Custom resolution logic for specific packages
   if (moduleName.startsWith('multiformats/hashes/hasher')) {
     return context.resolveRequest(
       context,
@@ -46,22 +62,5 @@ cfg.resolver.resolveRequest = (context, moduleName, platform) => {
   }
   return context.resolveRequest(context, moduleName, platform)
 }
-
-cfg.transformer.getTransformOptions = async () => ({
-  transform: {
-    experimentalImportSupport: true,
-    inlineRequires: true,
-    nonInlinedRequires: [
-      // We can remove this option and rely on the default after
-      // https://github.com/facebook/metro/pull/1390 is released.
-      'React',
-      'react',
-      'react-compiler-runtime',
-      'react/jsx-dev-runtime',
-      'react/jsx-runtime',
-      'react-native',
-    ],
-  },
-})
 
 module.exports = cfg
