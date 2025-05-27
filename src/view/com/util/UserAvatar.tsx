@@ -593,10 +593,8 @@ export {PreviewableUserAvatar}
 // We have started serving smaller avis but haven't updated lexicons to give the data properly
 // manually string-replace to use the smaller ones
 // -prf
-function hackModifyThumbnailPath(uri: string, isEnabled: boolean): string {
-  return isEnabled
-    ? uri.replace('/img/avatar/plain/', '/img/avatar_thumbnail/plain/')
-    : uri
+function hackModifyThumbnailPath(uri: string, _isEnabled: boolean): string {
+  return uri
 }
 
 const styles = StyleSheet.create({
