@@ -3,12 +3,12 @@ import {
   ActivityIndicator,
   Keyboard,
   LayoutAnimation,
-  TextInput,
+  type TextInput,
   View,
 } from 'react-native'
 import {
   ComAtprotoServerCreateSession,
-  ComAtprotoServerDescribeServer,
+  type ComAtprotoServerDescribeServer,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -24,7 +24,7 @@ import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
-import {HostingProvider} from '#/components/forms/HostingProvider'
+// import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
@@ -41,7 +41,7 @@ export const LoginForm = ({
   serviceDescription,
   initialHandle,
   setError,
-  setServiceUrl,
+  // setServiceUrl,
   onPressRetryConnect,
   onPressBack,
   onPressForgotPassword,
@@ -76,9 +76,9 @@ export const LoginForm = ({
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
 
-  const onPressSelectService = React.useCallback(() => {
-    Keyboard.dismiss()
-  }, [])
+  // const onPressSelectService = React.useCallback(() => {
+  //   Keyboard.dismiss()
+  // }, [])
 
   const onPressNext = async () => {
     if (isProcessing) return
@@ -179,7 +179,7 @@ export const LoginForm = ({
 
   return (
     <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
-      <View>
+      {/* <View>
         <TextField.LabelText>
           <Trans>Hosting provider</Trans>
         </TextField.LabelText>
@@ -188,7 +188,7 @@ export const LoginForm = ({
           onSelectServiceUrl={setServiceUrl}
           onOpenDialog={onPressSelectService}
         />
-      </View>
+      </View> */}
       <View>
         <TextField.LabelText>
           <Trans>Account</Trans>
