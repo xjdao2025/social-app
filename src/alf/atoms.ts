@@ -15,6 +15,11 @@ export const atoms = {
     borderWidth: 1,
   },
 
+  // custom
+  text_family_ddin: {
+    fontFamily: 'DDIN',
+  },
+
   /*
    * Positioning
    */
