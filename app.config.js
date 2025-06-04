@@ -240,6 +240,10 @@ module.exports = function (_config) {
           'expo-font',
           {
             fonts: [
+              // d-din
+              './assets/fonts/din/D-DINExp-Bold.otf',
+              './assets/fonts/din/D-DINExp-Italic.otf',
+              './assets/fonts/din/D-DINExp.otf',
               './assets/fonts/inter/InterVariable.woff2',
               './assets/fonts/inter/InterVariable-Italic.woff2',
               // Android only

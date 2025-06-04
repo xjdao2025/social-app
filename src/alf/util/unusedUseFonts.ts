@@ -11,5 +11,8 @@ export function DO_NOT_USE() {
   return useFonts({
     InterVariable: require('../../../assets/fonts/inter/InterVariable.woff2'),
     'InterVariable-Italic': require('../../../assets/fonts/inter/InterVariable-Italic.woff2'),
+    'DDIN-Bold': require('../../../assets/fonts/din/D-DINExp-Bold.otf'),
+    'DDIN-Italic': require('../../../assets/fonts/din/D-DINExp-Italic.otf'),
+    DDIN: require('../../../assets/fonts/din/D-DINExp.otf'),
   })
 }

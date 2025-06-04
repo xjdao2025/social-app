@@ -4,6 +4,7 @@ import './style.css'
 import React, {useEffect, useState} from 'react'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
+import {useFonts} from 'expo-font'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -72,6 +73,10 @@ function InnerApp() {
   const theme = useColorModeTheme()
   const {_} = useLingui()
   const hasCheckedReferrer = useStarterPackEntry()
+
+  useFonts({
+    DDIN: require('../assets/fonts/din/D-DINExp.otf'),
+  })
 
   // init
   useEffect(() => {

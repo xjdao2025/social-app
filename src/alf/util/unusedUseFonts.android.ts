@@ -15,5 +15,8 @@ export function DO_NOT_USE() {
     'Inter-BoldItalic': require('../../../assets/fonts/inter/Inter-SemiBoldItalic.otf'),
     'Inter-Black': require('../../../assets/fonts/inter/Inter-ExtraBold.otf'),
     'Inter-BlackItalic': require('../../../assets/fonts/inter/Inter-ExtraBoldItalic.otf'),
+    'DDIN-Bold': require('../../../assets/fonts/din/D-DINExp-Bold.otf'),
+    'DDIN-Italic': require('../../../assets/fonts/din/D-DINExp-Italic.otf'),
+    DDIN: require('../../../assets/fonts/din/D-DINExp.otf'),
   })
 }
