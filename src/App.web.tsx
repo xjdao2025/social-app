@@ -76,6 +76,8 @@ function InnerApp() {
 
   useFonts({
     DDIN: require('../assets/fonts/din/D-DINExp.otf'),
+    DDINBold: require('../assets/fonts/din/D-DINExp-Bold.otf'),
+    DDINItalic: require('../assets/fonts/din/D-DINExp-Italic.otf'),
   })
 
   // init

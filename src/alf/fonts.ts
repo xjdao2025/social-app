@@ -64,13 +64,15 @@ export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
       delete style.fontWeight
       delete style.fontStyle
     } else {
-      style.fontFamily = `${
-        style.fontFamily ? style.fontFamily + ',' : ''
-      }InterVariable`
+      style.fontFamily = style.fontFamily || 'InterVariable'
+      appendFontSyle(style)
+      // style.fontFamily = `${
+      //   style.fontFamily ? style.fontFamily + ',' : ''
+      // }InterVariable`
 
-      if (style.fontStyle === 'italic') {
-        style.fontFamily += 'Italic'
-      }
+      // if (style.fontStyle === 'italic') {
+      //   style.fontFamily += 'Italic'
+      // }
     }
 
     if (isWeb) {
@@ -94,6 +96,20 @@ export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
      * https://github.com/bluesky-social/social-app/commit/2419096e2409008b7d71fd6b8f8d0dd5b016e267
      */
     style.letterSpacing = 0.25
+  }
+}
+
+function appendFontSyle(style) {
+  if (!style.fontFamily) {
+    return style
+  }
+  if (style.fontWeight === 'bold' || style.fontWeight > 400) {
+    style.fontFamily = `${style.fontFamily}Bold`
+    return style
+  }
+  if (style.fontStyle === 'italic') {
+    style.fontFamily = `${style.fontFamily}Italic`
+    return style
   }
 }
 
