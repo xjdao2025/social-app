@@ -154,8 +154,8 @@ let ProfileHeaderShell = ({
                       styles.backBtnWrapper,
                       {
                         top: platform({
-                          web: 10,
-                          default: topInset,
+                          web: 16,
+                          default: topInset + 16,
                         }),
                       },
                     ]}>
@@ -207,10 +207,8 @@ let ProfileHeaderShell = ({
               t.atoms.bg,
               a.rounded_full,
               {
-                borderWidth: live.isActive ? 3 : 2,
-                borderColor: live.isActive
-                  ? t.palette.negative_500
-                  : t.atoms.bg.backgroundColor,
+                borderWidth: 1,
+                borderColor: t.atoms.bg.backgroundColor,
               },
               styles.avi,
               profile.associated?.labeler && styles.aviLabeler,
@@ -218,7 +216,7 @@ let ProfileHeaderShell = ({
             <View ref={aviRef} collapsable={false}>
               <UserAvatar
                 type={profile.associated?.labeler ? 'labeler' : 'user'}
-                size={live.isActive ? 88 : 90}
+                size={88}
                 avatar={profile.avatar}
                 moderation={moderation.ui('avatar')}
               />
@@ -252,7 +250,7 @@ export {ProfileHeaderShell}
 const styles = StyleSheet.create({
   backBtnWrapper: {
     position: 'absolute',
-    left: 10,
+    left: 16,
     width: 30,
     height: 30,
     overflow: 'hidden',
@@ -271,12 +269,12 @@ const styles = StyleSheet.create({
   },
   aviPosition: {
     position: 'absolute',
-    top: 110,
-    left: 10,
+    top: 115,
+    left: 15,
   },
   avi: {
-    width: 94,
-    height: 94,
+    width: 90,
+    height: 90,
   },
   aviLabeler: {
     borderRadius: 10,

@@ -10,8 +10,10 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useActorStatus} from '#/lib/actor-status'
+import {shareUrl} from '#/lib/sharing'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {ellipsis} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -23,10 +25,13 @@ import {
 import {useRequireAuth, useSession} from '#/state/session'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
+import {ProfileHeaderMedal} from '#/screens/Profile/Header/Medal'
+import {ProfileHeaderRewardPoints} from '#/screens/Profile/Header/RewardPoints'
 import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
+import {Copy} from '#/components/icons/Copy'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {
   KnownFollowers,
@@ -141,6 +146,10 @@ let ProfileHeaderStandard = ({
 
   const {isActive: live} = useActorStatus(profile)
 
+  const onPressShare = React.useCallback(() => {
+    shareUrl(profile.did)
+  }, [profile])
+
   return (
     <ProfileHeaderShell
       profile={profile}
@@ -148,7 +157,7 @@ let ProfileHeaderStandard = ({
       hideBackButton={hideBackButton}
       isPlaceholderProfile={isPlaceholderProfile}>
       <View
-        style={[a.px_lg, a.pt_md, a.pb_sm, a.overflow_hidden]}
+        style={[a.px_lg, a.pt_md, a.pb_md, a.overflow_hidden]}
         pointerEvents={isIOS ? 'auto' : 'box-none'}>
         <View
           style={[
@@ -157,7 +166,7 @@ let ProfileHeaderStandard = ({
             a.align_center,
             a.justify_end,
             a.gap_xs,
-            a.pb_sm,
+            a.pb_lg,
             a.flex_wrap,
           ]}
           pointerEvents={isIOS ? 'auto' : 'box-none'}>
@@ -231,8 +240,7 @@ let ProfileHeaderStandard = ({
           ) : null}
           <ProfileMenu profile={profile} />
         </View>
-        <View
-          style={[a.flex_col, a.gap_2xs, a.pb_sm, live ? a.pt_sm : a.pt_2xs]}>
+        <View style={[a.flex_col, a.pb_sm, live ? a.pt_sm : a.pt_2xs]}>
           <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
             <Text
               emoji
@@ -242,6 +250,7 @@ let ProfileHeaderStandard = ({
                 gtMobile ? a.text_4xl : a.text_3xl,
                 a.self_start,
                 a.font_heavy,
+                {paddingBottom: 6},
               ]}>
               {sanitizeDisplayName(
                 profile.displayName || sanitizeHandle(profile.handle),
@@ -258,7 +267,22 @@ let ProfileHeaderStandard = ({
               </View>
             </Text>
           </View>
+          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+            <Text
+              style={[
+                [a.text_md, a.leading_snug, t.atoms.text_contrast_medium],
+              ]}>
+              DID: {ellipsis(profile.did, 12, 4)}
+            </Text>
+            <Button
+              testID="profileDid"
+              onPress={onPressShare}
+              label={_(msg`Did`)}>
+              <Copy width={12} />
+            </Button>
+          </View>
           <ProfileHeaderHandle profile={profile} />
+          <ProfileHeaderMedal />
         </View>
         {!isPlaceholderProfile && !isBlockedUser && (
           <View style={a.gap_md}>
@@ -288,6 +312,7 @@ let ProfileHeaderStandard = ({
               )}
           </View>
         )}
+        <ProfileHeaderRewardPoints />
       </View>
       <Prompt.Basic
         control={unblockPromptControl}

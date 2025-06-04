@@ -300,25 +300,25 @@ let ProfileMenu = ({
                   </Menu.ItemText>
                   <Menu.ItemIcon icon={List} />
                 </Menu.Item>
-                {isSelf && canGoLive && (
-                  <Menu.Item
-                    testID="profileHeaderDropdownListAddRemoveBtn"
-                    label={
-                      status.isActive
-                        ? _(msg`Edit live status`)
-                        : _(msg`Go live`)
-                    }
-                    onPress={goLiveDialogControl.open}>
-                    <Menu.ItemText>
-                      {status.isActive ? (
-                        <Trans>Edit live status</Trans>
-                      ) : (
-                        <Trans>Go live</Trans>
-                      )}
-                    </Menu.ItemText>
-                    <Menu.ItemIcon icon={LiveIcon} />
-                  </Menu.Item>
-                )}
+                {/*{isSelf && canGoLive && (*/}
+                {/*  <Menu.Item*/}
+                {/*    testID="profileHeaderDropdownListAddRemoveBtn"*/}
+                {/*    label={*/}
+                {/*      status.isActive*/}
+                {/*        ? _(msg`Edit live status`)*/}
+                {/*        : _(msg`Go live`)*/}
+                {/*    }*/}
+                {/*    onPress={goLiveDialogControl.open}>*/}
+                {/*    <Menu.ItemText>*/}
+                {/*      {status.isActive ? (*/}
+                {/*        <Trans>Edit live status</Trans>*/}
+                {/*      ) : (*/}
+                {/*        <Trans>Go live</Trans>*/}
+                {/*      )}*/}
+                {/*    </Menu.ItemText>*/}
+                {/*    <Menu.ItemIcon icon={LiveIcon} />*/}
+                {/*  </Menu.Item>*/}
+                {/*)}*/}
                 {verification.viewer.role === 'verifier' &&
                   !verification.profile.isViewer &&
                   (verification.viewer.hasIssuedVerification ? (

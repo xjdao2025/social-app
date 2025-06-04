@@ -64,7 +64,7 @@ export function VerificationCheckButton({
     return <Badge profile={profile} verificationState={state} size={size} />
   }
 
-  return null
+  return <Badge profile={profile} verificationState={state} size={size} />
 }
 
 export function Badge({

@@ -187,7 +187,9 @@ function ProfileScreenLoaded({
   const mediaSectionRef = React.useRef<SectionRef>(null)
   const videosSectionRef = React.useRef<SectionRef>(null)
   const likesSectionRef = React.useRef<SectionRef>(null)
+  const feedsSectionRef = React.useRef<SectionRef>(null)
   const listsSectionRef = React.useRef<SectionRef>(null)
+  const starterPacksSectionRef = React.useRef<SectionRef>(null)
   const labelsSectionRef = React.useRef<SectionRef>(null)
 
   useSetTitle(combinedDisplayName(profile))
@@ -209,7 +211,10 @@ function ProfileScreenLoaded({
   const showMediaTab = !hasLabeler
   const showVideosTab = !hasLabeler
   const showLikesTab = isMe
+  const feedGenCount = profile.associated?.feedgens || 0
+  const showFeedsTab = isMe || feedGenCount > 0
   const starterPackCount = profile.associated?.starterPacks || 0
+  const showStarterPacksTab = isMe || starterPackCount > 0
   // subtract starterpack count from list count, since starterpacks are a type of list
   const listCount = (profile.associated?.lists || 0) - starterPackCount
   const showListsTab = hasSession && (isMe || listCount > 0)
@@ -222,6 +227,9 @@ function ProfileScreenLoaded({
     showMediaTab ? _(msg`Media`) : undefined,
     showVideosTab ? _(msg`Videos`) : undefined,
     showLikesTab ? _(msg`Likes`) : undefined,
+    showFeedsTab ? _(msg`Feeds`) : undefined,
+    showStarterPacksTab ? _(msg`Starter Packs`) : undefined,
+    showListsTab && !hasLabeler ? _(msg`Lists`) : undefined,
   ].filter(Boolean) as string[]
 
   let nextIndex = 0
@@ -231,6 +239,9 @@ function ProfileScreenLoaded({
   let mediaIndex: number | null = null
   let videosIndex: number | null = null
   let likesIndex: number | null = null
+  let feedsIndex: number | null = null
+  let starterPacksIndex: number | null = null
+  let listsIndex: number | null = null
   if (showFiltersTab) {
     filtersIndex = nextIndex++
   }
@@ -249,6 +260,15 @@ function ProfileScreenLoaded({
   if (showLikesTab) {
     likesIndex = nextIndex++
   }
+  if (showFeedsTab) {
+    feedsIndex = nextIndex++
+  }
+  if (showStarterPacksTab) {
+    starterPacksIndex = nextIndex++
+  }
+  if (showListsTab) {
+    listsIndex = nextIndex++
+  }
 
   const scrollSectionToTop = useCallback(
     (index: number) => {
@@ -264,6 +284,12 @@ function ProfileScreenLoaded({
         videosSectionRef.current?.scrollToTop()
       } else if (index === likesIndex) {
         likesSectionRef.current?.scrollToTop()
+      } else if (index === feedsIndex) {
+        feedsSectionRef.current?.scrollToTop()
+      } else if (index === starterPacksIndex) {
+        starterPacksSectionRef.current?.scrollToTop()
+      } else if (index === listsIndex) {
+        listsSectionRef.current?.scrollToTop()
       }
     },
     [
@@ -273,6 +299,9 @@ function ProfileScreenLoaded({
       mediaIndex,
       videosIndex,
       likesIndex,
+      feedsIndex,
+      listsIndex,
+      starterPacksIndex,
     ],
   )
 
@@ -430,6 +459,31 @@ function ProfileScreenLoaded({
                 isFocused={isFocused}
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
+                setScrollViewTag={setScrollViewTag}
+              />
+            )
+          : null}
+        {showFeedsTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <ProfileFeedgens
+                ref={feedsSectionRef}
+                did={profile.did}
+                scrollElRef={scrollElRef as ListRef}
+                headerOffset={headerHeight}
+                enabled={isFocused}
+                setScrollViewTag={setScrollViewTag}
+              />
+            )
+          : null}
+        {showStarterPacksTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <ProfileStarterPacks
+                ref={starterPacksSectionRef}
+                did={profile.did}
+                isMe={isMe}
+                scrollElRef={scrollElRef as ListRef}
+                headerOffset={headerHeight}
+                enabled={isFocused}
                 setScrollViewTag={setScrollViewTag}
               />
             )
