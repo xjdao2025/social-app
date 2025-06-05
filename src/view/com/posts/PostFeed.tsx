@@ -58,7 +58,7 @@ import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
 import {PostFeedErrorMessage} from './PostFeedErrorMessage'
 import {PostFeedItem} from './PostFeedItem'
-import PostProposalItem from './PostProposalItem'
+import {PostProposalItem} from './PostProposalItem'
 import {ShowLessFollowup} from './ShowLessFollowup'
 import {ViewFullThread} from './ViewFullThread'
 
@@ -132,8 +132,11 @@ type FeedRow =
       key: string
     }
   | {
-      type: 'proposal'
+      type: 'proposalItem'
       key: string
+      slice: FeedPostSlice
+      indexInSlice: number
+      showReplyTo: boolean
     }
 
 export function getItemsForFeedback(feedRow: FeedRow):
@@ -360,7 +363,9 @@ let PostFeed = ({
   const feedItems: FeedRow[] = React.useMemo(() => {
     // wraps a slice item, and replaces it with a showLessFollowup item
     // if the user has pressed show less on it
-    const sliceItem = (row: Extract<FeedRow, {type: 'sliceItem'}>) => {
+    const sliceItem = (
+      row: Extract<FeedRow, {type: 'sliceItem' | 'proposalItem'}>,
+    ) => {
       if (hasPressedShowLessUris.has(row.slice.items[row.indexInSlice]?.uri)) {
         return {
           type: 'showLessFollowup',
@@ -370,8 +375,13 @@ let PostFeed = ({
         return row
       }
     }
-
-    let feedKind: 'following' | 'discover' | 'profile' | 'thevids' | undefined
+    let feedKind:
+      | 'following'
+      | 'discover'
+      | 'profile'
+      | 'thevids'
+      | 'proposal'
+      | undefined
     if (feedType === 'following') {
       feedKind = 'following'
     } else if (feedUriOrActorDid === DISCOVER_FEED_URI) {
@@ -382,6 +392,8 @@ let PostFeed = ({
         feedTab === 'posts_with_replies')
     ) {
       feedKind = 'profile'
+    } else if (feedType === 'proposal') {
+      feedKind = 'proposal'
     }
 
     let arr: FeedRow[] = []
@@ -501,6 +513,8 @@ let PostFeed = ({
                   }
                 }
               }
+              const itemType =
+                feedKind === 'proposal' ? 'proposalItem' : 'sliceItem'
 
               if (slice.isFallbackMarker) {
                 arr.push({
@@ -513,7 +527,7 @@ let PostFeed = ({
                 const last = slice.items.length - 1
                 arr.push(
                   sliceItem({
-                    type: 'sliceItem',
+                    type: itemType,
                     key: slice.items[0]._reactKey,
                     slice: slice,
                     indexInSlice: 0,
@@ -527,7 +541,7 @@ let PostFeed = ({
                 })
                 arr.push(
                   sliceItem({
-                    type: 'sliceItem',
+                    type: itemType,
                     key: slice.items[beforeLast]._reactKey,
                     slice: slice,
                     indexInSlice: beforeLast,
@@ -538,7 +552,7 @@ let PostFeed = ({
                 )
                 arr.push(
                   sliceItem({
-                    type: 'sliceItem',
+                    type: itemType,
                     key: slice.items[last]._reactKey,
                     slice: slice,
                     indexInSlice: last,
@@ -549,7 +563,7 @@ let PostFeed = ({
                 for (let i = 0; i < slice.items.length; i++) {
                   arr.push(
                     sliceItem({
-                      type: 'sliceItem',
+                      type: itemType,
                       key: slice.items[i]._reactKey,
                       slice: slice,
                       indexInSlice: i,
@@ -759,8 +773,33 @@ let PostFeed = ({
         )
       } else if (row.type === 'showLessFollowup') {
         return <ShowLessFollowup />
-      } else if (row.type === 'proposal') {
-        return <PostProposalItem />
+      } else if (row.type === 'proposalItem') {
+        const slice = row.slice
+        const indexInSlice = row.indexInSlice
+        const item = slice.items[indexInSlice]
+        return (
+          <PostProposalItem
+            post={item.post}
+            record={item.record}
+            reason={indexInSlice === 0 ? slice.reason : undefined}
+            feedContext={slice.feedContext}
+            reqId={slice.reqId}
+            moderation={item.moderation}
+            parentAuthor={item.parentAuthor}
+            showReplyTo={row.showReplyTo}
+            isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
+            isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
+            isThreadLastChild={
+              isThreadChildAt(slice.items, indexInSlice) &&
+              slice.items.length === indexInSlice + 1
+            }
+            isParentBlocked={item.isParentBlocked}
+            isParentNotFound={item.isParentNotFound}
+            hideTopBorder={rowIndex === 0 && indexInSlice === 0}
+            rootPost={slice.items[0].post}
+            onShowLess={onPressShowLess}
+          />
+        )
       } else {
         return null
       }

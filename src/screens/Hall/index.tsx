@@ -53,9 +53,9 @@ export default function HallScreen() {
       <View style={styles.linearBg} />
       <View style={[a.flex_col, a.px_lg, a.flex_0, styles.topInfo]}>
         <View style={[a.flex_row, a.align_baseline, a.justify_between]}>
-          <Text style={[t.atoms.text, a.text_3xl]}>t基金会</Text>
+          <Text style={[t.atoms.text, a.text_2xl, a.font_bold]}>t基金会</Text>
           <Text
-            style={[t.atoms.text_contrast_medium, a.text_md]}
+            style={[t.atoms.text_contrast_medium, a.text_sm]}
             onClick={() => {
               window.alert(1234)
             }}>
@@ -96,8 +96,8 @@ export default function HallScreen() {
         <View style={[styles.card, a.pt_lg]}>
           <View
             style={[a.flex_row, a.align_baseline, a.justify_between, a.px_lg]}>
-            <Text style={[t.atoms.text, a.text_2xl]}>t节点</Text>
-            <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
+            <Text style={[t.atoms.text, a.text_lg, a.font_bold]}>t节点</Text>
+            <Text style={[t.atoms.text_contrast_medium, a.text_sm]}>
               t更多{'>'}
             </Text>
           </View>
@@ -122,7 +122,8 @@ export default function HallScreen() {
                       borderRadius: '50%',
                       backgroundColor: '#f00',
                     },
-                  ]} />
+                  ]}
+                />
               )
             })}
           </View>
@@ -137,7 +138,7 @@ export default function HallScreen() {
               {top: 22, zIndex: 9, backgroundColor: '#fff'},
             ]}>
             <View style={[{paddingTop: 30}]}>
-              <Text style={[t.atoms.text, a.text_2xl]}>t提案</Text>
+              <Text style={[t.atoms.text, a.text_lg, a.font_bold]}>t提案</Text>
             </View>
             <View style={[a.flex_row, a.mt_md, a.gap_md]}>
               {proposalStageOptions.map(({label, key}, idx) => {
@@ -172,8 +173,8 @@ export default function HallScreen() {
 
           <ProfileFeedSection
             // ref={postsSectionRef}
-            feed={`author|did:plc:pc5gxd5my6uooild5drcixdm|posts_and_author_threads`}
-            // feed={`proposal|all`}
+            // feed={`author|did:plc:pc5gxd5my6uooild5drcixdm|posts_and_author_threads`}
+            feed={`proposal|all`}
             headerHeight={0}
             isFocused={true}
             contentContainerStyle={{

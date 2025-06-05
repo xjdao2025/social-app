@@ -504,7 +504,9 @@ function createApi({
     return new ListFeedAPI({agent, feedParams: {list}})
   } else if (feedDesc === 'demo') {
     return new DemoFeedAPI({agent})
-  } else {
+  }
+  // todo add proposal api
+  else {
     // shouldnt happen
     return new FollowingFeedAPI({agent})
   }
