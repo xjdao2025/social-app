@@ -1,8 +1,8 @@
-import React from 'react'
-import {View} from 'react-native'
-import Animated from 'react-native-reanimated'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
+import Animated, {type AnimatedStyle} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import type React from 'react'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
@@ -20,9 +20,13 @@ import {Link} from '#/components/Link'
 
 export function HomeHeaderLayoutMobile({
   children,
+  transparent,
+  style,
 }: {
-  children: React.ReactNode
+  children?: React.ReactNode
   tabBarAnchor: JSX.Element | null | undefined
+  transparent?: boolean
+  style?: StyleProp<AnimatedStyle<StyleProp<ViewStyle>>>
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -36,20 +40,21 @@ export function HomeHeaderLayoutMobile({
       style={[
         a.fixed,
         a.z_10,
-        t.atoms.bg,
+        !transparent ? t.atoms.bg : undefined,
         {
           top: 0,
           left: 0,
           right: 0,
         },
         headerMinimalShellTransform,
+        ...(style || []),
       ]}
       onLayout={e => {
         headerHeight.set(e.nativeEvent.layout.height)
       }}>
-      <Layout.Header.Outer noBottomBorder>
+      <Layout.Header.Outer noBottomBorder transparent={transparent}>
         <Layout.Header.Slot>
-          <Layout.Header.MenuButton />
+          <Layout.Header.MenuButton transparent={transparent} />
         </Layout.Header.Slot>
 
         <View style={[a.flex_1, a.align_center]}>
@@ -76,7 +81,7 @@ export function HomeHeaderLayoutMobile({
               hitSlop={HITSLOP_10}
               label={_(msg`View your feeds and explore more`)}
               size="small"
-              variant="ghost"
+              variant={!transparent ? 'ghost' : undefined}
               color="secondary"
               shape="square"
               style={[

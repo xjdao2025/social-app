@@ -110,6 +110,7 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import HallScreen from './screens/Hall'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -649,6 +650,11 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Search"
         getComponent={() => SearchScreen}
+        options={{title: title(msg`Explore`)}}
+      />
+      <Flat.Screen
+        name="Hall"
+        getComponent={() => HallScreen}
         options={{title: title(msg`Explore`)}}
       />
       <Flat.Screen

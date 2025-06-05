@@ -58,6 +58,7 @@ import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
 import {PostFeedErrorMessage} from './PostFeedErrorMessage'
 import {PostFeedItem} from './PostFeedItem'
+import PostProposalItem from './PostProposalItem'
 import {ShowLessFollowup} from './ShowLessFollowup'
 import {ViewFullThread} from './ViewFullThread'
 
@@ -128,6 +129,10 @@ type FeedRow =
     }
   | {
       type: 'showLessFollowup'
+      key: string
+    }
+  | {
+      type: 'proposal'
       key: string
     }
 
@@ -654,6 +659,7 @@ let PostFeed = ({
 
   const renderItem = React.useCallback(
     ({item: row, index: rowIndex}: ListRenderItemInfo<FeedRow>) => {
+      console.log('row:', row)
       if (row.type === 'empty') {
         return renderEmptyState()
       } else if (row.type === 'error') {
@@ -753,6 +759,8 @@ let PostFeed = ({
         )
       } else if (row.type === 'showLessFollowup') {
         return <ShowLessFollowup />
+      } else if (row.type === 'proposal') {
+        return <PostProposalItem />
       } else {
         return null
       }

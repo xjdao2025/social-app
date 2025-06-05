@@ -3,6 +3,7 @@ import {Router} from '#/lib/routes/router'
 export const router = new Router({
   Home: '/',
   Search: '/search',
+  Hall: '/hall',
   Feeds: '/feeds',
   Notifications: '/notifications',
   NotificationSettings: '/notifications/settings',

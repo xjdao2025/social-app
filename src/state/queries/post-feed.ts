@@ -54,12 +54,16 @@ export type AuthorFilter =
 type FeedUri = string
 type ListUri = string
 
+export type ProposalStatus = 'all' | 'inprogress' | 'pass' | 'fail'
+
 export type FeedDescriptor =
   | 'following'
   | `author|${ActorDid}|${AuthorFilter}`
   | `feedgen|${FeedUri}`
   | `likes|${ActorDid}`
   | `list|${ListUri}`
+  | `proposal|${ProposalStatus}`
+  | `proposal|${ProposalStatus}|${ActorDid}`
   | 'demo'
 export interface FeedParams {
   mergeFeedEnabled?: boolean
@@ -177,6 +181,16 @@ export function usePostFeedQuery(
     queryKey: RQKEY(feedDesc, params),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       logger.debug('usePostFeedQuery', {feedDesc, cursor: pageParam?.cursor})
+      console.log('usePostFeedQuery', {
+        feedDesc,
+        feedParams: params || {},
+        feedTuners,
+        agent,
+        // Not in the query key because they don't change:
+        userInterests,
+        // Not in the query key. Reacting to it switching isn't important:
+        enableFollowingToDiscoverFallback,
+      })
       const {api, cursor} = pageParam
         ? pageParam
         : {
