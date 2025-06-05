@@ -157,7 +157,30 @@ export function getItemsForFeedback(feedRow: FeedRow):
 // DISABLED need to check if this is causing random feed refreshes -prf
 // const REFRESH_AFTER = STALE.HOURS.ONE
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
-
+export type PostFeedProps = {
+  feed: FeedDescriptor
+  feedParams?: FeedParams
+  ignoreFilterFor?: string
+  style?: StyleProp<ViewStyle>
+  enabled?: boolean
+  pollInterval?: number
+  disablePoll?: boolean
+  scrollElRef?: ListRef
+  onHasNew?: (v: boolean) => void
+  onScrolledDownChange?: (isScrolledDown: boolean) => void
+  renderEmptyState: () => JSX.Element
+  renderEndOfFeed?: () => JSX.Element
+  testID?: string
+  headerOffset?: number
+  progressViewOffset?: number
+  desktopFixedHeight?: number | boolean
+  ListHeaderComponent?: () => JSX.Element
+  extraData?: any
+  savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  initialNumToRender?: number
+  isVideoFeed?: boolean
+  contentContainerStyle?: StyleProp<ViewStyle>
+}
 let PostFeed = ({
   feed,
   feedParams,
@@ -174,35 +197,14 @@ let PostFeed = ({
   testID,
   headerOffset = 0,
   progressViewOffset,
-  desktopFixedHeightOffset,
+  desktopFixedHeight,
   ListHeaderComponent,
+  contentContainerStyle,
   extraData,
   savedFeedConfig,
   initialNumToRender: initialNumToRenderOverride,
   isVideoFeed = false,
-}: {
-  feed: FeedDescriptor
-  feedParams?: FeedParams
-  ignoreFilterFor?: string
-  style?: StyleProp<ViewStyle>
-  enabled?: boolean
-  pollInterval?: number
-  disablePoll?: boolean
-  scrollElRef?: ListRef
-  onHasNew?: (v: boolean) => void
-  onScrolledDownChange?: (isScrolledDown: boolean) => void
-  renderEmptyState: () => JSX.Element
-  renderEndOfFeed?: () => JSX.Element
-  testID?: string
-  headerOffset?: number
-  progressViewOffset?: number
-  desktopFixedHeightOffset?: number
-  ListHeaderComponent?: () => JSX.Element
-  extraData?: any
-  savedFeedConfig?: AppBskyActorDefs.SavedFeed
-  initialNumToRender?: number
-  isVideoFeed?: boolean
-}): React.ReactNode => {
+}: PostFeedProps): React.ReactNode => {
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount, hasSession} = useSession()
@@ -834,17 +836,20 @@ let PostFeed = ({
         onRefresh={onRefresh}
         headerOffset={headerOffset}
         progressViewOffset={progressViewOffset}
-        contentContainerStyle={{
-          minHeight: Dimensions.get('window').height * 1.5,
-        }}
+        contentContainerStyle={contentContainerStyle}
+        // contentContainerStyle={{
+        //   minHeight: Dimensions.get('window').height * 1.5,
+        //   ...contentContainerStyle,
+        // }}
+        desktopFixedHeight={desktopFixedHeight}
         onScrolledDownChange={onScrolledDownChange}
         onEndReached={onEndReached}
         onEndReachedThreshold={2} // number of posts left to trigger load more
         removeClippedSubviews={true}
         extraData={extraData}
-        desktopFixedHeight={
-          desktopFixedHeightOffset ? desktopFixedHeightOffset : true
-        }
+        // desktopFixedHeight={
+        //   desktopFixedHeightOffset ? desktopFixedHeightOffset : true
+        // }
         initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
         windowSize={9}
         maxToRenderPerBatch={isIOS ? 5 : 1}

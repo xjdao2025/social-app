@@ -9,7 +9,7 @@ import {isIOS, isNative} from '#/platform/detection'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {PostFeed} from '#/view/com/posts/PostFeed'
+import {PostFeed, type PostFeedProps} from '#/view/com/posts/PostFeed'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {type ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
@@ -24,6 +24,8 @@ interface FeedSectionProps {
   scrollElRef: ListRef
   ignoreFilterFor?: string
   setScrollViewTag: (tag: number | null) => void
+  contentContainerStyle?: PostFeedProps['contentContainerStyle']
+  desktopFixedHeight?: PostFeedProps['desktopFixedHeight']
 }
 export const ProfileFeedSection = React.forwardRef<
   SectionRef,
@@ -36,6 +38,8 @@ export const ProfileFeedSection = React.forwardRef<
     scrollElRef,
     ignoreFilterFor,
     setScrollViewTag,
+    contentContainerStyle,
+    desktopFixedHeight,
   },
   ref,
 ) {
@@ -83,6 +87,8 @@ export const ProfileFeedSection = React.forwardRef<
         onHasNew={setHasNew}
         onScrolledDownChange={setIsScrolledDown}
         renderEmptyState={renderPostsEmpty}
+        contentContainerStyle={contentContainerStyle}
+        desktopFixedHeight={desktopFixedHeight}
         headerOffset={headerHeight}
         progressViewOffset={ios(0)}
         renderEndOfFeed={isVideoFeed ? undefined : ProfileEndOfFeed}

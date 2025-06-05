@@ -1,24 +1,24 @@
 import {createContext, useCallback, useContext} from 'react'
-import {GestureResponderEvent, Keyboard, View} from 'react-native'
+import {type GestureResponderEvent, Keyboard, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {HITSLOP_30} from '#/lib/constants'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {isIOS} from '#/platform/detection'
 import {useSetDrawerOpen} from '#/state/shell'
 import {
   atoms as a,
   platform,
-  TextStyleProp,
+  type TextStyleProp,
   useBreakpoints,
   useGutters,
   useLayoutBreakpoints,
   useTheme,
   web,
 } from '#/alf'
-import {Button, ButtonIcon, ButtonProps} from '#/components/Button'
+import {Button, ButtonIcon, type ButtonProps} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {
@@ -35,10 +35,12 @@ export function Outer({
   noBottomBorder,
   headerRef,
   sticky = true,
+  transparent = false,
 }: {
   children: React.ReactNode
   noBottomBorder?: boolean
   headerRef?: React.MutableRefObject<View | null>
+  transparent?: boolean
   sticky?: boolean
 }) {
   const t = useTheme()
@@ -56,7 +58,13 @@ export function Outer({
         a.flex_row,
         a.align_center,
         a.gap_sm,
-        sticky && web([a.sticky, {top: 0}, a.z_10, t.atoms.bg]),
+        sticky &&
+          web([
+            a.sticky,
+            {top: 0},
+            a.z_10,
+            !transparent ? t.atoms.bg : undefined,
+          ]),
         gutters,
         platform({
           native: [a.pb_xs, {minHeight: 48}],
@@ -143,7 +151,7 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
   )
 }
 
-export function MenuButton() {
+export function MenuButton({transparent}: {transparent?: boolean}) {
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
   const {gtMobile} = useBreakpoints()
@@ -158,7 +166,7 @@ export function MenuButton() {
       <Button
         label={_(msg`Open drawer menu`)}
         size="small"
-        variant="ghost"
+        variant={!transparent ? 'ghost' : undefined}
         color="secondary"
         shape="square"
         onPress={onPress}
