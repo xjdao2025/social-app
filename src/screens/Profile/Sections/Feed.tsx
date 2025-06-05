@@ -114,7 +114,12 @@ function ProfileEndOfFeed() {
 
   return (
     <View
-      style={[a.w_full, a.py_5xl, a.border_t, t.atoms.border_contrast_medium]}>
+      style={[
+        a.w_full,
+        a.border_t,
+        t.atoms.border_contrast_medium,
+        {paddingBottom: 58 + 32, paddingTop: 32},
+      ]}>
       <Text style={[t.atoms.text_contrast_medium, a.text_center]}>
         <Trans>End of feed</Trans>
       </Text>
