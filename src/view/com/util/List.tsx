@@ -1,5 +1,10 @@
 import React, {isValidElement, memo, startTransition, useRef} from 'react'
-import {type FlatListProps, StyleSheet, View, type ViewProps} from 'react-native'
+import {
+  type FlatListProps,
+  StyleSheet,
+  View,
+  type ViewProps,
+} from 'react-native'
 import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
@@ -43,7 +48,7 @@ function ListImpl<ItemT>(
     disableFullWindowScroll,
     contentContainerStyle,
     data,
-    desktopFixedHeight,
+    desktopFixedHeight = true,
     headerOffset,
     keyExtractor,
     refreshing: _unsupportedRefreshing,
