@@ -3,12 +3,12 @@ import {StyleSheet, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
 
 import {HomeHeaderLayoutMobile} from '#/view/com/home/HomeHeaderLayoutMobile'
-import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {type ListRef} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 import {ProfileFeedSection} from '../Profile/Sections/Feed'
+import NodeInfo from './NodeInfo'
 
 const proposalStageOptions = [
   {key: 'all', label: '全部'},
@@ -112,17 +112,21 @@ export default function HallScreen() {
             ]}>
             {Array.from({length: 4}, (_, idx) => {
               return (
-                <View
+                <NodeInfo
                   key={idx}
-                  style={[
-                    a.flex_0,
-                    {
-                      width: 64,
-                      height: 64,
-                      borderRadius: '50%',
-                      backgroundColor: '#f00',
-                    },
-                  ]}
+                  trigger={
+                    <View
+                      style={[
+                        a.flex_0,
+                        {
+                          width: 64,
+                          height: 64,
+                          borderRadius: '50%',
+                          backgroundColor: '#ff0',
+                        },
+                      ]}
+                    />
+                  }
                 />
               )
             })}
