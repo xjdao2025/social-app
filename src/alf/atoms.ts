@@ -1032,8 +1032,16 @@ export const atoms = {
     // exponential easing function
     animation: 'slideInLeft cubic-bezier(0.16, 1, 0.3, 1) 0.5s',
   }),
+  slide_in_bottom: web({
+    // exponential easing function
+    animation: 'slideInBottom cubic-bezier(0.16, 1, 0.3, 1) 0.5s',
+  }),
   slide_out_left: web({
     animation: 'slideOutLeft ease-in 0.15s',
+    animationFillMode: 'forwards',
+  }),
+  slide_out_bottom: web({
+    animation: 'slideOutBottom ease-in 0.15s',
     animationFillMode: 'forwards',
   }),
   // special composite animation for dialogs
