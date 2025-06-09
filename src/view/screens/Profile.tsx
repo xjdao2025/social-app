@@ -47,6 +47,7 @@ import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
 import {navigate} from '#/Navigation'
 import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
+import { ProfileTabsAll } from "#/screens/Profile/Tabs/All";
 
 interface SectionRef {
   scrollToTop: () => void
@@ -215,8 +216,8 @@ function ProfileScreenLoaded({
   const showListsTab = hasSession && (isMe || listCount > 0)
 
   const sectionTitles = [
-    showFiltersTab ? _(msg`Labels`) : undefined,
-    showListsTab && hasLabeler ? _(msg`Lists`) : undefined,
+    // showFiltersTab ? _(msg`Labels`) : undefined,
+    // showListsTab && hasLabeler ? _(msg`Lists`) : undefined,
     showPostsTab ? _(msg`Posts`) : undefined,
     showRepliesTab ? _(msg`Replies`) : undefined,
     showMediaTab ? _(msg`Media`) : undefined,
@@ -231,9 +232,9 @@ function ProfileScreenLoaded({
   let mediaIndex: number | null = null
   let videosIndex: number | null = null
   let likesIndex: number | null = null
-  if (showFiltersTab) {
-    filtersIndex = nextIndex++
-  }
+  // if (showFiltersTab) {
+  //   filtersIndex = nextIndex++
+  // }
   if (showPostsTab) {
     postsIndex = nextIndex++
   }
@@ -342,44 +343,52 @@ function ProfileScreenLoaded({
         onCurrentPageSelected={onCurrentPageSelected}
         renderHeader={renderHeader}
         allowHeaderOverScroll>
-        {showFiltersTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileLabelsSection
-                ref={labelsSectionRef}
-                labelerInfo={labelerInfo}
-                labelerError={labelerError}
-                isLabelerLoading={isLabelerLoading}
-                moderationOpts={moderationOpts}
-                scrollElRef={scrollElRef as ListRef}
-                headerHeight={headerHeight}
-                isFocused={isFocused}
-                setScrollViewTag={setScrollViewTag}
-              />
-            )
-          : null}
-        {showListsTab && !!profile.associated?.labeler
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileLists
-                ref={listsSectionRef}
-                did={profile.did}
-                scrollElRef={scrollElRef as ListRef}
-                headerOffset={headerHeight}
-                enabled={isFocused}
-                setScrollViewTag={setScrollViewTag}
-              />
-            )
-          : null}
+        {/*{showFiltersTab*/}
+        {/*  ? ({headerHeight, isFocused, scrollElRef}) => (*/}
+        {/*      <ProfileLabelsSection*/}
+        {/*        ref={labelsSectionRef}*/}
+        {/*        labelerInfo={labelerInfo}*/}
+        {/*        labelerError={labelerError}*/}
+        {/*        isLabelerLoading={isLabelerLoading}*/}
+        {/*        moderationOpts={moderationOpts}*/}
+        {/*        scrollElRef={scrollElRef as ListRef}*/}
+        {/*        headerHeight={headerHeight}*/}
+        {/*        isFocused={isFocused}*/}
+        {/*        setScrollViewTag={setScrollViewTag}*/}
+        {/*      />*/}
+        {/*    )*/}
+        {/*  : null}*/}
+        {/*{showListsTab && !!profile.associated?.labeler*/}
+        {/*  ? ({headerHeight, isFocused, scrollElRef}) => (*/}
+        {/*      <ProfileLists*/}
+        {/*        ref={listsSectionRef}*/}
+        {/*        did={profile.did}*/}
+        {/*        scrollElRef={scrollElRef as ListRef}*/}
+        {/*        headerOffset={headerHeight}*/}
+        {/*        enabled={isFocused}*/}
+        {/*        setScrollViewTag={setScrollViewTag}*/}
+        {/*      />*/}
+        {/*    )*/}
+        {/*  : null}*/}
         {showPostsTab
           ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileFeedSection
-                ref={postsSectionRef}
-                feed={`author|${profile.did}|posts_and_author_threads`}
-                headerHeight={headerHeight}
-                isFocused={isFocused}
-                scrollElRef={scrollElRef as ListRef}
-                ignoreFilterFor={profile.did}
-                setScrollViewTag={setScrollViewTag}
-              />
+              // <ProfileFeedSection
+              //   ref={postsSectionRef}
+              //   feed={`author|${profile.did}|posts_and_author_threads`}
+              //   headerHeight={headerHeight}
+              //   isFocused={isFocused}
+              //   scrollElRef={scrollElRef as ListRef}
+              //   ignoreFilterFor={profile.did}
+              //   setScrollViewTag={setScrollViewTag}
+              // />
+            <ProfileTabsAll
+              sectionRef={postsSectionRef}
+              profile={profile}
+              headerHeight={headerHeight}
+              isFocused={isFocused}
+              scrollElRef={scrollElRef}
+              setScrollViewTag={setScrollViewTag}
+            />
             )
           : null}
         {showRepliesTab

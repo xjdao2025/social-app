@@ -17,7 +17,7 @@ import {atoms as a, ios, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import {type SectionRef} from './types'
 
-interface FeedSectionProps {
+export interface FeedSectionProps {
   feed: FeedDescriptor
   headerHeight: number
   isFocused: boolean

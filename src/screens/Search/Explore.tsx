@@ -694,227 +694,227 @@ export function Explore({
         case 'trendingVideos': {
           return <ExploreTrendingVideos />
         }
-        case 'recommendations': {
-          return <ExploreRecommendations />
-        }
-        case 'profile': {
-          return (
-            <SuggestedProfileCard
-              profile={item.profile}
-              moderationOpts={moderationOpts!}
-              recId={item.recId}
-              position={index}
-            />
-          )
-        }
-        case 'profileEmpty': {
-          return (
-            <View style={[a.px_lg, a.pb_lg]}>
-              <Admonition>
-                {selectedInterest ? (
-                  <Trans>
-                    No results for "{interestsDisplayNames[selectedInterest]}".
-                  </Trans>
-                ) : (
-                  <Trans>No results.</Trans>
-                )}
-              </Admonition>
-            </View>
-          )
-        }
-        case 'feed': {
-          return (
-            <View
-              style={[
-                a.border_t,
-                t.atoms.border_contrast_low,
-                a.px_lg,
-                a.py_lg,
-              ]}>
-              <FeedCard.Default view={item.feed} />
-            </View>
-          )
-        }
-        case 'starterPack': {
-          return (
-            <View style={[a.px_lg, a.pb_lg]}>
-              <StarterPackCard view={item.view} />
-            </View>
-          )
-        }
-        case 'starterPackSkeleton': {
-          return (
-            <View style={[a.px_lg, a.pb_lg]}>
-              <StarterPackCardSkeleton />
-            </View>
-          )
-        }
-        case 'loadMore': {
-          return (
-            <View style={[a.border_t, t.atoms.border_contrast_low]}>
-              <LoadMore item={item} />
-            </View>
-          )
-        }
-        case 'profilePlaceholder': {
-          return (
-            <>
-              {Array.from({length: 3}).map((__, i) => (
-                <View
-                  style={[
-                    a.px_lg,
-                    a.py_lg,
-                    a.border_t,
-                    t.atoms.border_contrast_low,
-                  ]}
-                  key={i}>
-                  <ProfileCard.Outer>
-                    <ProfileCard.Header>
-                      <ProfileCard.AvatarPlaceholder />
-                      <ProfileCard.NameAndHandlePlaceholder />
-                    </ProfileCard.Header>
-                    <ProfileCard.DescriptionPlaceholder numberOfLines={2} />
-                  </ProfileCard.Outer>
-                </View>
-              ))}
-            </>
-          )
-        }
-        case 'feedPlaceholder': {
-          return <FeedFeedLoadingPlaceholder />
-        }
-        case 'error':
-        case 'preview:error': {
-          return (
-            <View
-              style={[
-                a.border_t,
-                a.pt_md,
-                a.px_md,
-                t.atoms.border_contrast_low,
-              ]}>
-              <View
-                style={[
-                  a.flex_row,
-                  a.gap_md,
-                  a.p_lg,
-                  a.rounded_sm,
-                  t.atoms.bg_contrast_25,
-                ]}>
-                <CircleInfo size="md" fill={t.palette.negative_400} />
-                <View style={[a.flex_1, a.gap_sm]}>
-                  <Text style={[a.font_bold, a.leading_snug]}>
-                    {item.message}
-                  </Text>
-                  <Text
-                    style={[
-                      a.italic,
-                      a.leading_snug,
-                      t.atoms.text_contrast_medium,
-                    ]}>
-                    {item.error}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          )
-        }
-        // feed previews
-        case 'preview:spacer': {
-          return <View style={[a.w_full, a.pt_4xl]} />
-        }
-        case 'preview:empty': {
-          return null // what should we do here?
-        }
-        case 'preview:loading': {
-          return (
-            <View style={[a.py_2xl, a.flex_1, a.align_center]}>
-              <Loader size="lg" />
-            </View>
-          )
-        }
-        case 'preview:header': {
-          return (
-            <ModuleHeader.Container
-              style={[
-                a.pt_xs,
-                t.atoms.border_contrast_low,
-                native(a.border_b),
-              ]}>
-              {/* Very non-scientific way to avoid small gap on scroll */}
-              <View style={[a.absolute, a.inset_0, t.atoms.bg, {top: -2}]} />
-              <ModuleHeader.FeedLink feed={item.feed}>
-                <ModuleHeader.FeedAvatar feed={item.feed} />
-                <View style={[a.flex_1, a.gap_xs]}>
-                  <ModuleHeader.TitleText style={[a.text_lg]}>
-                    {item.feed.displayName}
-                  </ModuleHeader.TitleText>
-                  <ModuleHeader.SubtitleText>
-                    <Trans>
-                      By {sanitizeHandle(item.feed.creator.handle, '@')}
-                    </Trans>
-                  </ModuleHeader.SubtitleText>
-                </View>
-              </ModuleHeader.FeedLink>
-              <ModuleHeader.PinButton feed={item.feed} />
-            </ModuleHeader.Container>
-          )
-        }
-        case 'preview:footer': {
-          return (
-            <View
-              style={[
-                a.border_t,
-                t.atoms.border_contrast_low,
-                a.w_full,
-                a.pt_4xl,
-              ]}
-            />
-          )
-        }
-        case 'preview:sliceItem': {
-          const slice = item.slice
-          const indexInSlice = item.indexInSlice
-          const subItem = slice.items[indexInSlice]
-          return (
-            <PostFeedItem
-              post={subItem.post}
-              record={subItem.record}
-              reason={indexInSlice === 0 ? slice.reason : undefined}
-              feedContext={slice.feedContext}
-              reqId={slice.reqId}
-              moderation={subItem.moderation}
-              parentAuthor={subItem.parentAuthor}
-              showReplyTo={item.showReplyTo}
-              isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
-              isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
-              isThreadLastChild={
-                isThreadChildAt(slice.items, indexInSlice) &&
-                slice.items.length === indexInSlice + 1
-              }
-              isParentBlocked={subItem.isParentBlocked}
-              isParentNotFound={subItem.isParentNotFound}
-              hideTopBorder={item.hideTopBorder}
-              rootPost={slice.items[0].post}
-            />
-          )
-        }
-        case 'preview:sliceViewFullThread': {
-          return <ViewFullThread uri={item.uri} />
-        }
-        case 'preview:loadMoreError': {
-          return (
-            <LoadMoreRetryBtn
-              label={_(
-                msg`There was an issue fetching posts. Tap here to try again.`,
-              )}
-              onPress={fetchNextPageFeedPreviews}
-            />
-          )
-        }
-        case 'interests-card': {
-          return <ExploreInterestsCard />
-        }
+        // case 'recommendations': {
+        //   return <ExploreRecommendations />
+        // }
+        // case 'profile': {
+        //   return (
+        //     <SuggestedProfileCard
+        //       profile={item.profile}
+        //       moderationOpts={moderationOpts!}
+        //       recId={item.recId}
+        //       position={index}
+        //     />
+        //   )
+        // }
+        // case 'profileEmpty': {
+        //   return (
+        //     <View style={[a.px_lg, a.pb_lg]}>
+        //       <Admonition>
+        //         {selectedInterest ? (
+        //           <Trans>
+        //             No results for "{interestsDisplayNames[selectedInterest]}".
+        //           </Trans>
+        //         ) : (
+        //           <Trans>No results.</Trans>
+        //         )}
+        //       </Admonition>
+        //     </View>
+        //   )
+        // }
+        // case 'feed': {
+        //   return (
+        //     <View
+        //       style={[
+        //         a.border_t,
+        //         t.atoms.border_contrast_low,
+        //         a.px_lg,
+        //         a.py_lg,
+        //       ]}>
+        //       <FeedCard.Default view={item.feed} />
+        //     </View>
+        //   )
+        // }
+        // case 'starterPack': {
+        //   return (
+        //     <View style={[a.px_lg, a.pb_lg]}>
+        //       <StarterPackCard view={item.view} />
+        //     </View>
+        //   )
+        // }
+        // case 'starterPackSkeleton': {
+        //   return (
+        //     <View style={[a.px_lg, a.pb_lg]}>
+        //       <StarterPackCardSkeleton />
+        //     </View>
+        //   )
+        // }
+        // case 'loadMore': {
+        //   return (
+        //     <View style={[a.border_t, t.atoms.border_contrast_low]}>
+        //       <LoadMore item={item} />
+        //     </View>
+        //   )
+        // }
+        // case 'profilePlaceholder': {
+        //   return (
+        //     <>
+        //       {Array.from({length: 3}).map((__, i) => (
+        //         <View
+        //           style={[
+        //             a.px_lg,
+        //             a.py_lg,
+        //             a.border_t,
+        //             t.atoms.border_contrast_low,
+        //           ]}
+        //           key={i}>
+        //           <ProfileCard.Outer>
+        //             <ProfileCard.Header>
+        //               <ProfileCard.AvatarPlaceholder />
+        //               <ProfileCard.NameAndHandlePlaceholder />
+        //             </ProfileCard.Header>
+        //             <ProfileCard.DescriptionPlaceholder numberOfLines={2} />
+        //           </ProfileCard.Outer>
+        //         </View>
+        //       ))}
+        //     </>
+        //   )
+        // }
+        // case 'feedPlaceholder': {
+        //   return <FeedFeedLoadingPlaceholder />
+        // }
+        // case 'error':
+        // case 'preview:error': {
+        //   return (
+        //     <View
+        //       style={[
+        //         a.border_t,
+        //         a.pt_md,
+        //         a.px_md,
+        //         t.atoms.border_contrast_low,
+        //       ]}>
+        //       <View
+        //         style={[
+        //           a.flex_row,
+        //           a.gap_md,
+        //           a.p_lg,
+        //           a.rounded_sm,
+        //           t.atoms.bg_contrast_25,
+        //         ]}>
+        //         <CircleInfo size="md" fill={t.palette.negative_400} />
+        //         <View style={[a.flex_1, a.gap_sm]}>
+        //           <Text style={[a.font_bold, a.leading_snug]}>
+        //             {item.message}
+        //           </Text>
+        //           <Text
+        //             style={[
+        //               a.italic,
+        //               a.leading_snug,
+        //               t.atoms.text_contrast_medium,
+        //             ]}>
+        //             {item.error}
+        //           </Text>
+        //         </View>
+        //       </View>
+        //     </View>
+        //   )
+        // }
+        // // feed previews
+        // case 'preview:spacer': {
+        //   return <View style={[a.w_full, a.pt_4xl]} />
+        // }
+        // case 'preview:empty': {
+        //   return null // what should we do here?
+        // }
+        // case 'preview:loading': {
+        //   return (
+        //     <View style={[a.py_2xl, a.flex_1, a.align_center]}>
+        //       <Loader size="lg" />
+        //     </View>
+        //   )
+        // }
+        // case 'preview:header': {
+        //   return (
+        //     <ModuleHeader.Container
+        //       style={[
+        //         a.pt_xs,
+        //         t.atoms.border_contrast_low,
+        //         native(a.border_b),
+        //       ]}>
+        //       {/* Very non-scientific way to avoid small gap on scroll */}
+        //       <View style={[a.absolute, a.inset_0, t.atoms.bg, {top: -2}]} />
+        //       <ModuleHeader.FeedLink feed={item.feed}>
+        //         <ModuleHeader.FeedAvatar feed={item.feed} />
+        //         <View style={[a.flex_1, a.gap_xs]}>
+        //           <ModuleHeader.TitleText style={[a.text_lg]}>
+        //             {item.feed.displayName}
+        //           </ModuleHeader.TitleText>
+        //           <ModuleHeader.SubtitleText>
+        //             <Trans>
+        //               By {sanitizeHandle(item.feed.creator.handle, '@')}
+        //             </Trans>
+        //           </ModuleHeader.SubtitleText>
+        //         </View>
+        //       </ModuleHeader.FeedLink>
+        //       <ModuleHeader.PinButton feed={item.feed} />
+        //     </ModuleHeader.Container>
+        //   )
+        // }
+        // case 'preview:footer': {
+        //   return (
+        //     <View
+        //       style={[
+        //         a.border_t,
+        //         t.atoms.border_contrast_low,
+        //         a.w_full,
+        //         a.pt_4xl,
+        //       ]}
+        //     />
+        //   )
+        // }
+        // case 'preview:sliceItem': {
+        //   const slice = item.slice
+        //   const indexInSlice = item.indexInSlice
+        //   const subItem = slice.items[indexInSlice]
+        //   return (
+        //     <PostFeedItem
+        //       post={subItem.post}
+        //       record={subItem.record}
+        //       reason={indexInSlice === 0 ? slice.reason : undefined}
+        //       feedContext={slice.feedContext}
+        //       reqId={slice.reqId}
+        //       moderation={subItem.moderation}
+        //       parentAuthor={subItem.parentAuthor}
+        //       showReplyTo={item.showReplyTo}
+        //       isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
+        //       isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
+        //       isThreadLastChild={
+        //         isThreadChildAt(slice.items, indexInSlice) &&
+        //         slice.items.length === indexInSlice + 1
+        //       }
+        //       isParentBlocked={subItem.isParentBlocked}
+        //       isParentNotFound={subItem.isParentNotFound}
+        //       hideTopBorder={item.hideTopBorder}
+        //       rootPost={slice.items[0].post}
+        //     />
+        //   )
+        // }
+        // case 'preview:sliceViewFullThread': {
+        //   return <ViewFullThread uri={item.uri} />
+        // }
+        // case 'preview:loadMoreError': {
+        //   return (
+        //     <LoadMoreRetryBtn
+        //       label={_(
+        //         msg`There was an issue fetching posts. Tap here to try again.`,
+        //       )}
+        //       onPress={fetchNextPageFeedPreviews}
+        //     />
+        //   )
+        // }
+        // case 'interests-card': {
+        //   return <ExploreInterestsCard />
+        // }
       }
     },
     [

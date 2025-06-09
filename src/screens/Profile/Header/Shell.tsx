@@ -185,12 +185,11 @@ let ProfileHeaderShell = ({
 
       {!isPlaceholderProfile && (
         <View
-          style={[a.px_lg, a.py_xs]}
           pointerEvents={isIOS ? 'auto' : 'box-none'}>
           {isMe ? (
-            <LabelsOnMe type="account" labels={profile.labels} />
+            <LabelsOnMe type="account" labels={profile.labels} style={[a.px_lg, a.py_xs]} />
           ) : (
-            <ProfileHeaderAlerts moderation={moderation} />
+            <ProfileHeaderAlerts moderation={moderation} style={[a.px_lg, a.py_xs]} />
           )}
         </View>
       )}

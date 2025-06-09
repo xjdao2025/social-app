@@ -1,15 +1,18 @@
 import React from 'react'
-import {Image as RNImage,Pressable, StyleSheet, View} from 'react-native'
+import { Image as RNImage, Pressable, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import {Image} from 'expo-image'
 
 import {atoms as a, useTheme} from '#/alf'
 import {ArrowRight_Angle} from '#/components/icons/Arrow'
 import {QrCode_Icon, QrCode_Scan} from '#/components/icons/QrCode'
 import {Text} from '#/components/Typography'
+import { useDialogControl } from "#/components/Dialog";
+import { SendPointsDialog } from "#/screens/Profile/Header/SendPointsDialog";
 // const splashImageUri = RNImage.resolveAssetSource(pointsBg).uri
 
 export function ProfileHeaderRewardPoints() {
   const t = useTheme()
+  const sendPointsControl = useDialogControl()
 
   return (
     <View style={[styles.container, [a.mt_md, a.px_lg, a.py_xl]]}>
@@ -46,17 +49,18 @@ export function ProfileHeaderRewardPoints() {
         </View>
       </View>
       <View style={[a.flex_row, a.align_center, a.gap_lg]}>
-        <Pressable accessibilityRole="button" onPress={() => {}}>
+        <TouchableWithoutFeedback accessibilityRole="button" onPress={() => sendPointsControl.open()}>
           <View style={[a.flex_col, a.align_center]}>
             <View style={[styles.circle, a.mb_sm]}>
-              <QrCode_Scan size={'md'} />
+              <QrCode_Scan size={'md'} fill={'#fff'} />
             </View>
-            <Text style={[{opacity: 0.7}, [t.atoms.text_inverted]]}>
+            <Text style={[{opacity: 0.7}, [t.atoms.text_inverted, a.user_select_none]]}>
               发送积分
             </Text>
           </View>
-        </Pressable>
-        <Pressable accessibilityRole="button" onPress={() => {}}>
+        </TouchableWithoutFeedback>
+        <SendPointsDialog control={sendPointsControl} />
+        <TouchableWithoutFeedback accessibilityRole="button" onPress={() => {}}>
           <View style={[a.flex_col, a.align_center]}>
             <View style={[styles.circle, a.mb_sm]}>
               <QrCode_Icon size={'md'} />
@@ -65,7 +69,7 @@ export function ProfileHeaderRewardPoints() {
               接收积分
             </Text>
           </View>
-        </Pressable>
+        </TouchableWithoutFeedback>
       </View>
     </View>
   )
