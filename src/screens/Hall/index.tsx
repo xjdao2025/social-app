@@ -2,14 +2,16 @@ import {useEffect, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
+import {useNavigation} from '@react-navigation/native'
 
+import {type NavigationProp} from '#/lib/routes/types'
 import {HomeHeaderLayoutMobile} from '#/view/com/home/HomeHeaderLayoutMobile'
 import {type ListRef} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 import {ProfileFeedSection} from '../Profile/Sections/Feed'
-import NodeInfo from './NodeInfo'
+import NodeInfo from './components/NodeInfo'
 
 const proposalStageOptions = [
   {key: 'all', label: '全部'},
@@ -22,6 +24,7 @@ export default function HallScreen() {
   const t = useTheme()
   const [headerOpacity, setHeaderOpacity] = useState(0)
   const [currentTabKey, setTabKey] = useState(proposalStageOptions[0].key)
+  const navigation = useNavigation<NavigationProp>()
 
   useEffect(() => {
     const f = () => {
@@ -55,16 +58,17 @@ export default function HallScreen() {
       <View style={[a.flex_col, a.px_lg, a.flex_0, styles.topInfo]}>
         <View style={[a.flex_row, a.align_baseline, a.justify_between]}>
           <Text style={[t.atoms.text, a.text_2xl, a.font_bold]}>基金会</Text>
-          <Pressable accessibilityRole="button"
+          <Pressable
+            accessibilityRole="button"
             accessibilityIgnoresInvertColors
             style={[a.flex_row]}
             onPress={() => {
-              window.alert(1234)
+              navigation.push('HallDocList')
             }}>
             <Text style={[t.atoms.text_contrast_medium, a.text_sm]}>更多</Text>
             <Image
               style={{width: 14, height: 14}}
-              source={require('#/assets/arrow-right.svg')}
+              source={require('#/assets/expand-right.svg')}
             />
           </Pressable>
         </View>
@@ -112,19 +116,20 @@ export default function HallScreen() {
         <View style={[styles.card, a.pt_lg]}>
           <View
             style={[a.flex_row, a.align_baseline, a.justify_between, a.px_lg]}>
-            <Text style={[t.atoms.text, a.text_lg, a.font_bold]}>t节点</Text>
-            <Pressable accessibilityRole="button"
+            <Text style={[t.atoms.text, a.text_lg, a.font_bold]}>节点</Text>
+            <Pressable
+              accessibilityRole="button"
               accessibilityIgnoresInvertColors
               style={[a.flex_row]}
               onPress={() => {
-                window.alert(1234)
+                navigation.push('HallNodeList')
               }}>
               <Text style={[t.atoms.text_contrast_medium, a.text_sm]}>
                 更多
               </Text>
               <Image
                 style={{width: 14, height: 14}}
-                source={require('#/assets/arrow-right.svg')}
+                source={require('#/assets/expand-right.svg')}
               />
             </Pressable>
           </View>
@@ -169,7 +174,7 @@ export default function HallScreen() {
               {top: 22, zIndex: 9, backgroundColor: '#fff'},
             ]}>
             <View style={[{paddingTop: 30}]}>
-              <Text style={[t.atoms.text, a.text_lg, a.font_bold]}>t提案</Text>
+              <Text style={[t.atoms.text, a.text_lg, a.font_bold]}>提案</Text>
             </View>
             <View style={[a.flex_row, a.mt_md, a.gap_md]}>
               {proposalStageOptions.map(({label, key}, idx) => {

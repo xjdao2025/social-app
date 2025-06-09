@@ -3,7 +3,11 @@ import {Router} from '#/lib/routes/router'
 export const router = new Router({
   Home: '/',
   Search: '/search',
+
   Hall: '/hall',
+  HallNodeList: '/hall/nodes',
+  HallDocList: '/hall/documents',
+
   Feeds: '/feeds',
   Notifications: '/notifications',
   NotificationSettings: '/notifications/settings',

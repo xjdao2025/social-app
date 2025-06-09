@@ -111,6 +111,8 @@ import {
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import HallScreen from './screens/Hall'
+import HallDocListScreen from './screens/Hall/DocList'
+import HallNodeListScreen from './screens/Hall/NodeList'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -131,7 +133,6 @@ const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
 function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
   const title = (page: MessageDescriptor) =>
     bskyTitle(i18n._(page), unreadCountLabel)
-
   return (
     <>
       <Stack.Screen
@@ -474,6 +475,22 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{
           title: title(msg`Video Feed`),
           requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="HallNodeList"
+        getComponent={() => HallNodeListScreen}
+        options={{
+          title: 'Hall Node List', // title(msg`Video Feed`),
+          requireAuth: false,
+        }}
+      />
+      <Stack.Screen
+        name="HallDocList"
+        getComponent={() => HallDocListScreen}
+        options={{
+          title: 'Hall Doc List', // title(msg`Video Feed`),
+          requireAuth: false,
         }}
       />
     </>
