@@ -8,7 +8,7 @@ import {useNavigationState} from '@react-navigation/native'
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {useHomeBadge} from '#/state/home-badge'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
@@ -94,7 +94,7 @@ export function BottomBarWeb() {
               )
             }}
           </NavItem>
-          <NavItem routeName="Search" href="/search">
+          <NavItem routeName="Hall" href="/hall">
             {({isActive}) => {
               const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass
               return (
@@ -109,26 +109,29 @@ export function BottomBarWeb() {
 
           {hasSession && (
             <>
-              <NavItem
+              {/* <NavItem
                 routeName="Messages"
                 href="/messages"
                 notificationCount={unreadMessageCount.numUnread}
                 hasNew={unreadMessageCount.hasNew}>
-                {({isActive}) => {
+                {({ isActive }) => {
                   const Icon = isActive ? MessageFilled : Message
                   return (
-                    <Icon
-                      aria-hidden={true}
-                      width={iconWidth - 1}
-                      style={[
-                        styles.ctrlIcon,
-                        t.atoms.text,
-                        styles.messagesIcon,
-                      ]}
-                    />
+                    <>
+                      <Icon
+                        aria-hidden={true}
+                        width={iconWidth - 1}
+                        style={[
+                          styles.ctrlIcon,
+                          t.atoms.text,
+                          styles.messagesIcon,
+                        ]}
+                      />
+                      <Text style={[a.text_center]}>Name</Text>
+                    </>
                   )
                 }}
-              </NavItem>
+              </NavItem> */}
               <NavItem
                 routeName="Notifications"
                 href="/notifications"

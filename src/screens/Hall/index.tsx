@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Pressable, StyleSheet, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
+import {Image} from 'expo-image'
 
 import {HomeHeaderLayoutMobile} from '#/view/com/home/HomeHeaderLayoutMobile'
 import {type ListRef} from '#/view/com/util/List'
@@ -53,18 +54,28 @@ export default function HallScreen() {
       <View style={styles.linearBg} />
       <View style={[a.flex_col, a.px_lg, a.flex_0, styles.topInfo]}>
         <View style={[a.flex_row, a.align_baseline, a.justify_between]}>
-          <Text style={[t.atoms.text, a.text_2xl, a.font_bold]}>t基金会</Text>
-          <Text
-            style={[t.atoms.text_contrast_medium, a.text_sm]}
-            onClick={() => {
+          <Text style={[t.atoms.text, a.text_2xl, a.font_bold]}>基金会</Text>
+          <Pressable accessibilityRole="button"
+            accessibilityIgnoresInvertColors
+            style={[a.flex_row]}
+            onPress={() => {
               window.alert(1234)
             }}>
-            t更多{'>'}
-          </Text>
+            <Text style={[t.atoms.text_contrast_medium, a.text_sm]}>更多</Text>
+            <Image
+              style={{width: 14, height: 14}}
+              source={require('#/assets/arrow-right.svg')}
+            />
+          </Pressable>
         </View>
         <View style={[a.flex_row, a.gap_md, a.mt_xl]}>
           <View style={[a.flex_1, styles.foundCard, styles.foundScale]}>
-            <Text style={[t.atoms.text_inverted, a.text_md]}>t基金规模</Text>
+            <Image
+              accessibilityIgnoresInvertColors
+              style={[styles.foundScaleBG]}
+              source={require('#/assets/hall.cash.svg')}
+            />
+            <Text style={[t.atoms.text_inverted, a.text_md]}>基金规模</Text>
             <View style={[a.flex_row, a.gap_sm, a.align_baseline]}>
               <Text style={[t.atoms.text_inverted, a.text_2xl]}>¥</Text>
               <Text
@@ -79,7 +90,12 @@ export default function HallScreen() {
             </View>
           </View>
           <View style={[a.flex_1, styles.foundCard, styles.foundToken]}>
-            <Text style={[t.atoms.text_inverted, a.text_md]}>t已发行积分</Text>
+            <Image
+              accessibilityIgnoresInvertColors
+              style={[styles.foundTokenBG]}
+              source={require('#/assets/hall.token.svg')}
+            />
+            <Text style={[t.atoms.text_inverted, a.text_md]}>已发行积分</Text>
             <Text
               style={[
                 t.atoms.text_inverted,
@@ -97,9 +113,20 @@ export default function HallScreen() {
           <View
             style={[a.flex_row, a.align_baseline, a.justify_between, a.px_lg]}>
             <Text style={[t.atoms.text, a.text_lg, a.font_bold]}>t节点</Text>
-            <Text style={[t.atoms.text_contrast_medium, a.text_sm]}>
-              t更多{'>'}
-            </Text>
+            <Pressable accessibilityRole="button"
+              accessibilityIgnoresInvertColors
+              style={[a.flex_row]}
+              onPress={() => {
+                window.alert(1234)
+              }}>
+              <Text style={[t.atoms.text_contrast_medium, a.text_sm]}>
+                更多
+              </Text>
+              <Image
+                style={{width: 14, height: 14}}
+                source={require('#/assets/arrow-right.svg')}
+              />
+            </Pressable>
           </View>
 
           <View
@@ -236,8 +263,22 @@ const styles = StyleSheet.create({
   foundScale: {
     backgroundImage: 'linear-gradient(126deg, #154FFF 16.58%, #68C3FD 93.61%)',
   },
+  foundScaleBG: {
+    position: 'absolute',
+    width: 51,
+    height: 61,
+    right: 0,
+    bottom: 0,
+  },
   foundToken: {
     backgroundImage: 'linear-gradient(126deg, #6685FB 16.58%, #B2BEFF 93.61%)',
+  },
+  foundTokenBG: {
+    position: 'absolute',
+    width: 52,
+    height: 60,
+    right: 0,
+    bottom: 0,
   },
   cardWrapper: {
     position: 'relative',
