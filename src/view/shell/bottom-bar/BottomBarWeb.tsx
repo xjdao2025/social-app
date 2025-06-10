@@ -42,6 +42,10 @@ import {
 import {Text} from '#/components/Typography'
 import {styles} from './BottomBarStyles'
 
+type RouteType = keyof CommonNavigatorParams
+
+const hideTabBarRoute: RouteType[] = ['PointsRecord']
+
 export function BottomBarWeb() {
   const {_} = useLingui()
   const {hasSession, currentAccount} = useSession()
@@ -67,6 +71,12 @@ export function BottomBarWeb() {
     // setShowLoggedOut(true)
   }, [requestSwitchToAccount, closeAllActiveElements])
 
+  const currentRoute = useNavigationState(state => {
+    return getCurrentRoute(state)
+  })
+
+  const hideTabBar = hideTabBarRoute.includes(currentRoute.name as RouteType)
+
   return (
     <Animated.View
       role="navigation"
@@ -76,6 +86,7 @@ export function BottomBarWeb() {
         t.atoms.bg,
         t.atoms.border_contrast_low,
         footerMinimalShellTransform,
+        hideTabBar && {display: 'none'},
       ]}>
       {hasSession ? (
         <>
