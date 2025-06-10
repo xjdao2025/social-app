@@ -34,6 +34,8 @@ export const router = new Router({
   ProfileFeed: '/profile/:name/feed/:rkey',
   ProfileFeedLikedBy: '/profile/:name/feed/:rkey/liked-by',
   ProfileLabelerLikedBy: '/profile/:name/labeler/liked-by',
+
+  PointsRecord: '/profile/points/record',
   // debug
   Debug: '/sys/debug',
   DebugMod: '/sys/debug-mod',

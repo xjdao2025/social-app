@@ -1,18 +1,27 @@
 import React from 'react'
-import { Image as RNImage, Pressable, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import {
+  Image as RNImage,
+  Pressable,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
 import {Image} from 'expo-image'
+import {useNavigation} from '@react-navigation/native'
 
+import  {type NavigationProp} from '#/lib/routes/types'
+import {ReceivePointsDialog} from '#/screens/Profile/Header/ReceivePointsDialog'
+import {SendPointsDialog} from '#/screens/Profile/Header/SendPointsDialog'
 import {atoms as a, useTheme} from '#/alf'
+import {useDialogControl} from '#/components/Dialog'
 import {ArrowRight_Angle} from '#/components/icons/Arrow'
 import {QrCode_Icon, QrCode_Scan} from '#/components/icons/QrCode'
 import {Text} from '#/components/Typography'
-import { useDialogControl } from "#/components/Dialog";
-import { SendPointsDialog } from "#/screens/Profile/Header/SendPointsDialog";
-import { ReceivePointsDialog } from "#/screens/Profile/Header/ReceivePointsDialog";
 // const splashImageUri = RNImage.resolveAssetSource(pointsBg).uri
 
 export function ProfileHeaderRewardPoints() {
   const t = useTheme()
+  const navigation = useNavigation<NavigationProp>()
   const sendPointsControl = useDialogControl()
   const receivePointsControl = useDialogControl()
 
@@ -38,9 +47,13 @@ export function ProfileHeaderRewardPoints() {
           </Text>
           <Pressable accessibilityRole="button" onPress={() => {}}>
             <View style={[a.flex_row, a.align_center, a.ml_md]}>
-              <Text style={[{opacity: 0.7}, [t.atoms.text_inverted]]}>
-                明细
-              </Text>
+              <TouchableWithoutFeedback
+                accessibilityRole="button"
+                onPress={() => navigation.push('PointsRecord')}>
+                <Text style={[{opacity: 0.7}, [t.atoms.text_inverted]]}>
+                  明细
+                </Text>
+              </TouchableWithoutFeedback>
               <ArrowRight_Angle
                 fill={'#6F869F'}
                 style={[a.ml_xs]}
@@ -51,18 +64,26 @@ export function ProfileHeaderRewardPoints() {
         </View>
       </View>
       <View style={[a.flex_row, a.align_center, a.gap_lg]}>
-        <TouchableWithoutFeedback accessibilityRole="button" onPress={() => sendPointsControl.open()}>
+        <TouchableWithoutFeedback
+          accessibilityRole="button"
+          onPress={() => sendPointsControl.open()}>
           <View style={[a.flex_col, a.align_center]}>
             <View style={[styles.circle, a.mb_sm]}>
               <QrCode_Scan size={'md'} fill={'#fff'} />
             </View>
-            <Text style={[{opacity: 0.7}, [t.atoms.text_inverted, a.user_select_none]]}>
+            <Text
+              style={[
+                {opacity: 0.7},
+                [t.atoms.text_inverted, a.user_select_none],
+              ]}>
               发送积分
             </Text>
           </View>
         </TouchableWithoutFeedback>
         <SendPointsDialog control={sendPointsControl} />
-        <TouchableWithoutFeedback accessibilityRole="button" onPress={() => receivePointsControl.open()}>
+        <TouchableWithoutFeedback
+          accessibilityRole="button"
+          onPress={() => receivePointsControl.open()}>
           <View style={[a.flex_col, a.align_center]}>
             <View style={[styles.circle, a.mb_sm]}>
               <QrCode_Icon size={'md'} />

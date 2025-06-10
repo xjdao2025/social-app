@@ -113,6 +113,7 @@ import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import HallScreen from './screens/Hall'
 import HallDocListScreen from './screens/Hall/DocList'
 import HallNodeListScreen from './screens/Hall/NodeList'
+import PointsRecordScreen from './screens/PointsRecord'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -490,6 +491,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => HallDocListScreen}
         options={{
           title: 'Hall Doc List', // title(msg`Video Feed`),
+          requireAuth: false,
+        }}
+      />
+      <Stack.Screen
+        name="PointsRecord"
+        getComponent={() => PointsRecordScreen}
+        options={{
+          title: 'Points Record', // title(msg`Video Feed`),
           requireAuth: false,
         }}
       />
