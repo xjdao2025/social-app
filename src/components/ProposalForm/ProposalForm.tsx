@@ -145,6 +145,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '#/../modules/bottom-sheet'
+import {DateTimeField} from '../forms/DateField/DateTimeField'
 import {
   type BlockAction,
   createPoposalState,
@@ -232,6 +233,8 @@ export default function ProposalForm(
     },
     [activeBlock.id],
   )
+
+  const t = useTheme()
 
   const selectVideo = React.useCallback(
     (blockId: string, asset: ImagePickerAsset) => {
@@ -709,7 +712,25 @@ export default function ProposalForm(
                 )} */}
               </React.Fragment>
             ))}
+            <View style={[a.px_lg, a.mt_lg]}>
+              <View>
+                <NewText
+                  style={[a.text_sm, t.atoms.text_contrast_medium, a.mb_sm]}>
+                  提案投票截止时间
+                </NewText>
+              </View>
+              <View>
+                <DateTimeField
+                  value={proposalState.endDate}
+                  label="提案投票截止时间"
+                  onChangeDate={newDate =>
+                    proposalDispatch({type: 'set_end_date', date: newDate})
+                  }
+                />
+              </View>
+            </View>
           </Animated.ScrollView>
+
           {/* {!isWebFooterSticky && footer} */}
           <View style={styles.stickyFooterWeb}>{footer}</View>
         </View>
@@ -759,7 +780,7 @@ let ProposalBlock = React.memo(function ProposalBlock({
   const {_} = useLingui()
   const richtext = post.richtext
   const isTextOnly = !post.embed.link && !post.embed.quote && !post.embed.media
-  const forceMinHeight = isWeb && isTextOnly && isActive
+  const forceMinHeight = isWeb && isTextOnly // && isActive
   const selectTextInputPlaceholder =
     post.type === 'title'
       ? '请输入提案名称'

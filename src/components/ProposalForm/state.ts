@@ -1,5 +1,6 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {AppBskyFeedPostgate, RichText} from '@atproto/api'
+import {format} from 'date-fns'
 import {nanoid} from 'nanoid/non-secure'
 
 import {type SelfLabel} from '#/lib/moderation'
@@ -23,6 +24,7 @@ const MAX_IMAGES = 4
 
 export type ProposalState = {
   blocks: ProposalBlockType[]
+  endDate: string
   activeBlockIndex: number
   mutableNeedsFocusActive: boolean
 }
@@ -66,6 +68,7 @@ export type ProposalAction =
       type: 'focus_block'
       blockId: string
     }
+  | {type: 'set_end_date'; date: ProposalState['endDate']}
 
 export type ProposalBlockType = {
   id: string
@@ -179,6 +182,12 @@ export function proposalReducer(
       return {
         ...state,
         activeBlockIndex: nextActivePostIndex,
+      }
+    }
+    case 'set_end_date': {
+      return {
+        ...state,
+        endDate: action.date,
       }
     }
   }
@@ -448,6 +457,7 @@ export function createPoposalState(): ProposalState {
   return {
     activeBlockIndex: 0,
     mutableNeedsFocusActive: false,
+    endDate: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
     blocks: [
       {
         id: nanoid(),

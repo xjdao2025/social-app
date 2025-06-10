@@ -211,13 +211,13 @@ const GalleryItem = ({
           />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         accessibilityRole="button"
         accessibilityLabel={_(msg`Add alt text`)}
         accessibilityHint=""
         onPress={onAltTextEdit}
         style={styles.altTextHiddenRegion}
-      />
+      /> */}
 
       <Image
         testID="selectedPhotoImage"
