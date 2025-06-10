@@ -44,7 +44,11 @@ import {styles} from './BottomBarStyles'
 
 type RouteType = keyof CommonNavigatorParams
 
-const hideTabBarRoute: RouteType[] = ['PointsRecord']
+const hideTabBarRoute: RouteType[] = [
+  'PointsRecord',
+  'HallDocList',
+  'HallNodeList',
+]
 
 export function BottomBarWeb() {
   const {_} = useLingui()
