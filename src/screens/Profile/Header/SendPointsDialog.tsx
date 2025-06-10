@@ -7,7 +7,7 @@ import { useLingui } from '@lingui/react'
 import { emailRegExp, phoneNumberRegExp } from "#/lib/tools";
 import { logger } from '#/logger'
 import { isWeb } from '#/platform/detection'
-import * as Toast from 'view/com/util/Toast.native'
+import * as Toast from '#/view/com/util/Toast'
 import { atoms as a, useTheme } from '#/alf'
 import { Button, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'

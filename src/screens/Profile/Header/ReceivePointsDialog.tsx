@@ -1,13 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Dimensions, Pressable, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { useCallback } from 'react'
+import { Dimensions, Pressable, StyleSheet, View } from 'react-native'
 import { Image } from "expo-image";
 import { type AppBskyActorDefs } from '@atproto/api'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
-import { emailRegExp, phoneNumberRegExp } from "#/lib/tools";
-import { logger } from '#/logger'
-import * as Toast from 'view/com/util/Toast.native'
+import * as Toast from '#/view/com/util/Toast'
 import { atoms as a, useTheme } from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import { Text } from '#/components/Typography'
@@ -27,8 +25,8 @@ export function ReceivePointsDialog({
   const { _ } = useLingui()
 
   const onPressCancel = useCallback(() => {
-    Toast.show('接收成功', 'check', 'center')
-    // control.close()
+    // Toast.show('接收成功', 'check', 'center')
+    control.close()
   }, [control])
 
   return (
