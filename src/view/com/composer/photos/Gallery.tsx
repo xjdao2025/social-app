@@ -1,12 +1,12 @@
 import React from 'react'
 import {
-  ImageStyle,
+  type ImageStyle,
   Keyboard,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   StyleSheet,
   TouchableOpacity,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {Image} from 'expo-image'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -14,14 +14,14 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {Dimensions} from '#/lib/media/types'
+import {type Dimensions} from '#/lib/media/types'
 import {colors, s} from '#/lib/styles'
 import {isNative} from '#/platform/detection'
-import {ComposerImage, cropImage} from '#/state/gallery'
+import {type ComposerImage, cropImage} from '#/state/gallery'
 import {Text} from '#/view/com/util/text/Text'
 import {useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
-import {PostAction} from '../state/composer'
+import {type PostAction} from '../state/composer'
 import {EditImageDialog} from './EditImageDialog'
 import {ImageAltTextDialog} from './ImageAltTextDialog'
 
@@ -115,7 +115,7 @@ const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
           )
         })}
       </View>
-      <AltTextReminder />
+      {/* <AltTextReminder /> */}
     </>
   ) : null
 }
@@ -163,7 +163,7 @@ const GalleryItem = ({
       style={imageStyle as ViewStyle}
       // Fixes ALT and icons appearing with half opacity when the post is inactive
       renderToHardwareTextureAndroid>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         testID="altTextButton"
         accessibilityRole="button"
         accessibilityLabel={_(msg`Add alt text`)}
@@ -186,7 +186,7 @@ const GalleryItem = ({
         <Text style={styles.altTextControlLabel} accessible={false}>
           <Trans>ALT</Trans>
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <View style={imageControlsStyle}>
         <TouchableOpacity
           testID="editPhotoButton"

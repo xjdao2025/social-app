@@ -9,6 +9,7 @@ import {HomeHeaderLayoutMobile} from '#/view/com/home/HomeHeaderLayoutMobile'
 import {type ListRef} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
+import ProposalFormModal from '#/components/ProposalForm'
 import {Text} from '#/components/Typography'
 import {ProfileFeedSection} from '../Profile/Sections/Feed'
 import NodeInfo from './components/NodeInfo'
@@ -229,6 +230,7 @@ export default function HallScreen() {
           </View> */}
         </View>
       </View>
+      <ProposalFormModal />
       {/* <View style={[a.flex_col, a.h_full, { paddingTop: 52 + 20, zIndex: 1, gap: 25, paddingBottom: 58 }]}>
         <View style={[styles.card, a.flex_1]}>
           <Text>sdfagjlasjfal</Text>
