@@ -7,7 +7,7 @@ import { useLingui } from '@lingui/react'
 import { emailRegExp, phoneNumberRegExp } from "#/lib/tools";
 import { logger } from '#/logger'
 import { isWeb } from '#/platform/detection'
-import * as Toast from '#/view/com/util/Toast'
+import * as Toast from 'view/com/util/Toast.native'
 import { atoms as a, useTheme } from '#/alf'
 import { Button, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -20,44 +20,23 @@ import { Image } from "expo-image";
 const SCREEN_HEIGHT = Dimensions.get('window').height
 
 export function SendPointsDialog({
-                                   profile,
-                                   control,
-                                   onUpdate,
-                                 }: {
+     profile,
+     control,
+     onUpdate,
+   }: {
   control: Dialog.DialogControlProps
   onUpdate?: () => void
 }) {
   const { _ } = useLingui()
-  const cancelControl = Dialog.useDialogControl()
-  const [dirty, setDirty] = useState(false)
-
-  // 'You might lose unsaved changes' warning
-  useEffect(() => {
-    if (isWeb && dirty) {
-      const abortController = new AbortController()
-      const { signal } = abortController
-      window.addEventListener('beforeunload', evt => evt.preventDefault(), {
-        signal,
-      })
-      return () => {
-        abortController.abort()
-      }
-    }
-  }, [dirty])
 
   const onPressCancel = useCallback(() => {
-    if (dirty) {
-      cancelControl.open()
-    } else {
-      control.close()
-    }
-  }, [dirty, control, cancelControl])
+    control.close()
+  }, [control])
 
   return (
     <Dialog.Outer
       control={control}
       nativeOptions={{
-        preventDismiss: dirty,
         minHeight: SCREEN_HEIGHT,
       }}
       testID="sendPointsModal"
@@ -66,15 +45,6 @@ export function SendPointsDialog({
         profile={profile}
         onUpdate={onUpdate}
         onPressCancel={onPressCancel}
-      />
-
-      <Prompt.Basic
-        control={cancelControl}
-        title={_(msg`Discard changes?`)}
-        description={_(msg`Are you sure you want to discard your changes?`)}
-        onConfirm={() => control.close()}
-        confirmButtonCta={_(msg`Discard`)}
-        confirmButtonColor="negative"
       />
     </Dialog.Outer>
   )

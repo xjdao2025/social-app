@@ -8,11 +8,13 @@ import {QrCode_Icon, QrCode_Scan} from '#/components/icons/QrCode'
 import {Text} from '#/components/Typography'
 import { useDialogControl } from "#/components/Dialog";
 import { SendPointsDialog } from "#/screens/Profile/Header/SendPointsDialog";
+import { ReceivePointsDialog } from "#/screens/Profile/Header/ReceivePointsDialog";
 // const splashImageUri = RNImage.resolveAssetSource(pointsBg).uri
 
 export function ProfileHeaderRewardPoints() {
   const t = useTheme()
   const sendPointsControl = useDialogControl()
+  const receivePointsControl = useDialogControl()
 
   return (
     <View style={[styles.container, [a.mt_md, a.px_lg, a.py_xl]]}>
@@ -60,7 +62,7 @@ export function ProfileHeaderRewardPoints() {
           </View>
         </TouchableWithoutFeedback>
         <SendPointsDialog control={sendPointsControl} />
-        <TouchableWithoutFeedback accessibilityRole="button" onPress={() => {}}>
+        <TouchableWithoutFeedback accessibilityRole="button" onPress={() => receivePointsControl.open()}>
           <View style={[a.flex_col, a.align_center]}>
             <View style={[styles.circle, a.mb_sm]}>
               <QrCode_Icon size={'md'} />
@@ -70,6 +72,7 @@ export function ProfileHeaderRewardPoints() {
             </Text>
           </View>
         </TouchableWithoutFeedback>
+        <ReceivePointsDialog control={receivePointsControl} />
       </View>
     </View>
   )
