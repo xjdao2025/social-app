@@ -1,26 +1,26 @@
 import React from 'react'
-import {View} from 'react-native'
+import { View } from 'react-native'
 import Animated from 'react-native-reanimated'
-import {msg, plural, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useNavigationState} from '@react-navigation/native'
+import { msg, plural, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useNavigationState } from '@react-navigation/native'
 
-import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
-import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
-import {makeProfileLink} from '#/lib/routes/links'
-import {type CommonNavigatorParams} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
-import {useHomeBadge} from '#/state/home-badge'
-import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
-import {useUnreadNotifications} from '#/state/queries/notifications/unread'
-import {useSession} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {useCloseAllActiveElements} from '#/state/util'
-import {Link} from '#/view/com/util/Link'
-import {Logo} from '#/view/icons/Logo'
-import {Logotype} from '#/view/icons/Logotype'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import { useMinimalShellFooterTransform } from '#/lib/hooks/useMinimalShellTransform'
+import { getCurrentRoute, isTab } from '#/lib/routes/helpers'
+import { makeProfileLink } from '#/lib/routes/links'
+import { AllNavigatorParams, type CommonNavigatorParams } from '#/lib/routes/types'
+import { useGate } from '#/lib/statsig/statsig'
+import { useHomeBadge } from '#/state/home-badge'
+import { useUnreadMessageCount } from '#/state/queries/messages/list-conversations'
+import { useUnreadNotifications } from '#/state/queries/notifications/unread'
+import { useSession } from '#/state/session'
+import { useLoggedOutViewControls } from '#/state/shell/logged-out'
+import { useCloseAllActiveElements } from '#/state/util'
+import { Link } from '#/view/com/util/Link'
+import { Logo } from '#/view/icons/Logo'
+import { Logotype } from '#/view/icons/Logotype'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
@@ -29,8 +29,10 @@ import {
   HomeOpen_Filled_Corner0_Rounded as HomeFilled,
   HomeOpen_Stoke2_Corner0_Rounded as Home,
 } from '#/components/icons/HomeOpen'
-import {MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled} from '#/components/icons/MagnifyingGlass'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
+import {
+  MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled
+} from '#/components/icons/MagnifyingGlass'
+import { MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass } from '#/components/icons/MagnifyingGlass2'
 import {
   Message_Stroke2_Corner0_Rounded as Message,
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
@@ -39,23 +41,24 @@ import {
   UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
   UserCircle_Stroke2_Corner0_Rounded as UserCircle,
 } from '#/components/icons/UserCircle'
-import {Text} from '#/components/Typography'
-import {styles} from './BottomBarStyles'
+import { Text } from '#/components/Typography'
+import { styles } from './BottomBarStyles'
 
-type RouteType = keyof CommonNavigatorParams
+type RouteType = keyof AllNavigatorParams
 
 const hideTabBarRoute: RouteType[] = [
   'PointsRecord',
   'HallDocList',
   'HallNodeList',
+  'MedalsWall'
 ]
 
 export function BottomBarWeb() {
-  const {_} = useLingui()
-  const {hasSession, currentAccount} = useSession()
+  const { _ } = useLingui()
+  const { hasSession, currentAccount } = useSession()
   const t = useTheme()
   const footerMinimalShellTransform = useMinimalShellFooterTransform()
-  const {requestSwitchToAccount} = useLoggedOutViewControls()
+  const { requestSwitchToAccount } = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const iconWidth = 26
 
@@ -66,12 +69,12 @@ export function BottomBarWeb() {
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
-    requestSwitchToAccount({requestedAccount: 'none'})
+    requestSwitchToAccount({ requestedAccount: 'none' })
   }, [requestSwitchToAccount, closeAllActiveElements])
 
   const showCreateAccount = React.useCallback(() => {
     closeAllActiveElements()
-    requestSwitchToAccount({requestedAccount: 'new'})
+    requestSwitchToAccount({ requestedAccount: 'new' })
     // setShowLoggedOut(true)
   }, [requestSwitchToAccount, closeAllActiveElements])
 
@@ -90,15 +93,17 @@ export function BottomBarWeb() {
         t.atoms.bg,
         t.atoms.border_contrast_low,
         footerMinimalShellTransform,
-        hideTabBar && {display: 'none'},
-      ]}>
+        hideTabBar && { display: 'none' },
+      ]}
+    >
       {hasSession ? (
         <>
           <NavItem
             routeName="Home"
             href="/"
-            hasNew={hasHomeBadge && gate('remove_show_latest_button')}>
-            {({isActive}) => {
+            hasNew={hasHomeBadge && gate('remove_show_latest_button')}
+          >
+            {({ isActive }) => {
               const Icon = isActive ? HomeFilled : Home
               return (
                 <Icon
@@ -109,8 +114,11 @@ export function BottomBarWeb() {
               )
             }}
           </NavItem>
-          <NavItem routeName="Hall" href="/hall">
-            {({isActive}) => {
+          <NavItem
+            routeName="Hall"
+            href="/hall"
+          >
+            {({ isActive }) => {
               const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass
               return (
                 <Icon
@@ -150,8 +158,9 @@ export function BottomBarWeb() {
               <NavItem
                 routeName="Notifications"
                 href="/notifications"
-                notificationCount={notificationCountStr}>
-                {({isActive}) => {
+                notificationCount={notificationCountStr}
+              >
+                {({ isActive }) => {
                   const Icon = isActive ? BellFilled : Bell
                   return (
                     <Icon
@@ -167,12 +176,13 @@ export function BottomBarWeb() {
                 href={
                   currentAccount
                     ? makeProfileLink({
-                        did: currentAccount.did,
-                        handle: currentAccount.handle,
-                      })
+                      did: currentAccount.did,
+                      handle: currentAccount.handle,
+                    })
                     : '/'
-                }>
-                {({isActive}) => {
+                }
+              >
+                {({ isActive }) => {
                   const Icon = isActive ? UserCircleFilled : UserCircle
                   return (
                     <Icon
@@ -203,11 +213,15 @@ export function BottomBarWeb() {
               paddingLeft: 14,
               paddingRight: 6,
               gap: 8,
-            }}>
-            <View style={{flexDirection: 'row', alignItems: 'center', gap: 12}}>
+            }}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
               <Logo width={32} />
-              <View style={{paddingTop: 4}}>
-                <Logotype width={80} fill={t.atoms.text.color} />
+              <View style={{ paddingTop: 4 }}>
+                <Logotype
+                  width={80}
+                  fill={t.atoms.text.color}
+                />
               </View>
             </View>
 
@@ -217,7 +231,8 @@ export function BottomBarWeb() {
                 label={_(msg`Create account`)}
                 size="small"
                 variant="solid"
-                color="primary">
+                color="primary"
+              >
                 <ButtonText>
                   <Trans>Create account</Trans>
                 </ButtonText>
@@ -227,7 +242,8 @@ export function BottomBarWeb() {
                 label={_(msg`Sign in`)}
                 size="small"
                 variant="solid"
-                color="secondary">
+                color="secondary"
+              >
                 <ButtonText>
                   <Trans>Sign in</Trans>
                 </ButtonText>
@@ -241,17 +257,17 @@ export function BottomBarWeb() {
 }
 
 const NavItem: React.FC<{
-  children: (props: {isActive: boolean}) => React.ReactChild
+  children: (props: { isActive: boolean }) => React.ReactChild
   href: string
   routeName: string
   hasNew?: boolean
   notificationCount?: string
-}> = ({children, href, routeName, hasNew, notificationCount}) => {
-  const {_} = useLingui()
-  const {currentAccount} = useSession()
+}> = ({ children, href, routeName, hasNew, notificationCount }) => {
+  const { _ } = useLingui()
+  const { currentAccount } = useSession()
   const currentRoute = useNavigationState(state => {
     if (!state) {
-      return {name: 'Home'}
+      return { name: 'Home' }
     }
     return getCurrentRoute(state)
   })
@@ -261,15 +277,15 @@ const NavItem: React.FC<{
     currentRoute.name === 'Profile' &&
     routeName === 'Profile' &&
     (currentRoute.params as CommonNavigatorParams['Profile']).name !==
-      currentAccount?.handle
+    currentAccount?.handle
 
   const isActive =
     currentRoute.name === 'Profile'
       ? isTab(currentRoute.name, routeName) &&
-        (currentRoute.params as CommonNavigatorParams['Profile']).name ===
-          (routeName === 'Profile'
-            ? currentAccount?.handle
-            : (currentRoute.params as CommonNavigatorParams['Profile']).name)
+      (currentRoute.params as CommonNavigatorParams['Profile']).name ===
+      (routeName === 'Profile'
+        ? currentAccount?.handle
+        : (currentRoute.params as CommonNavigatorParams['Profile']).name)
       : isTab(currentRoute.name, routeName)
 
   return (
@@ -279,8 +295,9 @@ const NavItem: React.FC<{
       navigationAction={isOnDifferentProfile ? 'push' : 'navigate'}
       aria-role="link"
       aria-label={routeName}
-      accessible={true}>
-      {children({isActive})}
+      accessible={true}
+    >
+      {children({ isActive })}
       {notificationCount ? (
         <View
           style={[styles.notificationCount, styles.notificationCountWeb]}
@@ -289,7 +306,8 @@ const NavItem: React.FC<{
               one: '# unread item',
               other: '# unread items',
             })}`,
-          )}>
+          )}
+        >
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
       ) : hasNew ? (

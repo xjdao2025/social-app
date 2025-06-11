@@ -36,6 +36,7 @@ export const router = new Router({
   ProfileLabelerLikedBy: '/profile/:name/labeler/liked-by',
 
   PointsRecord: '/profile/points/record',
+  MedalsWall: '/profile/:name/medals',
   // debug
   Debug: '/sys/debug',
   DebugMod: '/sys/debug-mod',

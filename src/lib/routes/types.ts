@@ -61,6 +61,7 @@ export type CommonNavigatorParams = {
   HallNodeList: undefined
   HallDocList: undefined
   PointsRecord: undefined
+  MedalsWall: {name: string}
 
   Hashtag: {tag: string; author?: string}
   Topic: {topic: string}

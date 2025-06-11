@@ -282,7 +282,7 @@ let ProfileHeaderStandard = ({
             </Button>
           </View>
           <ProfileHeaderHandle profile={profile} />
-          <ProfileHeaderMedal />
+          <ProfileHeaderMedal profile={profile} />
         </View>
         {!isPlaceholderProfile && !isBlockedUser && (
           <View style={a.gap_md}>
@@ -312,7 +312,7 @@ let ProfileHeaderStandard = ({
               )}
           </View>
         )}
-        <ProfileHeaderRewardPoints />
+        {isMe && <ProfileHeaderRewardPoints />}
       </View>
       <Prompt.Basic
         control={unblockPromptControl}

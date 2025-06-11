@@ -1,15 +1,13 @@
 import {Pressable, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
-import {useNavigation} from '@react-navigation/native'
-
-import  {type NavigationProp} from '#/lib/routes/types'
 import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import { useGoBack } from "#/lib/hooks/useGoBack";
 
 const PointsRecordScreen = () => {
   const t = useTheme()
-  const navigation = useNavigation<NavigationProp>()
+  const goBack = useGoBack()
 
   return (
     <Layout.Screen testID="PointsRecordScreen">
@@ -17,7 +15,7 @@ const PointsRecordScreen = () => {
         accessibilityRole="button"
         accessibilityIgnoresInvertColors
         style={{position: 'absolute', left: 16, top: 18, zIndex: 1}}
-        onPress={() => navigation.goBack()}>
+        onPress={goBack}>
         <Image
           accessibilityIgnoresInvertColors
           style={{width: 14, height: 12}}
