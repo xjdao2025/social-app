@@ -12,9 +12,10 @@ const defaultDataWith6Colors = [
   require('#/assets/medals/mdal2.png'),
 ];
 
-const SCREEN_WIDTH = Dimensions.get("window").width;
+// const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCALE_RATIO = 240 / 750
 const SCROLL_OFFSET_RATIO = 465 / 750
+const SCREEN_WIDTH = Math.min(600, Dimensions.get("window").width)
 
 const MedalsHeader = () => {
   const t = useTheme()

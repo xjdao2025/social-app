@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native'
 import { Image } from "expo-image";
 import { type AppBskyActorDefs } from '@atproto/api'
-import { msg, Trans } from '@lingui/macro'
+import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
 import * as Toast from '#/view/com/util/Toast'
@@ -78,7 +78,7 @@ function DialogInner({
   return (
     <Dialog.ScrollableInner
       label={_(msg`Receive Points`)}
-      style={[a.overflow_hidden, { marginTop: '50%' }]}
+      style={[a.overflow_hidden, { marginTop: 'calc(50vh - 40px - 170px)' }]}
       header={
         <Dialog.Header
           renderRight={cancelButton}

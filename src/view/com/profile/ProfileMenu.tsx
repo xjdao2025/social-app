@@ -199,7 +199,7 @@ let ProfileMenu = ({
   }, [profile.did])
 
   const onPressSearch = React.useCallback(() => {
-    navigation.navigate('ProfileSearch', {name: profile.handle})
+    navigation.navigate('ProfileSearch', {name: profile.handle}, )
   }, [navigation, profile.handle])
 
   const verificationCreatePromptControl = Prompt.usePromptControl()

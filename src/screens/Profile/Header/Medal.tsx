@@ -22,7 +22,7 @@ export function ProfileHeaderMedal({
   return (
     <TouchableWithoutFeedback
       onPress={() => {
-        navigation.push('MedalsWall', { name: profile.handle })
+        navigation.push('MedalsWall', { name: profile.handle, receiveUser: 'eeee' })
       }}
       testID={'profileModal'}
       accessibilityLabel={''}

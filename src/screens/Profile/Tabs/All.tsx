@@ -5,6 +5,7 @@ import { type AppBskyActorDefs } from "@atproto/api";
 import React, { Ref, useEffect } from "react";
 import { type SectionRef } from "#/screens/Profile/Sections/types";
 import { type ListRef } from '#/view/com/util/List'
+import * as Layout from '#/components/Layout'
 
 type ProfileTabsAllProps = {
   profile: AppBskyActorDefs.ProfileViewDetailed
@@ -21,7 +22,7 @@ export function ProfileTabsAll(props: ProfileTabsAllProps) {
     sectionRef
   } = props;
 
-  return <>
+  return <Layout.Center>
     <SubBar
       items={[{ key: 'all', label: '贴文' }, { key: 'post', label: '回复' }]}
     />
@@ -34,5 +35,5 @@ export function ProfileTabsAll(props: ProfileTabsAllProps) {
       ignoreFilterFor={profile.did}
       setScrollViewTag={setScrollViewTag}
     />
-  </>
+  </Layout.Center>
 }

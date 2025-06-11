@@ -6,41 +6,51 @@ import MedalsHeader from "#/screens/MedalsWall/MedalsHeader";
 import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import { Text } from "#/components/Typography";
+import { useNavigation } from "@react-navigation/native";
+import { useEffect } from "react";
 
 
 const MedalsWallScreen = () => {
   const t = useTheme()
   const goBack = useGoBack()
+  const navigation = useNavigation()
+
+  useEffect(() => {
+    // window.history.replaceState({}, null, '/')
+
+  }, []);
 
   return <Layout.Screen testID="MedalsWallScreen">
-    <Pressable
-      accessibilityRole="button"
-      accessibilityIgnoresInvertColors
-      style={{position: 'absolute', left: 16, top: 18, zIndex: 1}}
-      onPress={goBack}>
-      <Image
+    <Layout.Content contentContainerStyle={[a.pb_0]}>
+      <Pressable
+        accessibilityRole="button"
         accessibilityIgnoresInvertColors
-        style={{width: 14, height: 12}}
-        source={require('#/assets/arrow-left-white.svg')}
-      />
-    </Pressable>
-    <MedalsHeader />
-    <View style={styles.content}>
-      <Text style={[styles.content_title, t.atoms.text_contrast_high]}>勋章</Text>
-      <View style={styles.inner}>
-        {new Array(5).fill(2).map(() => {
-          return <View style={styles.medal_item}>
-            <Image
-              accessibilityIgnoresInvertColors
-              style={{ width: 80, aspectRatio: 1 }}
-              source={require('#/assets/medals/mdal1.png')}
-            />
-            <Text style={[styles.medal_item_title, t.atoms.text_contrast_high]}>珍爱地球</Text>
-            <Text style={[styles.medal_item_time, t.atoms.text_contrast_low]}>2023.08.01 获得</Text>
-          </View>
-        })}
+        style={{position: 'absolute', left: 16, top: 18, zIndex: 1}}
+        onPress={goBack}>
+        <Image
+          accessibilityIgnoresInvertColors
+          style={{width: 14, height: 12}}
+          source={require('#/assets/arrow-left-white.svg')}
+        />
+      </Pressable>
+      <MedalsHeader />
+      <View style={styles.content}>
+        <Text style={[styles.content_title, t.atoms.text_contrast_high]}>勋章</Text>
+        <View style={styles.inner}>
+          {new Array(5).fill(2).map(() => {
+            return <View style={styles.medal_item}>
+              <Image
+                accessibilityIgnoresInvertColors
+                style={{ width: 80, aspectRatio: 1 }}
+                source={require('#/assets/medals/mdal1.png')}
+              />
+              <Text style={[styles.medal_item_title, t.atoms.text_contrast_high]}>珍爱地球</Text>
+              <Text style={[styles.medal_item_time, t.atoms.text_contrast_low]}>2023.08.01 获得</Text>
+            </View>
+          })}
+        </View>
       </View>
-    </View>
+    </Layout.Content>
   </Layout.Screen>
 }
 

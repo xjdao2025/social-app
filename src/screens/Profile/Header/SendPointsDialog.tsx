@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Dimensions, Pressable, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { type AppBskyActorDefs } from '@atproto/api'
-import { msg, Trans } from '@lingui/macro'
+import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
 import { emailRegExp, phoneNumberRegExp } from "#/lib/tools";
@@ -131,7 +131,7 @@ function DialogInner({
   return (
     <Dialog.ScrollableInner
       label={_(msg`Edit profile`)}
-      style={[a.overflow_hidden, { marginTop: '50%' }]}
+      style={[a.overflow_hidden, { marginTop: 'calc(50vh - 40px - 170px)' }]}
       header={
         <Dialog.Header
           renderRight={cancelButton}
@@ -181,16 +181,14 @@ function DialogInner({
               ]}
               label={_(msg`Display name is too long`)}
             >
-              <Trans>
-                请输入正确格式
-              </Trans>
+              请输入正确格式
             </TextField.SuffixText>
           )}
         </View>
 
         <View>
           <TextField.LabelText>
-            <Trans>积分</Trans>
+            积分
           </TextField.LabelText>
           <TextField.Root isInvalid={giftPointsInvalid}>
             <Dialog.Input
@@ -212,9 +210,7 @@ function DialogInner({
               ]}
               label={_(msg`Description is too long`)}
             >
-              <Trans>
-                请输入正确格式
-              </Trans>
+              请输入正确格式
             </TextField.SuffixText>
           )}
         </View>
@@ -238,7 +234,7 @@ function DialogInner({
           testID="editProfileSaveBtn"
         >
           <ButtonText style={[a.text_md]}>
-            <Trans>确认</Trans>
+            确认
           </ButtonText>
         </Button>
       </View>
