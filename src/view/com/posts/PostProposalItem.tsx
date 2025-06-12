@@ -180,10 +180,11 @@ let FeedItemInner = ({
   const {_} = useLingui()
   const [hover, setHover] = useState(false)
 
-  const href = useMemo(() => {
-    const urip = new AtUri(post.uri)
-    return makeProfileLink(post.author, 'post', urip.rkey)
-  }, [post.uri, post.author])
+  // const href = useMemo(() => {
+  //   const urip = new AtUri(post.uri)
+  //   return makeProfileLink(post.author, 'post', urip.rkey)
+  // }, [post.uri, post.author])
+  const href = '/proposal/proposal-id-xx1'
   const {sendInteraction} = useFeedFeedbackContext()
 
   // const onPressReply = () => {
@@ -304,101 +305,7 @@ let FeedItemInner = ({
             )}
           </View>
 
-          <View style={{paddingTop: 12, flexShrink: 1}}>
-            {/* {isReasonFeedSource(reason) ? (
-            <Link href={reason.href}>
-              <Text
-                type="sm-bold"
-                style={pal.textLight}
-                lineHeight={1.2}
-                numberOfLines={1}>
-                <Trans context="from-feed">
-                  From{' '}
-                  <FeedNameText
-                    type="sm-bold"
-                    uri={reason.uri}
-                    href={reason.href}
-                    lineHeight={1.2}
-                    numberOfLines={1}
-                    style={pal.textLight}
-                  />
-                </Trans>
-              </Text>
-            </Link>
-          ) : AppBskyFeedDefs.isReasonRepost(reason) ? (
-            <Link
-              style={styles.includeReason}
-              href={makeProfileLink(reason.by)}
-              title={
-                isOwner
-                  ? _(msg`Reposted by you`)
-                  : _(
-                    msg`Reposted by ${sanitizeDisplayName(
-                      reason.by.displayName || reason.by.handle,
-                    )}`,
-                  )
-              }
-              onBeforePress={onOpenReposter}>
-              <RepostIcon
-                style={{ color: pal.colors.textLight, marginRight: 3 }}
-                width={13}
-                height={13}
-              />
-              <Text
-                type="sm-bold"
-                style={pal.textLight}
-                lineHeight={1.2}
-                numberOfLines={1}>
-                {isOwner ? (
-                  <Trans>Reposted by you</Trans>
-                ) : (
-                  <Trans>
-                    Reposted by{' '}
-                    <ProfileHoverCard inline did={reason.by.did}>
-                      <TextLinkOnWebOnly
-                        type="sm-bold"
-                        style={pal.textLight}
-                        lineHeight={1.2}
-                        numberOfLines={1}
-                        text={
-                          <Text
-                            emoji
-                            type="sm-bold"
-                            style={pal.textLight}
-                            lineHeight={1.2}>
-                            {sanitizeDisplayName(
-                              reason.by.displayName ||
-                              sanitizeHandle(reason.by.handle),
-                              moderation.ui('displayName'),
-                            )}
-                          </Text>
-                        }
-                        href={makeProfileLink(reason.by)}
-                        onBeforePress={onOpenReposter}
-                      />
-                    </ProfileHoverCard>
-                  </Trans>
-                )}
-              </Text>
-            </Link>
-          ) : AppBskyFeedDefs.isReasonPin(reason) ? (
-            <View style={styles.includeReason}>
-              <PinIcon
-                style={{ color: pal.colors.textLight, marginRight: 3 }}
-                width={13}
-                height={13}
-              />
-              <Text
-                type="sm-bold"
-                style={pal.textLight}
-                lineHeight={1.2}
-                numberOfLines={1}>
-                <Trans>Pinned</Trans>
-              </Text>
-            </View>
-          ) : null} */}
-            {/* <Text>123</Text> */}
-          </View>
+          <View style={{paddingTop: 12, flexShrink: 1}} />
         </View>
 
         <View style={styles.layout}>
@@ -435,7 +342,8 @@ let FeedItemInner = ({
                 style={{flex: 1}}
               />
               {isOwner && listDid === currentAccount?.did && (
-                <Pressable accessibilityRole="button"
+                <Pressable
+                  accessibilityRole="button"
                   style={{flex: 0, flexBasis: 22}}
                   onPress={() => delControl.open()}>
                   <Image
@@ -574,14 +482,14 @@ let PostContent = ({
           /> */}
         </View>
       ) : undefined}
-      {limitLines ? (
+      {/* {limitLines ? (
         <TextLink
           text={_(msg`Show More`)}
           style={pal.link}
           onPress={onPressShowMore}
           href="#"
         />
-      ) : undefined}
+      ) : undefined} */}
       {/* {postEmbed ? (
         <View style={[a.pb_xs]}>
           <PostEmbeds

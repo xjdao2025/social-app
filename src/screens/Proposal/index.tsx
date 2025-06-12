@@ -4,7 +4,10 @@ import Animated from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {moderatePost, RichText as RichTextAPI} from '@atproto/api'
 
-import {type CommonNavigatorParams, type NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   fillThreadModerationCache,
@@ -81,7 +84,8 @@ export default function ProposalDetailScreen({route}: Props) {
         </Header.Content>
         <Header.Slot>
           {canDelProposal && (
-            <Pressable accessibilityRole="button"
+            <Pressable
+              accessibilityRole="button"
               onPress={() => {
                 delControl.open()
               }}>
@@ -175,7 +179,8 @@ export default function ProposalDetailScreen({route}: Props) {
                 backgroundImage:
                   'linear-gradient(71deg, #DEF2FE 10.27%, #B5D3FF 28.82%, #D9D7FA 96.02%)',
               },
-            ]} />
+            ]}
+          />
           <VoltResult agree={40} disagree={60} />
         </Animated.ScrollView>
 
@@ -224,6 +229,7 @@ export default function ProposalDetailScreen({route}: Props) {
         onConfirm={async voltFor => {
           console.log('goingt to volt', voltFor)
           Toast.show('投票成功', 'check', 'center')
+          // Toast.show('报错', 'xmark');
         }}
       />
     </Layout.Screen>
