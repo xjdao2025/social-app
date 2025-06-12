@@ -779,6 +779,7 @@ let PostFeed = ({
         const item = slice.items[indexInSlice]
         return (
           <PostProposalItem
+            listDid={feedTab}
             post={item.post}
             record={item.record}
             reason={indexInSlice === 0 ? slice.reason : undefined}

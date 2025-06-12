@@ -212,6 +212,7 @@ export default function HallScreen() {
             // ref={postsSectionRef}
             // feed={`author|did:plc:pc5gxd5my6uooild5drcixdm|posts_and_author_threads`}
             feed={`proposal|all`}
+            // feed={`proposal|all|did:plc:pc5gxd5my6uooild5drcixdm`}
             headerHeight={0}
             isFocused={true}
             contentContainerStyle={{

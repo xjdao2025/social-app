@@ -8,6 +8,8 @@ export const router = new Router({
   HallNodeList: '/hall/nodes',
   HallDocList: '/hall/documents',
 
+  ProposalDetail: '/proposal/:proposalId',
+
   Feeds: '/feeds',
   Notifications: '/notifications',
   NotificationSettings: '/notifications/settings',

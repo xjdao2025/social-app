@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 1,
     borderStyle: 'solid',
-    paddingBlock: 2,
+    paddingBlock: 4,
     paddingInline: 4,
   },
   text: {

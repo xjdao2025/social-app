@@ -1,8 +1,9 @@
 import {memo, useCallback, useMemo, useState} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Pressable, StyleSheet, View} from 'react-native'
+import {Image} from 'expo-image'
 import {
   type AppBskyActorDefs,
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyFeedThreadgate,
   AtUri,
@@ -50,6 +51,7 @@ import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import * as Prompt from '#/components/Prompt'
 import ProposalStatusTag, {ProposalStatus} from '#/components/ProposalStatusTag'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
@@ -76,6 +78,7 @@ interface FeedItemProps {
   hideTopBorder?: boolean
   isParentBlocked?: boolean
   isParentNotFound?: boolean
+  listDid: string
 }
 
 export function PostProposalItem(
@@ -86,6 +89,7 @@ export function PostProposalItem(
   },
 ): React.ReactNode {
   const {
+    listDid,
     post,
     record,
     reason,
@@ -118,6 +122,7 @@ export function PostProposalItem(
   if (richText && moderation) {
     return (
       <FeedItemInner
+        listDid={listDid}
         // Safeguard from clobbering per-post state below:
         key={postShadowed.uri}
         post={postShadowed}
@@ -144,6 +149,7 @@ export function PostProposalItem(
 }
 
 let FeedItemInner = ({
+  listDid,
   post,
   record,
   reason,
@@ -169,9 +175,9 @@ let FeedItemInner = ({
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const {openComposer} = useOpenComposer()
+  const delControl = Prompt.usePromptControl()
   const pal = usePalette('default')
   const {_} = useLingui()
-
   const [hover, setHover] = useState(false)
 
   const href = useMemo(() => {
@@ -180,24 +186,24 @@ let FeedItemInner = ({
   }, [post.uri, post.author])
   const {sendInteraction} = useFeedFeedbackContext()
 
-  const onPressReply = () => {
-    sendInteraction({
-      item: post.uri,
-      event: 'app.bsky.feed.defs#interactionReply',
-      feedContext,
-      reqId,
-    })
-    openComposer({
-      replyTo: {
-        uri: post.uri,
-        cid: post.cid,
-        text: record.text || '',
-        author: post.author,
-        embed: post.embed,
-        moderation,
-      },
-    })
-  }
+  // const onPressReply = () => {
+  //   sendInteraction({
+  //     item: post.uri,
+  //     event: 'app.bsky.feed.defs#interactionReply',
+  //     feedContext,
+  //     reqId,
+  //   })
+  //   openComposer({
+  //     replyTo: {
+  //       uri: post.uri,
+  //       cid: post.cid,
+  //       text: record.text || '',
+  //       author: post.author,
+  //       embed: post.embed,
+  //       moderation,
+  //     },
+  //   })
+  // }
 
   const onOpenAuthor = () => {
     sendInteraction({
@@ -250,9 +256,7 @@ let FeedItemInner = ({
   ]
 
   const {currentAccount} = useSession()
-  const isOwner =
-    AppBskyFeedDefs.isReasonRepost(reason) &&
-    reason.by.did === currentAccount?.did
+  const isOwner = post.author.did === currentAccount?.did
 
   /**
    * If `post[0]` in this slice is the actual root post (not an orphan thread),
@@ -268,39 +272,40 @@ let FeedItemInner = ({
   const {isActive: live} = useActorStatus(post.author)
 
   return (
-    <Link
-      testID={`feedItem-by-${post.author.handle}`}
-      style={outerStyles}
-      href={href}
-      noFeedback
-      accessible={false}
-      onBeforePress={onBeforePress}
-      dataSet={{feedContext}}
-      onPointerEnter={() => {
-        setHover(true)
-      }}
-      onPointerLeave={() => {
-        setHover(false)
-      }}>
-      <SubtleWebHover hover={hover} />
-      <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
-        <View style={{width: 42}}>
-          {isThreadChild && (
-            <View
-              style={[
-                styles.replyLine,
-                {
-                  flexGrow: 1,
-                  backgroundColor: pal.colors.replyLine,
-                  marginBottom: 4,
-                },
-              ]}
-            />
-          )}
-        </View>
+    <>
+      <Link
+        testID={`feedItem-by-${post.author.handle}`}
+        style={outerStyles}
+        href={href}
+        noFeedback
+        accessible={false}
+        onBeforePress={onBeforePress}
+        dataSet={{feedContext}}
+        onPointerEnter={() => {
+          setHover(true)
+        }}
+        onPointerLeave={() => {
+          setHover(false)
+        }}>
+        <SubtleWebHover hover={hover} />
+        <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
+          <View style={{width: 42}}>
+            {isThreadChild && (
+              <View
+                style={[
+                  styles.replyLine,
+                  {
+                    flexGrow: 1,
+                    backgroundColor: pal.colors.replyLine,
+                    marginBottom: 4,
+                  },
+                ]}
+              />
+            )}
+          </View>
 
-        <View style={{paddingTop: 12, flexShrink: 1}}>
-          {/* {isReasonFeedSource(reason) ? (
+          <View style={{paddingTop: 12, flexShrink: 1}}>
+            {/* {isReasonFeedSource(reason) ? (
             <Link href={reason.href}>
               <Text
                 type="sm-bold"
@@ -392,43 +397,56 @@ let FeedItemInner = ({
               </Text>
             </View>
           ) : null} */}
-          {/* <Text>123</Text> */}
+            {/* <Text>123</Text> */}
+          </View>
         </View>
-      </View>
 
-      <View style={styles.layout}>
-        <View style={styles.layoutAvi}>
-          <PreviewableUserAvatar
-            size={42}
-            profile={post.author}
-            moderation={moderation.ui('avatar')}
-            type={post.author.associated?.labeler ? 'labeler' : 'user'}
-            onBeforePress={onOpenAuthor}
-            live={live}
-          />
-          {isThreadParent && (
-            <View
-              style={[
-                styles.replyLine,
-                {
-                  flexGrow: 1,
-                  backgroundColor: pal.colors.replyLine,
-                  marginTop: live ? 8 : 4,
-                },
-              ]}
+        <View style={styles.layout}>
+          <View style={styles.layoutAvi}>
+            <PreviewableUserAvatar
+              size={42}
+              profile={post.author}
+              moderation={moderation.ui('avatar')}
+              type={post.author.associated?.labeler ? 'labeler' : 'user'}
+              onBeforePress={onOpenAuthor}
+              live={live}
             />
-          )}
-        </View>
-        <View style={styles.layoutContent}>
-          <PostMeta
-            author={post.author}
-            moderation={moderation}
-            timestamp={post.indexedAt}
-            postHref={href}
-            onOpenAuthor={onOpenAuthor}
-            style={{width: '80%'}}
-          />
-          {/* {showReplyTo &&
+            {isThreadParent && (
+              <View
+                style={[
+                  styles.replyLine,
+                  {
+                    flexGrow: 1,
+                    backgroundColor: pal.colors.replyLine,
+                    marginTop: live ? 8 : 4,
+                  },
+                ]}
+              />
+            )}
+          </View>
+          <View style={styles.layoutContent}>
+            <View style={[a.flex_row, a.justify_between, a.gap_md]}>
+              <PostMeta
+                author={post.author}
+                moderation={moderation}
+                timestamp={post.indexedAt}
+                postHref={href}
+                onOpenAuthor={onOpenAuthor}
+                style={{flex: 1}}
+              />
+              {isOwner && listDid === currentAccount?.did && (
+                <Pressable accessibilityRole="button"
+                  style={{flex: 0, flexBasis: 22}}
+                  onPress={() => delControl.open()}>
+                  <Image
+                    accessibilityIgnoresInvertColors
+                    style={{width: 18, height: 18}}
+                    source={require('#/assets/dustbin.svg')}
+                  />
+                </Pressable>
+              )}
+            </View>
+            {/* {showReplyTo &&
             (parentAuthor || isParentBlocked || isParentNotFound) && (
               <ReplyToLabel
                 blocked={isParentBlocked}
@@ -436,17 +454,17 @@ let FeedItemInner = ({
                 profile={parentAuthor}
               />
             )} */}
-          <LabelsOnMyPost post={post} />
-          <PostContent
-            moderation={moderation}
-            richText={richText}
-            postEmbed={post.embed}
-            postAuthor={post.author}
-            onOpenEmbed={onOpenEmbed}
-            post={post}
-            threadgateRecord={threadgateRecord}
-          />
-          {/* <PostCtrls
+            <LabelsOnMyPost post={post} />
+            <PostContent
+              moderation={moderation}
+              richText={richText}
+              postEmbed={post.embed}
+              postAuthor={post.author}
+              onOpenEmbed={onOpenEmbed}
+              post={post}
+              threadgateRecord={threadgateRecord}
+            />
+            {/* <PostCtrls
             post={post}
             record={record}
             richText={richText}
@@ -457,9 +475,20 @@ let FeedItemInner = ({
             threadgateRecord={threadgateRecord}
             onShowLess={onShowLess}
           /> */}
+          </View>
         </View>
-      </View>
-    </Link>
+      </Link>
+      <Prompt.Basic
+        control={delControl}
+        title="要删除这则贴文吗？"
+        description="如果你删除这则贴文，则以后将无法恢复。"
+        confirmButtonCta="删除"
+        onConfirm={() => {
+          debugger
+        }}
+        confirmButtonColor="negative"
+      />
+    </>
   )
 }
 FeedItemInner = memo(FeedItemInner)
@@ -553,7 +582,7 @@ let PostContent = ({
           href="#"
         />
       ) : undefined}
-      {postEmbed ? (
+      {/* {postEmbed ? (
         <View style={[a.pb_xs]}>
           <PostEmbeds
             embed={postEmbed}
@@ -562,7 +591,7 @@ let PostContent = ({
             viewContext={PostEmbedViewContext.Feed}
           />
         </View>
-      ) : null}
+      ) : null} */}
     </ContentHider>
   )
 }
@@ -606,7 +635,8 @@ function VoltState({
             style={[
               voltStyles.barInner,
               {backgroundColor: '#1083FE', width: agreePercent},
-            ]} />
+            ]}
+          />
           <View style={[voltStyles.barLabel]}>
             <Text style={[a.text_xs]}>同意</Text>
           </View>
@@ -624,7 +654,8 @@ function VoltState({
             style={[
               voltStyles.barInner,
               {backgroundColor: '#FD615B', width: disagreePercent},
-            ]} />
+            ]}
+          />
           <View style={[voltStyles.barLabel]}>
             <Text style={[a.text_xs]}>反对</Text>
           </View>

@@ -113,8 +113,9 @@ import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import HallScreen from './screens/Hall'
 import HallDocListScreen from './screens/Hall/DocList'
 import HallNodeListScreen from './screens/Hall/NodeList'
-import PointsRecordScreen from './screens/PointsRecord'
 import MedalsWallScreen from './screens/MedalsWall'
+import PointsRecordScreen from './screens/PointsRecord'
+import ProposalDetailScreen from './screens/Proposal'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -511,6 +512,13 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
           requireAuth: false,
         }}
       />
+      <Stack.Screen
+        name="ProposalDetail"
+        getComponent={() => ProposalDetailScreen}
+        options={({route}) => ({
+          title: '提案详情', // title(msg`Post by @${route.params.name}`),
+        })}
+      />
     </>
   )
 }
@@ -658,6 +666,7 @@ function MessagesTabNavigator() {
 }
 
 /**
+ * web 路由入口
  * The FlatNavigator is used by Web to represent the routes
  * in a single ("flat") stack.
  */
