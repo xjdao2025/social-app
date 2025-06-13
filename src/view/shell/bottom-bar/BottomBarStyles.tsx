@@ -17,8 +17,8 @@ export const styles = StyleSheet.create({
   bottomBarWeb: a.fixed,
   ctrl: {
     flex: 1,
-    paddingTop: 13,
-    paddingBottom: 4,
+    paddingTop: 6,
+    paddingBottom: 7,
   },
   notificationCount: {
     position: 'absolute',

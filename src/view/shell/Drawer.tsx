@@ -25,6 +25,9 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {atoms as a, tokens, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import MenuHallSvg from '#/components/DAO/menu.hall'
+import MenuSquareSvg from '#/components/DAO/menu.square'
+import MenuUserCenterSvg from '#/components/DAO/menu.usercenter'
 import {Divider} from '#/components/Divider'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
@@ -148,6 +151,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   const navigation = useNavigation<NavigationProp>()
   const {
     isAtHome,
+    isAtHall,
     isAtSearch,
     isAtFeeds,
     isAtNotifications,
@@ -155,9 +159,6 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
     isAtMessages,
   } = useNavigationTabState()
   const {hasSession, currentAccount} = useSession()
-
-  // events
-  // =
 
   const onPressTab = React.useCallback(
     (tab: string) => {
@@ -187,6 +188,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   )
 
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
+  const onPressHall = React.useCallback(() => onPressTab('Hall'), [onPressTab])
 
   const onPressSearch = React.useCallback(
     () => onPressTab('Search'),
@@ -271,24 +273,27 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
           <>
             <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
             <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
-            <ChatMenuItem isActive={isAtMessages} onPress={onPressMessages} />
-            <NotificationsMenuItem
-              isActive={isAtNotifications}
-              onPress={onPressNotifications}
-            />
-            <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
-            <ListsMenuItem onPress={onPressLists} />
+            <HallMenuItem isActive={isAtHall} onPress={onPressHall} />
+            {/* <ChatMenuItem isActive={isAtMessages} onPress={onPressMessages} /> */}
+
+            {/* <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} /> */}
+            {/* <ListsMenuItem onPress={onPressLists} /> */}
             <ProfileMenuItem
               isActive={isAtMyProfile}
               onPress={onPressProfile}
+            />
+            <NotificationsMenuItem
+              isActive={isAtNotifications}
+              onPress={onPressNotifications}
             />
             <SettingsMenuItem onPress={onPressSettings} />
           </>
         ) : (
           <>
-            <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
-            <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
             <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
+            <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
+            <HallMenuItem isActive={isAtHall} onPress={onPressHall} />
+            {/* <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} /> */}
           </>
         )}
 
@@ -406,11 +411,17 @@ let HomeMenuItem = ({
   return (
     <MenuItem
       icon={
-        isActive ? (
-          <HomeFilled style={[t.atoms.text]} width={iconWidth} />
-        ) : (
-          <Home style={[t.atoms.text]} width={iconWidth} />
-        )
+        <MenuSquareSvg
+          size={20}
+          active={isActive}
+          activeColor="#0B0F14"
+          inactiveColor="#0B0F14"
+        />
+        // isActive ? (
+        //   <HomeFilled style={[t.atoms.text]} width={iconWidth} />
+        // ) : (
+        //   <Home style={[t.atoms.text]} width={iconWidth} />
+        // )
       }
       label={_(msg`Home`)}
       bold={isActive}
@@ -419,6 +430,38 @@ let HomeMenuItem = ({
   )
 }
 HomeMenuItem = React.memo(HomeMenuItem)
+
+let HallMenuItem = ({
+  isActive,
+  onPress,
+}: {
+  isActive: boolean
+  onPress: () => void
+}): React.ReactNode => {
+  const {_} = useLingui()
+  const t = useTheme()
+  return (
+    <MenuItem
+      icon={
+        <MenuHallSvg
+          size={20}
+          active={isActive}
+          activeColor="#0B0F14"
+          inactiveColor="#0B0F14"
+        />
+        // isActive ? (
+        //   <HomeFilled style={[t.atoms.text]} width={iconWidth} />
+        // ) : (
+        //   <Home style={[t.atoms.text]} width={iconWidth} />
+        // )
+      }
+      label="乡建厅"
+      bold={isActive}
+      onPress={onPress}
+    />
+  )
+}
+HallMenuItem = React.memo(HallMenuItem)
 
 let ChatMenuItem = ({
   isActive,
@@ -536,13 +579,14 @@ let ProfileMenuItem = ({
   return (
     <MenuItem
       icon={
-        isActive ? (
-          <UserCircleFilled style={[t.atoms.text]} width={iconWidth} />
-        ) : (
-          <UserCircle style={[t.atoms.text]} width={iconWidth} />
-        )
+        <MenuUserCenterSvg
+          size={20}
+          active={isActive}
+          activeColor="#0B0F14"
+          inactiveColor="#0B0F14"
+        />
       }
-      label={_(msg`Profile`)}
+      label="个人中心"
       onPress={onPress}
     />
   )
