@@ -110,6 +110,7 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import ApplicationsScreen from './screens/Applications'
 import HallScreen from './screens/Hall'
 import HallDocListScreen from './screens/Hall/DocList'
 import HallNodeListScreen from './screens/Hall/NodeList'
@@ -515,6 +516,13 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="ProposalDetail"
         getComponent={() => ProposalDetailScreen}
+        options={({route}) => ({
+          title: '提案详情', // title(msg`Post by @${route.params.name}`),
+        })}
+      />
+      <Stack.Screen
+        name="Applications"
+        getComponent={() => ApplicationsScreen}
         options={({route}) => ({
           title: '提案详情', // title(msg`Post by @${route.params.name}`),
         })}

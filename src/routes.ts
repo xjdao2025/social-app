@@ -10,6 +10,8 @@ export const router = new Router({
 
   ProposalDetail: '/proposal/:proposalId',
 
+  Applications: '/applications',
+
   Feeds: '/feeds',
   Notifications: '/notifications',
   NotificationSettings: '/notifications/settings',

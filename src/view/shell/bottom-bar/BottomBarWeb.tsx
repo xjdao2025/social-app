@@ -152,7 +152,7 @@ export function BottomBarWeb() {
             }}
           </NavItem>
 
-          <NavItem routeName="Notifications" href="/notifications">
+          <NavItem routeName="Applications" href="/applications">
             {({isActive}) => {
               return (
                 <>
