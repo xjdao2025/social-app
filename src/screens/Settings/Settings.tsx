@@ -106,7 +106,7 @@ export function SettingsScreen({}: Props) {
             ]}>
             {profile && <ProfilePreview profile={profile} />}
           </View>
-          {accounts.length > 1 ? (
+          {/* {accounts.length > 1 ? (
             <>
               <SettingsList.PressableItem
                 label={_(msg`Switch account`)}
@@ -158,7 +158,7 @@ export function SettingsScreen({}: Props) {
             </>
           ) : (
             <AddAccountRow />
-          )}
+          )} */}
           <SettingsList.Divider />
           <SettingsList.LinkItem to="/settings/account" label={_(msg`Account`)}>
             <SettingsList.ItemIcon icon={PersonIcon} />
@@ -166,62 +166,7 @@ export function SettingsScreen({}: Props) {
               <Trans>Account</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
-          <SettingsList.LinkItem
-            to="/settings/privacy-and-security"
-            label={_(msg`Privacy and security`)}>
-            <SettingsList.ItemIcon icon={LockIcon} />
-            <SettingsList.ItemText>
-              <Trans>Privacy and security</Trans>
-            </SettingsList.ItemText>
-          </SettingsList.LinkItem>
-          <SettingsList.LinkItem to="/moderation" label={_(msg`Moderation`)}>
-            <SettingsList.ItemIcon icon={HandIcon} />
-            <SettingsList.ItemText>
-              <Trans>Moderation</Trans>
-            </SettingsList.ItemText>
-          </SettingsList.LinkItem>
-          <SettingsList.LinkItem
-            to="/settings/content-and-media"
-            label={_(msg`Content and media`)}>
-            <SettingsList.ItemIcon icon={WindowIcon} />
-            <SettingsList.ItemText>
-              <Trans>Content and media</Trans>
-            </SettingsList.ItemText>
-          </SettingsList.LinkItem>
-          <SettingsList.LinkItem
-            to="/settings/appearance"
-            label={_(msg`Appearance`)}>
-            <SettingsList.ItemIcon icon={PaintRollerIcon} />
-            <SettingsList.ItemText>
-              <Trans>Appearance</Trans>
-            </SettingsList.ItemText>
-          </SettingsList.LinkItem>
-          <SettingsList.LinkItem
-            to="/settings/accessibility"
-            label={_(msg`Accessibility`)}>
-            <SettingsList.ItemIcon icon={AccessibilityIcon} />
-            <SettingsList.ItemText>
-              <Trans>Accessibility</Trans>
-            </SettingsList.ItemText>
-          </SettingsList.LinkItem>
-          <SettingsList.LinkItem
-            to="/settings/language"
-            label={_(msg`Languages`)}>
-            <SettingsList.ItemIcon icon={EarthIcon} />
-            <SettingsList.ItemText>
-              <Trans>Languages</Trans>
-            </SettingsList.ItemText>
-          </SettingsList.LinkItem>
-          <SettingsList.PressableItem
-            onPress={() => Linking.openURL(HELP_DESK_URL)}
-            label={_(msg`Help`)}
-            accessibilityHint={_(msg`Opens helpdesk in browser`)}>
-            <SettingsList.ItemIcon icon={CircleQuestionIcon} />
-            <SettingsList.ItemText>
-              <Trans>Help</Trans>
-            </SettingsList.ItemText>
-            <SettingsList.Chevron />
-          </SettingsList.PressableItem>
+
           <SettingsList.LinkItem to="/settings/about" label={_(msg`About`)}>
             <SettingsList.ItemIcon icon={BubbleInfoIcon} />
             <SettingsList.ItemText>
@@ -240,6 +185,64 @@ export function SettingsScreen({}: Props) {
           {IS_INTERNAL && (
             <>
               <SettingsList.Divider />
+              <SettingsList.LinkItem
+                to="/settings/privacy-and-security"
+                label={_(msg`Privacy and security`)}>
+                <SettingsList.ItemIcon icon={LockIcon} />
+                <SettingsList.ItemText>
+                  <Trans>Privacy and security</Trans>
+                </SettingsList.ItemText>
+              </SettingsList.LinkItem>
+              <SettingsList.LinkItem
+                to="/moderation"
+                label={_(msg`Moderation`)}>
+                <SettingsList.ItemIcon icon={HandIcon} />
+                <SettingsList.ItemText>
+                  <Trans>Moderation</Trans>
+                </SettingsList.ItemText>
+              </SettingsList.LinkItem>
+              <SettingsList.LinkItem
+                to="/settings/content-and-media"
+                label={_(msg`Content and media`)}>
+                <SettingsList.ItemIcon icon={WindowIcon} />
+                <SettingsList.ItemText>
+                  <Trans>Content and media</Trans>
+                </SettingsList.ItemText>
+              </SettingsList.LinkItem>
+              <SettingsList.LinkItem
+                to="/settings/appearance"
+                label={_(msg`Appearance`)}>
+                <SettingsList.ItemIcon icon={PaintRollerIcon} />
+                <SettingsList.ItemText>
+                  <Trans>Appearance</Trans>
+                </SettingsList.ItemText>
+              </SettingsList.LinkItem>
+              <SettingsList.LinkItem
+                to="/settings/accessibility"
+                label={_(msg`Accessibility`)}>
+                <SettingsList.ItemIcon icon={AccessibilityIcon} />
+                <SettingsList.ItemText>
+                  <Trans>Accessibility</Trans>
+                </SettingsList.ItemText>
+              </SettingsList.LinkItem>
+              <SettingsList.LinkItem
+                to="/settings/language"
+                label={_(msg`Languages`)}>
+                <SettingsList.ItemIcon icon={EarthIcon} />
+                <SettingsList.ItemText>
+                  <Trans>Languages</Trans>
+                </SettingsList.ItemText>
+              </SettingsList.LinkItem>
+              <SettingsList.PressableItem
+                onPress={() => Linking.openURL(HELP_DESK_URL)}
+                label={_(msg`Help`)}
+                accessibilityHint={_(msg`Opens helpdesk in browser`)}>
+                <SettingsList.ItemIcon icon={CircleQuestionIcon} />
+                <SettingsList.ItemText>
+                  <Trans>Help</Trans>
+                </SettingsList.ItemText>
+                <SettingsList.Chevron />
+              </SettingsList.PressableItem>
               <SettingsList.PressableItem
                 onPress={() => {
                   if (!reducedMotion) {

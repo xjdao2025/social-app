@@ -2,6 +2,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {IS_INTERNAL} from '#/lib/app-info'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
@@ -133,36 +134,9 @@ export function AccountSettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
-          <SettingsList.PressableItem
-            label={_(msg`Handle`)}
-            accessibilityHint={_(msg`Opens change handle dialog`)}
-            onPress={() => changeHandleControl.open()}>
-            <SettingsList.ItemIcon icon={AtIcon} />
-            <SettingsList.ItemText>
-              <Trans>Handle</Trans>
-            </SettingsList.ItemText>
-            <SettingsList.Chevron />
-          </SettingsList.PressableItem>
+
           <SettingsList.Divider />
-          <SettingsList.PressableItem
-            label={_(msg`Export my data`)}
-            onPress={() => exportCarControl.open()}>
-            <SettingsList.ItemIcon icon={CarIcon} />
-            <SettingsList.ItemText>
-              <Trans>Export my data</Trans>
-            </SettingsList.ItemText>
-            <SettingsList.Chevron />
-          </SettingsList.PressableItem>
-          <SettingsList.PressableItem
-            label={_(msg`Deactivate account`)}
-            onPress={() => deactivateAccountControl.open()}
-            destructive>
-            <SettingsList.ItemIcon icon={FreezeIcon} />
-            <SettingsList.ItemText>
-              <Trans>Deactivate account</Trans>
-            </SettingsList.ItemText>
-            <SettingsList.Chevron />
-          </SettingsList.PressableItem>
+
           <SettingsList.PressableItem
             label={_(msg`Delete account`)}
             onPress={() => openModal({name: 'delete-account'})}
@@ -173,6 +147,40 @@ export function AccountSettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
+          {IS_INTERNAL && (
+            <>
+              <SettingsList.Divider />
+              <SettingsList.PressableItem
+                label={_(msg`Handle`)}
+                accessibilityHint={_(msg`Opens change handle dialog`)}
+                onPress={() => changeHandleControl.open()}>
+                <SettingsList.ItemIcon icon={AtIcon} />
+                <SettingsList.ItemText>
+                  <Trans>Handle</Trans>
+                </SettingsList.ItemText>
+                <SettingsList.Chevron />
+              </SettingsList.PressableItem>
+              <SettingsList.PressableItem
+                label={_(msg`Export my data`)}
+                onPress={() => exportCarControl.open()}>
+                <SettingsList.ItemIcon icon={CarIcon} />
+                <SettingsList.ItemText>
+                  <Trans>Export my data</Trans>
+                </SettingsList.ItemText>
+                <SettingsList.Chevron />
+              </SettingsList.PressableItem>
+              <SettingsList.PressableItem
+                label={_(msg`Deactivate account`)}
+                onPress={() => deactivateAccountControl.open()}
+                destructive>
+                <SettingsList.ItemIcon icon={FreezeIcon} />
+                <SettingsList.ItemText>
+                  <Trans>Deactivate account</Trans>
+                </SettingsList.ItemText>
+                <SettingsList.Chevron />
+              </SettingsList.PressableItem>
+            </>
+          )}
         </SettingsList.Container>
       </Layout.Content>
 

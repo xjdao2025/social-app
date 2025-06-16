@@ -32,7 +32,7 @@ export function AboutSettingsScreen({}: Props) {
   const {_, i18n} = useLingui()
   const [devModeEnabled, setDevModeEnabled] = useDevMode()
   const [demoModeEnabled, setDemoModeEnabled] = useDemoMode()
-  const stableID = useMemo(() => Statsig.getStableID(), [])
+  // const stableID = useMemo(() => Statsig.getStableID(), [])
 
   const {mutate: onClearImageCache, isPending: isClearingImageCache} =
     useMutation({
@@ -146,7 +146,7 @@ export function AboutSettingsScreen({}: Props) {
             }}
             onPress={() => {
               setStringAsync(
-                `Build version: ${appVersion}; Bundle info: ${bundleInfo}; Bundle date: ${BUNDLE_DATE}; Platform: ${Platform.OS}; Platform version: ${Platform.Version}; Anonymous ID: ${stableID}`,
+                `Build version: ${appVersion}; Bundle info: ${bundleInfo}; Bundle date: ${BUNDLE_DATE}; Platform: ${Platform.OS}; Platform version: ${Platform.Version};`, //  Anonymous ID: ${stableID}
               )
               Toast.show(_(msg`Copied build version to clipboard`))
             }}>
