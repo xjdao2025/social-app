@@ -1,10 +1,11 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {useAnimatedRef} from 'react-native-reanimated'
+import Animated, {useAnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
+import {type ProposalStatus} from '#/state/queries/post-feed'
 import {HomeHeaderLayoutMobile} from '#/view/com/home/HomeHeaderLayoutMobile'
 import {type ListRef} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
@@ -12,9 +13,10 @@ import * as Layout from '#/components/Layout'
 import ProposalFormModal from '#/components/ProposalForm'
 import {Text} from '#/components/Typography'
 import {ProfileFeedSection} from '../Profile/Sections/Feed'
+import {type SectionRef} from '../Profile/Sections/types'
 import NodeInfo from './components/NodeInfo'
 
-const proposalStageOptions = [
+const proposalStageOptions: Array<{key: ProposalStatus; label: string}> = [
   {key: 'all', label: '全部'},
   {key: 'inprogress', label: '审核中'},
   {key: 'pass', label: '通过'},
@@ -47,6 +49,8 @@ export default function HallScreen() {
   }, [])
 
   const scrollElRef = useAnimatedRef()
+
+  const postsSectionRef = useRef<SectionRef>(null)
 
   return (
     <Layout.Screen testID="hallScreen">
@@ -192,6 +196,7 @@ export default function HallScreen() {
                     ]}
                     onClick={() => {
                       setTabKey(key)
+                      postsSectionRef.current?.scrollToTop()
                     }}>
                     <Text
                       style={[
@@ -209,10 +214,10 @@ export default function HallScreen() {
           </View>
 
           <ProfileFeedSection
-            // ref={postsSectionRef}
+            ref={postsSectionRef}
             // feed={`author|did:plc:pc5gxd5my6uooild5drcixdm|posts_and_author_threads`}
-            feed={`proposal|all`}
-            // feed={`proposal|all|did:plc:pc5gxd5my6uooild5drcixdm`}
+            feed={`proposal|${currentTabKey}`}
+            // feed={`proposal|${currentTabKey}|did:plc:pc5gxd5my6uooild5drcixdm`}
             headerHeight={0}
             isFocused={true}
             contentContainerStyle={{
