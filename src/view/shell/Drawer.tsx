@@ -26,6 +26,9 @@ import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {atoms as a, tokens, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import MenuHallSvg from '#/components/DAO/menu.hall'
+import MenuNotificationsSvg from '#/components/DAO/menu.notifications'
+import MenuSearchSvg from '#/components/DAO/menu.search'
+import MenuSettingsSvg from '#/components/DAO/menu.settings'
 import MenuSquareSvg from '#/components/DAO/menu.square'
 import MenuUserCenterSvg from '#/components/DAO/menu.usercenter'
 import {Divider} from '#/components/Divider'
@@ -58,7 +61,7 @@ import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 
-const iconWidth = 26
+const iconWidth = 20
 
 let DrawerProfileCard = ({
   account,
@@ -385,11 +388,12 @@ let SearchMenuItem = ({
   return (
     <MenuItem
       icon={
-        isActive ? (
-          <MagnifyingGlassFilled style={[t.atoms.text]} width={iconWidth} />
-        ) : (
-          <MagnifyingGlass style={[t.atoms.text]} width={iconWidth} />
-        )
+        // isActive ? (
+        //   <MagnifyingGlassFilled style={[t.atoms.text]} width={iconWidth} />
+        // ) : (
+        //   <MagnifyingGlass style={[t.atoms.text]} width={iconWidth} />
+        // )
+        <MenuSearchSvg size={iconWidth} />
       }
       label={_(msg`Explore`)}
       bold={isActive}
@@ -412,7 +416,7 @@ let HomeMenuItem = ({
     <MenuItem
       icon={
         <MenuSquareSvg
-          size={20}
+          size={iconWidth}
           active={isActive}
           activeColor="#0B0F14"
           inactiveColor="#0B0F14"
@@ -444,7 +448,7 @@ let HallMenuItem = ({
     <MenuItem
       icon={
         <MenuHallSvg
-          size={20}
+          size={iconWidth}
           active={isActive}
           activeColor="#0B0F14"
           inactiveColor="#0B0F14"
@@ -502,11 +506,12 @@ let NotificationsMenuItem = ({
   return (
     <MenuItem
       icon={
-        isActive ? (
-          <BellFilled style={[t.atoms.text]} width={iconWidth} />
-        ) : (
-          <Bell style={[t.atoms.text]} width={iconWidth} />
-        )
+        <MenuNotificationsSvg size={iconWidth} />
+        // isActive ? (
+        //   <BellFilled style={[t.atoms.text]} width={iconWidth} />
+        // ) : (
+        //   <Bell style={[t.atoms.text]} width={iconWidth} />
+        // )
       }
       label={_(msg`Notifications`)}
       accessibilityHint={
@@ -580,7 +585,7 @@ let ProfileMenuItem = ({
     <MenuItem
       icon={
         <MenuUserCenterSvg
-          size={20}
+          size={iconWidth}
           active={isActive}
           activeColor="#0B0F14"
           inactiveColor="#0B0F14"
@@ -598,7 +603,7 @@ let SettingsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
   const t = useTheme()
   return (
     <MenuItem
-      icon={<Settings style={[t.atoms.text]} width={iconWidth} />}
+      icon={<MenuSettingsSvg size={iconWidth} />}
       label={_(msg`Settings`)}
       onPress={onPress}
     />
