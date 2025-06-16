@@ -1,56 +1,73 @@
 import { Pressable, StyleSheet, View } from "react-native";
 import { Image } from "expo-image";
 
-import { useGoBack } from "#/lib/hooks/useGoBack";
 import MedalsHeader from "#/screens/MedalsWall/MedalsHeader";
-import {atoms as a, useTheme} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf'
 import * as Layout from '#/components/Layout'
 import { Text } from "#/components/Typography";
-import { useNavigation } from "@react-navigation/native";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 
 const MedalsWallScreen = () => {
   const t = useTheme()
-  const goBack = useGoBack()
-  const navigation = useNavigation()
+  const {gtMobile} = useBreakpoints()
+  const contentRef = useRef<HTMLDivElement | undefined>(undefined);
+  const [headerOpacity, setHeaderOpacity] = useState(0)
 
   useEffect(() => {
-    // window.history.replaceState({}, null, '/')
+    const f = () => {
+      const top = contentRef.current?.getBoundingClientRect().top
+      setHeaderOpacity(top === 44 ? 1 : 0)
+    }
+    window.addEventListener('scroll', f)
+    return () => {
+      window.removeEventListener('scroll', f)
+    }
 
   }, []);
 
   return <Layout.Screen testID="MedalsWallScreen">
-    <Layout.Content contentContainerStyle={[a.pb_0]}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityIgnoresInvertColors
-        style={{position: 'absolute', left: 16, top: 18, zIndex: 1}}
-        onPress={goBack}>
-        <Image
-          accessibilityIgnoresInvertColors
-          style={{width: 14, height: 12}}
-          source={require('#/assets/arrow-left-white.svg')}
-        />
-      </Pressable>
+    <View
+      style={[
+        a.w_full,
+        a.mx_auto,
+        gtMobile && {
+          maxWidth: 600,
+        },
+      ]}
+    >
+      <View style={{height: 285 + 48}} />
       <MedalsHeader />
       <View style={styles.content}>
-        <Text style={[styles.content_title, t.atoms.text_contrast_high]}>勋章</Text>
-        <View style={styles.inner}>
-          {new Array(5).fill(2).map(() => {
-            return <View style={styles.medal_item}>
-              <Image
-                accessibilityIgnoresInvertColors
-                style={{ width: 80, aspectRatio: 1 }}
-                source={require('#/assets/medals/mdal1.png')}
-              />
-              <Text style={[styles.medal_item_title, t.atoms.text_contrast_high]}>珍爱地球</Text>
-              <Text style={[styles.medal_item_time, t.atoms.text_contrast_low]}>2023.08.01 获得</Text>
-            </View>
-          })}
+        <View
+          style={[
+            styles.content_top_wrap,
+            a.sticky,
+            { backgroundColor: `rgba(53,53,68, ${headerOpacity})` },
+          ]}
+          ref={contentRef}
+        >
+          <View style={[styles.content_top]}>
+            <Text style={[styles.content_title, t.atoms.text_contrast_high]}>勋章</Text>
+          </View>
+        </View>
+        <View style={styles.content_inner}>
+          <View style={styles.inner}>
+            {new Array(5).fill(2).map(() => {
+              return <View style={styles.medal_item}>
+                <Image
+                  accessibilityIgnoresInvertColors
+                  style={{ width: 80, aspectRatio: 1 }}
+                  source={require('#/assets/medals/mdal1.png')}
+                />
+                <Text style={[styles.medal_item_title, t.atoms.text_contrast_high]}>珍爱地球</Text>
+                <Text style={[styles.medal_item_time, t.atoms.text_contrast_low]}>2023.08.01 获得</Text>
+              </View>
+            })}
+          </View>
         </View>
       </View>
-    </Layout.Content>
+    </View>
   </Layout.Screen>
 }
 
@@ -58,12 +75,23 @@ export default MedalsWallScreen;
 
 const styles = StyleSheet.create({
   content: {
+    marginTop: -48,
+  },
+  content_top_wrap: {
+    top: 44,
+    zIndex: 100,
+  },
+  content_top: {
     backgroundColor: '#F1F3F5',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    marginTop: -48,
-    minHeight: 'calc(100vh - 285px)',
+  },
+  content_inner: {
+    backgroundColor: '#F1F3F5',
     paddingInline: 16,
+    position: 'relative',
+    // minHeight: 'calc(100vh - 285px - 48px)',
+    minHeight: '100vh'
   },
   content_title: {
     fontSize: 16,
