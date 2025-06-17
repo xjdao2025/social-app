@@ -8,17 +8,17 @@ const config = {
   /** 缩进尺寸 */
   indentSize: 2,
   /** API 命名空间前缀，用于 declare namespace {typeNameSpace} {} */
-  typeNameSpace: 'APIMintpad',
+  typeNameSpace: 'APIDao',
   /** 所有服务所在的文件夹 */
   rootFolderPath: path.resolve(__dirname, '..', 'src', 'server'),
   /** 当前服务的文件夹名称 */
-  serviceFolderName: 'mintpad',
+  serviceFolderName: 'dao',
   /** 服务在代码中的变量名称 */
-  serviceVariableName: 'mintpad',
+  serviceVariableName: 'dao',
   /** 加载swagger json */
   async loadJSON() {
-    // https://bescard.rivtower.cc/devops/swagger/index.html
-    const res = await axios.get('https://bescard.rivtower.cc/devops/swagger/v1/swagger.json', {});
+    // https://xiangjiandao.rivtower.cc/devops/swagger/index.html#/
+    const res = await axios.get('https://xiangjiandao.rivtower.cc/devops/swagger/v1/swagger.%7Bjson%7Cyaml%7D', {});
     return res.data;
   },
   /** 用于过滤接口或者对接口的返回进行一定的修改 */
@@ -52,60 +52,15 @@ const config = {
   /** 可以在这里修改schema以符合前端代码真是的需求 */
   beforeRenderSchema(schema) {
     const buildEnum = buildEnumHOF(schema);
-    buildEnum("DobStatus", () => {
-      schema.enumVariableName = "EVENT_STATUS";
-      schema.enums = [
-        // { value: 0, name: "UNKNOWN" },
-        { value: 1, name: "COMING_SOON" },
-        { value: 2, name: "OPEN" },
-        { value: 3, name: "CLOSED" },
-      ]
-    });
-    buildEnum("CurrencyType", () => {
-      schema.enumVariableName = "CURRENCY_TYPE";
-      schema.enums = [
-        // { value: 0, name: "UNKNOWN" },
-        { value: 1, name: "USDT" },
-        { value: 2, name: "USDC" },
-        { value: 3, name: "USDI" },
-      ]
-    });
-
-    buildEnum("DobType", () => {
-      schema.enumVariableName = "EVENT_TYPE";
-      schema.enums = [
-        // { value: 0, name: "UNKNOWN" },
-        { value: 1, name: "DOB" },
-        { value: 2, name: "DOB_SERIES" },
-        { value: 3, name: "BLIND_BOX" },
-      ]
-    });
-
-    buildEnum("DataType", () => {
-      schema.enumVariableName = "IMAGE_FORMAT_TYPE";
-      schema.enums = [
-        { value: 0, name: "UNKNOWN" },
-        { value: 1, name: "BASE64" },
-        { value: 2, name: "URL" },
-        { value: 3, name: "JSON_RESOURCE_TYPE" },
-        { value: 4, name: "DOB0" },
-        // { value: 99, name: "OSS_FILE_ID" },
-      ]
-    });
-
-    buildEnum("OrderStatus", () => {
-      schema.enumVariableName = "ORDER_STATUS";
-      schema.enums = [
-        // { value: 0, name: "UNKNOWN" },
-        { value: 1, name: "UNSIGNED" },
-        { value: 2, name: "PROCESSING" },
-        { value: 3, name: "COMPLETE" },
-        { value: 4, name: "FAILED" },
-        { value: 5, name: "SIGN_TIMEOUT" },
-        { value: 6, name: "CANCELED" },
-        // { value: 99, name: "OSS_FILE_ID" },
-      ]
-    });
+    // buildEnum("DobStatus", () => {
+    //   schema.enumVariableName = "EVENT_STATUS";
+    //   schema.enums = [
+    //     // { value: 0, name: "UNKNOWN" },
+    //     { value: 1, name: "COMING_SOON" },
+    //     { value: 2, name: "OPEN" },
+    //     { value: 3, name: "CLOSED" },
+    //   ]
+    // });
   },
 };
 export default config;

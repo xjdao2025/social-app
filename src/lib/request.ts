@@ -4,11 +4,10 @@ import axios, {type AxiosRequestConfig, type AxiosResponse} from 'axios'
 import {throttle} from 'lodash'
 
 import {clearStorage, get} from '#/state/persisted'
-import {BSKY_SERVICE} from './constants'
+import {BSKY_SERVICE, DAO_SERVICE} from './constants'
 
 // const isServer = typeof window === "undefined";
-// todo 确认API接口配置
-export const SERVER = BSKY_SERVICE
+export const SERVER = DAO_SERVICE
 
 function getToken() {
   const session = get('session')

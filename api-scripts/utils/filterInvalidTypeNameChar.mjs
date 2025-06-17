@@ -4,5 +4,8 @@ export default function filterInvalidTypeNameChar(name) {
     if (name !== outputName) {
         console.log('filterInvalidTypeNameChar: 修正带有异常字符的类型名称:', name, '->', outputName);
     }
+    if(outputName.startsWith("Xiangjiandao")) {
+        return outputName.replace(/^Xiangjiandao/, "");
+    }
     return outputName;
 }
