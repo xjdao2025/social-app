@@ -1,5 +1,5 @@
 import React from 'react'
-import {ActivityIndicator, StyleSheet} from 'react-native'
+import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
@@ -38,6 +38,7 @@ import {FollowingEndOfFeed} from '#/view/com/posts/FollowingEndOfFeed'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
 import * as Layout from '#/components/Layout'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
+import {Text} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
 export function HomeScreen(props: Props) {
@@ -297,18 +298,19 @@ function HomeScreenReady({
             )
           }
           const savedFeedConfig = feedInfo.savedFeed
-          return (
-            <FeedPage
-              key={feed}
-              testID="customFeedPage"
-              isPageFocused={maybeSelectedFeed === feed}
-              isPageAdjacent={Math.abs(selectedIndex - index) === 1}
-              feed={feed}
-              renderEmptyState={renderCustomFeedEmptyState}
-              savedFeedConfig={savedFeedConfig}
-              feedInfo={feedInfo}
-            />
+          return (null
+            // <FeedPage
+            //   key={feed}
+            //   testID="customFeedPage"
+            //   isPageFocused={maybeSelectedFeed === feed}
+            //   isPageAdjacent={Math.abs(selectedIndex - index) === 1}
+            //   feed={feed}
+            //   renderEmptyState={renderCustomFeedEmptyState}
+            //   savedFeedConfig={savedFeedConfig}
+            //   feedInfo={feedInfo}
+            // />
           )
+          // return null
         })
       ) : (
         <NoFeedsPinned preferences={preferences} />

@@ -29,6 +29,7 @@ import {FAB} from '../util/fab/FAB'
 import {type ListMethods} from '../util/List'
 import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '../util/MainScrollProvider'
+import { Image } from "expo-image";
 
 const POLL_FREQ = 60e3 // 60sec
 
@@ -60,7 +61,8 @@ export function FeedPage({
   const {openComposer} = useOpenComposer()
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
   const setMinimalShellMode = useSetMinimalShellMode()
-  const headerOffset = useHeaderOffset()
+  const headerOffset = 300
+
   const feedFeedback = useFeedFeedback(feed, hasSession)
   const scrollElRef = React.useRef<ListMethods>(null)
   const [hasNew, setHasNew] = React.useState(false)
@@ -161,7 +163,11 @@ export function FeedPage({
         <FAB
           testID="composeFAB"
           onPress={onPressCompose}
-          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+          icon={<Image
+            source={require('#/assets/plus.svg')}
+            accessibilityIgnoresInvertColors
+            style={{ width: 60, aspectRatio: 1 }}
+          />}
           accessibilityRole="button"
           accessibilityLabel={_(msg({message: `New post`, context: 'action'}))}
           accessibilityHint=""

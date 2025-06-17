@@ -15,6 +15,7 @@ export interface TabBarProps {
 
   onSelect?: (index: number) => void
   onPressSelected?: (index: number) => void
+  position?: 'center' | 'left'
 }
 
 // How much of the previous/next item we're showing
@@ -27,6 +28,7 @@ export function TabBar({
   items,
   onSelect,
   onPressSelected,
+  position = 'center'
 }: TabBarProps) {
   const t = useTheme()
   const scrollElRef = useRef<ScrollView>(null)
@@ -117,10 +119,15 @@ export function TabBar({
                   testID={testID ? `${testID}-${item}` : undefined}
                   style={[
                     styles.itemText,
-                    selected ? t.atoms.text : t.atoms.text_contrast_medium,
-                    a.text_md,
-                    a.font_bold,
-                    {lineHeight: 20},
+                    selected ? [
+                      t.atoms.text,
+                      a.text_xl,
+                      a.font_bold
+                    ] : [
+                      a.text_md,
+                      { color: '#6F869F' }
+                    ],
+                    {lineHeight: 28},
                   ]}>
                   {item}
                   <View
@@ -137,7 +144,7 @@ export function TabBar({
           )
         })}
       </DraggableScrollView>
-      <View style={[t.atoms.border_contrast_low, styles.outerBottomBorder]} />
+      <View style={[styles.outerBottomBorder]} />
     </View>
   )
 }
@@ -192,13 +199,11 @@ const mobileStyles = StyleSheet.create({
   contentContainer: {
     flexGrow: 1,
     backgroundColor: 'transparent',
-    paddingHorizontal: 6,
+    paddingHorizontal: 16,
+    gap: 32,
   },
   item: {
-    flexGrow: 1,
-    alignItems: 'stretch',
     paddingTop: 10,
-    paddingHorizontal: 10,
     justifyContent: 'center',
   },
   itemInner: {
@@ -208,7 +213,7 @@ const mobileStyles = StyleSheet.create({
   },
   itemText: {
     textAlign: 'center',
-    paddingBottom: 10 + 3,
+    paddingBottom: 5,
   },
   itemIndicator: {
     position: 'absolute',
@@ -225,5 +230,6 @@ const mobileStyles = StyleSheet.create({
     right: 0,
     top: '100%',
     borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: '#D4DBE2'
   },
 })
