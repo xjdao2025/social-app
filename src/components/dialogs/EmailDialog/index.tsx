@@ -59,9 +59,9 @@ function Inner({control}: {control: StatefulControl<Screen>}) {
     case ScreenID.Verify: {
       return <Verify config={screen} showScreen={showScreen} />
     }
-    // case ScreenID.VerificationReminder: {
-    //   return <VerificationReminder config={screen} showScreen={showScreen} />
-    // }
+    case ScreenID.VerificationReminder: {
+      return <VerificationReminder config={screen} showScreen={showScreen} />
+    }
     case ScreenID.Manage2FA: {
       return <Manage2FA config={screen} showScreen={showScreen} />
     }

@@ -802,12 +802,12 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
   function onReady() {
     prevLoggedRouteName.current = getCurrentRouteName()
-    if (currentAccount && shouldRequestEmailConfirmation(currentAccount)) {
-      emailDialogControl.open({
-        id: EmailDialogScreenID.VerificationReminder,
-      })
-      snoozeEmailConfirmationPrompt()
-    }
+    // if (currentAccount && shouldRequestEmailConfirmation(currentAccount)) {
+    //   emailDialogControl.open({
+    //     id: EmailDialogScreenID.VerificationReminder,
+    //   })
+    //   snoozeEmailConfirmationPrompt()
+    // }
   }
 
   return (

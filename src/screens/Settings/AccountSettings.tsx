@@ -8,6 +8,8 @@ import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
+import SettingsPhoneSvg from '#/components/DAO/settings.phone'
+import SettingsUpdatePhoneSvg from '#/components/DAO/settings.phone-update'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {
@@ -24,6 +26,7 @@ import {PencilLine_Stroke2_Corner2_Rounded as PencilIcon} from '#/components/ico
 import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
 import {Trash_Stroke2_Corner2_Rounded} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
+import {Text} from '#/components/Typography'
 import {ChangeHandleDialog} from './components/ChangeHandleDialog'
 import {DeactivateAccountDialog} from './components/DeactivateAccountDialog'
 import {ExportCarDialog} from './components/ExportCarDialog'
@@ -114,6 +117,38 @@ export function AccountSettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
+
+          <SettingsList.Item>
+            <SettingsList.ItemIcon icon={SettingsPhoneSvg} size="lg" />
+            {/* Tricky flexbox situation here: we want the email to truncate, but by default it will make the "Email" text wrap instead.
+                For numberOfLines to work, we need flex: 1 on the BadgeText, but that means it goes to width: 50% because the
+                ItemText is also flex: 1. So we need to set flex: 0 on the ItemText to prevent it from growing, but if we did that everywhere
+                it wouldn't push the BadgeText/Chevron/whatever to the right.
+                TODO: find a general solution for this. workaround in this case is to set the ItemText to flex: 1 and BadgeText to flex: 0 -sfn */}
+            <SettingsList.ItemText style={[a.flex_0]}>
+              手机号
+            </SettingsList.ItemText>
+            {currentAccount && (
+              <>
+                <SettingsList.BadgeText style={[a.flex_1]}>
+                  {'130 0000 0000' || <Trans>(no email)</Trans>}
+                </SettingsList.BadgeText>
+              </>
+            )}
+          </SettingsList.Item>
+
+          <SettingsList.PressableItem
+            label="更新手机号"
+            onPress={() =>
+              emailDialogControl.open({
+                id: EmailDialogScreenID.Update,
+              })
+            }>
+            <SettingsList.ItemIcon icon={SettingsUpdatePhoneSvg} size="lg" />
+            <SettingsList.ItemText>更新手机号</SettingsList.ItemText>
+            <SettingsList.Chevron />
+          </SettingsList.PressableItem>
+
           <SettingsList.Divider />
           <SettingsList.Item>
             <SettingsList.ItemIcon icon={BirthdayCakeIcon} />
