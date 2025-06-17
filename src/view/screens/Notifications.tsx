@@ -122,14 +122,14 @@ export function NotificationsScreen({}: Props) {
   return (
     <Layout.Screen testID="notificationsScreen">
       <Layout.Header.Outer noBottomBorder sticky={false}>
-        <Layout.Header.MenuButton />
+        <Layout.Header.BackButton />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
             <Trans>Notifications</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
         <Layout.Header.Slot>
-          <Link
+          {/* <Link
             to="/notifications/settings"
             label={_(msg`Notification settings`)}
             size="small"
@@ -138,7 +138,7 @@ export function NotificationsScreen({}: Props) {
             shape="round"
             style={[a.justify_center]}>
             <ButtonIcon icon={isLoading ? Loader : SettingsIcon} size="lg" />
-          </Link>
+          </Link> */}
         </Layout.Header.Slot>
       </Layout.Header.Outer>
       <Pager

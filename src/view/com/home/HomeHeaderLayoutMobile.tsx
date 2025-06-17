@@ -1,6 +1,6 @@
-import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
 import Animated, {type AnimatedStyle} from 'react-native-reanimated'
-import {msg} from '@lingui/macro'
+import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type React from 'react'
 
@@ -8,15 +8,22 @@ import {HITSLOP_10} from '#/lib/constants'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
 import {useMinimalShellHeaderTransform} from '#/lib/hooks/useMinimalShellTransform'
+import {colors} from '#/lib/styles'
 import {emitSoftReset} from '#/state/events'
+import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {ButtonIcon} from '#/components/Button'
+import {
+  Bell_Filled_Corner0_Rounded as BellFilled,
+  Bell_Stroke2_Corner0_Rounded as Bell,
+} from '#/components/icons/Bell'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
+import {Text} from '#/components/Typography'
 
 export function HomeHeaderLayoutMobile({
   children,
@@ -34,7 +41,7 @@ export function HomeHeaderLayoutMobile({
   const headerMinimalShellTransform = useMinimalShellHeaderTransform()
   const {hasSession} = useSession()
   const playHaptic = useHaptics()
-
+  const notificationCount = useUnreadNotifications()
   return (
     <Animated.View
       style={[
@@ -77,20 +84,27 @@ export function HomeHeaderLayoutMobile({
           {hasSession && (
             <Link
               testID="viewHeaderHomeFeedPrefsBtn"
-              to="/feeds"
+              to="/notifications"
               hitSlop={HITSLOP_10}
-              label={_(msg`View your feeds and explore more`)}
-              size="small"
+              label="通知"
+              // size="large"
               variant={!transparent ? 'ghost' : undefined}
               color="secondary"
-              shape="square"
-              style={[
-                a.justify_center,
-                {
-                  marginRight: -Layout.BUTTON_VISUAL_ALIGNMENT_OFFSET,
-                },
-              ]}>
-              <ButtonIcon icon={FeedsIcon} size="lg" />
+              // shape="square"
+              style={[a.justify_end, styles.ctrl]}>
+              <ButtonIcon icon={Bell} size="lg" color="#42576C" />
+              {notificationCount ? (
+                <View
+                  style={[styles.dotBadge]}
+                  aria-label={_(
+                    msg`${plural(notificationCount, {
+                      one: '# unread item',
+                      other: '# unread items',
+                    })}`,
+                  )}>
+                  {/* <Text style={styles.notificationCountLabel}>{notificationCount}</Text> */}
+                </View>
+              ) : null}
             </Link>
           )}
         </Layout.Header.Slot>
@@ -99,3 +113,22 @@ export function HomeHeaderLayoutMobile({
     </Animated.View>
   )
 }
+
+export const styles = StyleSheet.create({
+  ctrl: {
+    // flex: 1,
+    // paddingTop: 6,
+    // paddingBottom: 7,
+    marginRight: -Layout.BUTTON_VISUAL_ALIGNMENT_OFFSET,
+  },
+  dotBadge: {
+    position: 'absolute',
+    top: -6,
+    right: -3,
+    width: 6,
+    height: 6,
+    borderRadius: '50%',
+    backgroundColor: '#F66455',
+    zIndex: 1,
+  },
+})

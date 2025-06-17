@@ -21,6 +21,8 @@ export function useUpdateProfileVerificationCache() {
         const {data: updated} = await agent.getProfile({
           actor: profile.did ?? '',
         })
+        // todo 转发一个到己方服务
+
         updateProfileShadow(qc, profile.did, {
           verification: updated.verification,
         })

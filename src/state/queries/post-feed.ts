@@ -24,6 +24,7 @@ import {HomeFeedAPI} from '#/lib/api/feed/home'
 import {LikesFeedAPI} from '#/lib/api/feed/likes'
 import {ListFeedAPI} from '#/lib/api/feed/list'
 import {MergeFeedAPI} from '#/lib/api/feed/merge'
+import {ProposalFeedAPI} from '#/lib/api/feed/proposal'
 import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {FeedTuner, type FeedTunerFn} from '#/lib/api/feed-manip'
@@ -504,9 +505,14 @@ function createApi({
     return new ListFeedAPI({agent, feedParams: {list}})
   } else if (feedDesc === 'demo') {
     return new DemoFeedAPI({agent})
-  }
-  // todo add proposal api
-  else {
+  } else if (feedDesc.startsWith('proposal')) {
+    // 提案接口
+    const [_, proposalState, userDid] = feedDesc.split('|')
+    return new ProposalFeedAPI({
+      agent,
+      params: {state: proposalState as ProposalStatus, did: userDid},
+    })
+  } else {
     // shouldnt happen
     return new FollowingFeedAPI({agent})
   }

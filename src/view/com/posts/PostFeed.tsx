@@ -673,7 +673,7 @@ let PostFeed = ({
 
   const renderItem = React.useCallback(
     ({item: row, index: rowIndex}: ListRenderItemInfo<FeedRow>) => {
-      console.log('row:', row)
+      // console.log('row:', row)
       if (row.type === 'empty') {
         return renderEmptyState()
       } else if (row.type === 'error') {

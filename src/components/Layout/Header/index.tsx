@@ -172,7 +172,7 @@ export function MenuButton({transparent}: {transparent?: boolean}) {
         onPress={onPress}
         hitSlop={HITSLOP_30}
         style={[{marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET}]}>
-        <ButtonIcon icon={Menu} size="lg" />
+        <ButtonIcon icon={Menu} size="lg" color="#42576C" />
       </Button>
     </Slot>
   )

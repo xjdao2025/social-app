@@ -765,10 +765,12 @@ export function ButtonIcon({
   icon: Comp,
   position,
   size,
+  color,
 }: {
   icon: React.ComponentType<SVGIconProps>
   position?: 'left' | 'right'
   size?: SVGIconProps['size']
+  color?: string
 }) {
   const {size: buttonSize, disabled} = useButtonContext()
   const textStyles = useSharedButtonTextStyles()
@@ -850,7 +852,7 @@ export function ButtonIcon({
           width={iconSize}
           style={[
             {
-              color: textStyles.color,
+              color: color || textStyles.color,
               pointerEvents: 'none',
             },
           ]}
