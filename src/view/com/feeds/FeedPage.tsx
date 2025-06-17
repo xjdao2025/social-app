@@ -61,7 +61,8 @@ export function FeedPage({
   const {openComposer} = useOpenComposer()
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
   const setMinimalShellMode = useSetMinimalShellMode()
-  const headerOffset = 300
+  const hookHeaderOffset = useHeaderOffset()
+  const headerOffset = hookHeaderOffset !== 0 ? 300 : hookHeaderOffset
 
   const feedFeedback = useFeedFeedback(feed, hasSession)
   const scrollElRef = React.useRef<ListMethods>(null)

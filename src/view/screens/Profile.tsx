@@ -48,6 +48,7 @@ import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
 import {navigate} from '#/Navigation'
 import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
 import { ProfileTabsAll } from "#/screens/Profile/Tabs/All";
+import SubBar from "#/screens/Profile/Tabs/SubBar";
 
 interface SectionRef {
   scrollToTop: () => void
@@ -215,65 +216,26 @@ function ProfileScreenLoaded({
   const listCount = (profile.associated?.lists || 0) - starterPackCount
   const showListsTab = hasSession && (isMe || listCount > 0)
 
-  const sectionTitles = [
-    // showFiltersTab ? _(msg`Labels`) : undefined,
-    // showListsTab && hasLabeler ? _(msg`Lists`) : undefined,
-    showPostsTab ? _(msg`Posts`) : undefined,
-    showRepliesTab ? _(msg`Replies`) : undefined,
-    showMediaTab ? _(msg`Media`) : undefined,
-    showVideosTab ? _(msg`Videos`) : undefined,
-    showLikesTab ? _(msg`Likes`) : undefined,
-  ].filter(Boolean) as string[]
-
-  let nextIndex = 0
-  let filtersIndex: number | null = null
-  let postsIndex: number | null = null
-  let repliesIndex: number | null = null
-  let mediaIndex: number | null = null
-  let videosIndex: number | null = null
-  let likesIndex: number | null = null
-  // if (showFiltersTab) {
-  //   filtersIndex = nextIndex++
-  // }
-  if (showPostsTab) {
-    postsIndex = nextIndex++
-  }
-  if (showRepliesTab) {
-    repliesIndex = nextIndex++
-  }
-  if (showMediaTab) {
-    mediaIndex = nextIndex++
-  }
-  if (showVideosTab) {
-    videosIndex = nextIndex++
-  }
-  if (showLikesTab) {
-    likesIndex = nextIndex++
-  }
+  const sectionTitles = ['全部','任务','商品','活动','提案']
 
   const scrollSectionToTop = useCallback(
     (index: number) => {
-      if (index === filtersIndex) {
-        labelsSectionRef.current?.scrollToTop()
-      } else if (index === postsIndex) {
-        postsSectionRef.current?.scrollToTop()
-      } else if (index === repliesIndex) {
-        repliesSectionRef.current?.scrollToTop()
-      } else if (index === mediaIndex) {
-        mediaSectionRef.current?.scrollToTop()
-      } else if (index === videosIndex) {
-        videosSectionRef.current?.scrollToTop()
-      } else if (index === likesIndex) {
-        likesSectionRef.current?.scrollToTop()
-      }
+      // if (index === filtersIndex) {
+      //   labelsSectionRef.current?.scrollToTop()
+      // } else if (index === postsIndex) {
+      //   postsSectionRef.current?.scrollToTop()
+      // } else if (index === repliesIndex) {
+      //   repliesSectionRef.current?.scrollToTop()
+      // } else if (index === mediaIndex) {
+      //   mediaSectionRef.current?.scrollToTop()
+      // } else if (index === videosIndex) {
+      //   videosSectionRef.current?.scrollToTop()
+      // } else if (index === likesIndex) {
+      //   likesSectionRef.current?.scrollToTop()
+      // }
     },
     [
-      filtersIndex,
-      postsIndex,
-      repliesIndex,
-      mediaIndex,
-      videosIndex,
-      likesIndex,
+
     ],
   )
 
@@ -343,104 +305,27 @@ function ProfileScreenLoaded({
         onCurrentPageSelected={onCurrentPageSelected}
         renderHeader={renderHeader}
         allowHeaderOverScroll>
-        {/*{showFiltersTab*/}
-        {/*  ? ({headerHeight, isFocused, scrollElRef}) => (*/}
-        {/*      <ProfileLabelsSection*/}
-        {/*        ref={labelsSectionRef}*/}
-        {/*        labelerInfo={labelerInfo}*/}
-        {/*        labelerError={labelerError}*/}
-        {/*        isLabelerLoading={isLabelerLoading}*/}
-        {/*        moderationOpts={moderationOpts}*/}
-        {/*        scrollElRef={scrollElRef as ListRef}*/}
-        {/*        headerHeight={headerHeight}*/}
-        {/*        isFocused={isFocused}*/}
-        {/*        setScrollViewTag={setScrollViewTag}*/}
-        {/*      />*/}
-        {/*    )*/}
-        {/*  : null}*/}
-        {/*{showListsTab && !!profile.associated?.labeler*/}
-        {/*  ? ({headerHeight, isFocused, scrollElRef}) => (*/}
-        {/*      <ProfileLists*/}
-        {/*        ref={listsSectionRef}*/}
-        {/*        did={profile.did}*/}
-        {/*        scrollElRef={scrollElRef as ListRef}*/}
-        {/*        headerOffset={headerHeight}*/}
-        {/*        enabled={isFocused}*/}
-        {/*        setScrollViewTag={setScrollViewTag}*/}
-        {/*      />*/}
-        {/*    )*/}
-        {/*  : null}*/}
-        {showPostsTab
+        {currentPage === 0
           ? ({headerHeight, isFocused, scrollElRef}) => (
-              // <ProfileFeedSection
-              //   ref={postsSectionRef}
-              //   feed={`author|${profile.did}|posts_and_author_threads`}
-              //   headerHeight={headerHeight}
-              //   isFocused={isFocused}
-              //   scrollElRef={scrollElRef as ListRef}
-              //   ignoreFilterFor={profile.did}
-              //   setScrollViewTag={setScrollViewTag}
-              // />
-            <ProfileTabsAll
-              sectionRef={postsSectionRef}
-              profile={profile}
-              headerHeight={headerHeight}
-              isFocused={isFocused}
-              scrollElRef={scrollElRef}
-              setScrollViewTag={setScrollViewTag}
-            />
-            )
-          : null}
-        {showRepliesTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
+            <SubBar
+              items={[{
+                key: `author|${profile.did}|posts_and_author_threads`, label: '贴文' },
+                { key: `author|${profile.did}|posts_with_replies`, label: '回复' },
+                { key: `author|${profile.did}|posts_with_media`, label: '媒体' },
+                { key: `author|${profile.did}|posts_with_video`, label: '视频' },
+                { key: `likes|${profile.did}`, label: '喜欢' },
+              ]}
+            >
               <ProfileFeedSection
-                ref={repliesSectionRef}
-                feed={`author|${profile.did}|posts_with_replies`}
+                ref={postsSectionRef}
+                feed={`author|${profile.did}|posts_and_author_threads`}
                 headerHeight={headerHeight}
                 isFocused={isFocused}
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
               />
-            )
-          : null}
-        {showMediaTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileFeedSection
-                ref={mediaSectionRef}
-                feed={`author|${profile.did}|posts_with_media`}
-                headerHeight={headerHeight}
-                isFocused={isFocused}
-                scrollElRef={scrollElRef as ListRef}
-                ignoreFilterFor={profile.did}
-                setScrollViewTag={setScrollViewTag}
-              />
-            )
-          : null}
-        {showVideosTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileFeedSection
-                ref={videosSectionRef}
-                feed={`author|${profile.did}|posts_with_video`}
-                headerHeight={headerHeight}
-                isFocused={isFocused}
-                scrollElRef={scrollElRef as ListRef}
-                ignoreFilterFor={profile.did}
-                setScrollViewTag={setScrollViewTag}
-              />
-            )
-          : null}
-        {showLikesTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileFeedSection
-                ref={likesSectionRef}
-                feed={`likes|${profile.did}`}
-                headerHeight={headerHeight}
-                isFocused={isFocused}
-                scrollElRef={scrollElRef as ListRef}
-                ignoreFilterFor={profile.did}
-                setScrollViewTag={setScrollViewTag}
-              />
+            </SubBar>
             )
           : null}
         {showListsTab && !profile.associated?.labeler
@@ -456,16 +341,6 @@ function ProfileScreenLoaded({
             )
           : null}
       </PagerWithHeader>
-      {hasSession && (
-        <FAB
-          testID="composeFAB"
-          onPress={onPressCompose}
-          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`New post`)}
-          accessibilityHint=""
-        />
-      )}
     </ScreenHider>
   )
 }

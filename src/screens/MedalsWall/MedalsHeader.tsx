@@ -1,7 +1,7 @@
 import { Dimensions, Pressable, StyleSheet, View } from "react-native";
 import { Image } from "expo-image";
 
-import { atoms as a, useTheme } from "#/alf";
+import { atoms as a, useBreakpoints, useTheme } from "#/alf";
 import { Text } from "#/components/Typography";
 import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
@@ -21,19 +21,22 @@ const SCREEN_WIDTH = Math.min(600, Dimensions.get("window").width)
 const MedalsHeader = () => {
   const t = useTheme()
   const goBack = useGoBack()
+  const {gtMobile} = useBreakpoints()
   const ref = useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
+
+  const screenWidth = gtMobile ? 600 : Dimensions.get('window').width
 
   return <>
     <View style={[
       a.fixed,
       a.top_0,
-      a.left_0,
-      a.right_0,
       a.z_10,
-      { height: 44, overflow: 'hidden' },
+      { width: screenWidth, height: 44, overflow: 'hidden' },
     ]}>
-      <View style={[styles.container, styles.bgColor, a.pl_lg, { paddingTop: 18 }]}>
+      <View
+        style={[styles.container, styles.bgColor, a.pl_lg, { paddingTop: 18 }]}
+      >
         <Pressable
           accessibilityRole="button"
           accessibilityIgnoresInvertColors
@@ -52,7 +55,13 @@ const MedalsHeader = () => {
         source={require('#/assets/medals/light.png')}
       />
     </View>
-    <View style={[styles.container, styles.bgColor, a.fixed]}>
+    <View
+      style={[
+        styles.container,
+        styles.bgColor,
+        a.fixed,
+        { width: screenWidth }
+      ]}>
       <Image
         accessibilityIgnoresInvertColors
         style={[{ width: 263, height: 253 }, styles.topBg]}
@@ -79,43 +88,43 @@ const MedalsHeader = () => {
         />
       </View>
       <Text style={[styles.new_get, a.text_xs, a.mt_md, a.mb_sm]}>最新获得</Text>
-      <View style={styles.empty}>
-        <Image
-          accessibilityIgnoresInvertColors
-          style={{ width: 60, aspectRatio: 1 }}
-          source={require('#/assets/medals/question.svg')}
-        />
-        <Text style={styles.emptyText}>待获得</Text>
-      </View>
+      {/*<View style={styles.empty}>*/}
+      {/*  <Image*/}
+      {/*    accessibilityIgnoresInvertColors*/}
+      {/*    style={{ width: 60, aspectRatio: 1 }}*/}
+      {/*    source={require('#/assets/medals/question.svg')}*/}
+      {/*  />*/}
+      {/*  <Text style={styles.emptyText}>待获得</Text>*/}
+      {/*</View>*/}
 
-        {/*<Carousel*/}
-        {/*  ref={ref}*/}
-        {/*  data={defaultDataWith6Colors}*/}
-        {/*  height={165}*/}
-        {/*  loop={false}*/}
-        {/*  pagingEnabled={true}*/}
-        {/*  snapEnabled={true}*/}
-        {/*  width={SCREEN_WIDTH}*/}
-        {/*  mode="parallax"*/}
-        {/*  onProgressChange={progress}*/}
-        {/*  modeConfig={{*/}
-        {/*    parallaxScrollingOffset: SCROLL_OFFSET_RATIO * SCREEN_WIDTH,*/}
-        {/*    parallaxAdjacentItemScale: 0.15,*/}
-        {/*    parallaxScrollingScale: SCALE_RATIO*/}
-        {/*  }}*/}
-        {/*  renderItem={({ item, index }) => {*/}
-        {/*    const currentIndex = ref.current?.getCurrentIndex()*/}
-        {/*    return <View*/}
-        {/*      style={[styles.swiper]}>*/}
-        {/*      <Image*/}
-        {/*        accessibilityIgnoresInvertColors*/}
-        {/*        style={{ width: '100%', aspectRatio: 1 }}*/}
-        {/*        source={item}*/}
-        {/*      />*/}
-        {/*      {index === currentIndex && <Text style={styles.swiper_text}>珍爱地球</Text>}*/}
-        {/*    </View>*/}
-        {/*  }}*/}
-        {/*/>*/}
+        <Carousel
+          ref={ref}
+          data={defaultDataWith6Colors}
+          height={165}
+          loop={false}
+          pagingEnabled={true}
+          snapEnabled={true}
+          width={SCREEN_WIDTH}
+          mode="parallax"
+          onProgressChange={progress}
+          modeConfig={{
+            parallaxScrollingOffset: SCROLL_OFFSET_RATIO * screenWidth,
+            parallaxAdjacentItemScale: 0.15,
+            parallaxScrollingScale: SCALE_RATIO
+          }}
+          renderItem={({ item, index }) => {
+            const currentIndex = ref.current?.getCurrentIndex()
+            return <View
+              style={[styles.swiper]}>
+              <Image
+                accessibilityIgnoresInvertColors
+                style={{ width: '100%', aspectRatio: 1 }}
+                source={item}
+              />
+              {index === currentIndex && <Text style={styles.swiper_text}>珍爱地球</Text>}
+            </View>
+          }}
+        />
     </View>
   </>;
 }
@@ -128,8 +137,6 @@ const styles = StyleSheet.create({
   },
   container: {
     height: 285 + 48,
-    left: 0,
-    right: 0,
     top: 0,
   },
   topBg: {

@@ -10,7 +10,7 @@ import {HomeHeaderLayout} from './HomeHeaderLayout'
 import { Text } from "#/components/Typography";
 import { Dimensions, View } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
-import {atoms as a, useTheme} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf'
 
 const defaultDataWith6Colors = [
   "#B0604D",
@@ -31,6 +31,7 @@ export function HomeHeader(
   const {feeds} = props
   const {hasSession} = useSession()
   const navigation = useNavigation<NavigationProp>()
+  const {gtMobile} = useBreakpoints()
 
   const hasPinnedCustom = React.useMemo<boolean>(() => {
     if (!hasSession) return false
@@ -64,25 +65,27 @@ export function HomeHeader(
     [items.length, props, hasPinnedCustom],
   )
 
+  const screenWidth = gtMobile ? 600 : Dimensions.get('window').width
+
   return (
     <HomeHeaderLayout tabBarAnchor={props.tabBarAnchor}>
       <Carousel
         testID={"banner"}
         loop={true}
-        width={Dimensions.get("window").width}
+        width={screenWidth}
         height={200}
         snapEnabled={true}
         pagingEnabled={true}
         autoPlayInterval={1000}
         autoPlay={false}
         data={defaultDataWith6Colors}
-        style={{ width: "100%" }}
+        style={{ width: screenWidth }}
         onConfigurePanGesture={(g: { enabled: (arg0: boolean) => any }) => {
           "worklet";
           g.enabled(false);
         }}
         renderItem={({index}) => {
-          return <View style={[{backgroundColor: ''}, a.h_full]}>
+          return <View style={[{backgroundColor: 'red'}, a.h_full]}>
             <Text>{index}</Text>
           </View>
         }}

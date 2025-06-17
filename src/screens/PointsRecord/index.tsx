@@ -11,91 +11,93 @@ const PointsRecordScreen = () => {
 
   return (
     <Layout.Screen testID="PointsRecordScreen">
-      <Pressable
-        accessibilityRole="button"
-        accessibilityIgnoresInvertColors
-        style={{position: 'absolute', left: 16, top: 18, zIndex: 1}}
-        onPress={goBack}>
-        <Image
+      <Layout.Center>
+        <Pressable
+          accessibilityRole="button"
           accessibilityIgnoresInvertColors
-          style={{width: 14, height: 12}}
-          source={require('#/assets/arrow-left.svg')}
-        />
-      </Pressable>
-      <View style={[styles.headContainer, a.pb_lg]}>
-        <View style={styles.linearBg}>
-          <View style={styles.headImage}>
-            <Image
-              accessibilityIgnoresInvertColors
-              style={{width: 224, height: 224}}
-              source={require('#/assets/hall/node-list.bg.png')}
-            />
+          style={{position: 'absolute', left: 16, top: 18, zIndex: 1}}
+          onPress={goBack}>
+          <Image
+            accessibilityIgnoresInvertColors
+            style={{width: 14, height: 12}}
+            source={require('#/assets/arrow-left.svg')}
+          />
+        </Pressable>
+        <View style={[styles.headContainer, a.pb_lg]}>
+          <View style={styles.linearBg}>
+            <View style={styles.headImage}>
+              <Image
+                accessibilityIgnoresInvertColors
+                style={{width: 224, height: 224}}
+                source={require('#/assets/hall/node-list.bg.png')}
+              />
+            </View>
           </View>
-        </View>
-        <View style={[styles.headPlaceholder, a.mb_lg]} />
-        <View style={[a.px_lg]}>
-          <Text style={[t.atoms.text_contrast_low, a.text_sm]}>我的积分</Text>
-        </View>
-        <View style={[a.px_lg, a.mt_md]}>
-          <Text
-            style={[t.atoms.text, a.text_4xl, a.text_family_ddin, a.font_bold]}>
-            1,820
-          </Text>
-        </View>
-      </View>
-      <View style={styles.card}>
-        <Text style={[{fontWeight: 500, color: '#0B0F14'}]}>明细</Text>
-        <View
-          style={[
-            a.flex_row,
-            a.justify_between,
-            a.px_lg,
-            a.align_center,
-            styles.item,
-          ]}>
-          <View style={[a.flex_col, a.justify_between, a.gap_sm]}>
-            <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_high]}>
-              发帖名字
+          <View style={[styles.headPlaceholder, a.mb_lg]} />
+          <View style={[a.px_lg]}>
+            <Text style={[t.atoms.text_contrast_low, a.text_sm]}>我的积分</Text>
+          </View>
+          <View style={[a.px_lg, a.mt_md]}>
+            <Text
+              style={[t.atoms.text, a.text_4xl, a.text_family_ddin, a.font_bold]}>
+              1,820
             </Text>
-            <Text style={[t.atoms.text_contrast_high]}>发帖奖励</Text>
-            <Text style={[t.atoms.text_contrast_low]}>2024-10-18 12:00:00</Text>
           </View>
-          <Text
-            style={[
-              a.text_md,
-              a.text_family_ddin,
-              a.font_bold,
-              {color: '#F66455'},
-            ]}>
-            +10
-          </Text>
         </View>
-        <View
-          style={[
-            a.flex_row,
-            a.justify_between,
-            a.px_lg,
-            a.align_center,
-            styles.item,
-          ]}>
-          <View style={[a.flex_col, a.justify_between, a.gap_sm]}>
-            <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_high]}>
-              发帖名字
+        <View style={styles.card}>
+          <Text style={[{fontWeight: 500, color: '#0B0F14'}]}>明细</Text>
+          <View
+            style={[
+              a.flex_row,
+              a.justify_between,
+              a.px_lg,
+              a.align_center,
+              styles.item,
+            ]}>
+            <View style={[a.flex_col, a.justify_between, a.gap_sm]}>
+              <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_high]}>
+                发帖名字
+              </Text>
+              <Text style={[t.atoms.text_contrast_high]}>发帖奖励</Text>
+              <Text style={[t.atoms.text_contrast_low]}>2024-10-18 12:00:00</Text>
+            </View>
+            <Text
+              style={[
+                a.text_md,
+                a.text_family_ddin,
+                a.font_bold,
+                {color: '#F66455'},
+              ]}>
+              +10
             </Text>
-            <Text style={[t.atoms.text_contrast_high]}>发帖奖励</Text>
-            <Text style={[t.atoms.text_contrast_low]}>2024-10-18 12:00:00</Text>
           </View>
-          <Text
+          <View
             style={[
-              a.text_md,
-              a.text_family_ddin,
-              a.font_bold,
-              {color: '#F66455'},
+              a.flex_row,
+              a.justify_between,
+              a.px_lg,
+              a.align_center,
+              styles.item,
             ]}>
-            +10
-          </Text>
+            <View style={[a.flex_col, a.justify_between, a.gap_sm]}>
+              <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_high]}>
+                发帖名字
+              </Text>
+              <Text style={[t.atoms.text_contrast_high]}>发帖奖励</Text>
+              <Text style={[t.atoms.text_contrast_low]}>2024-10-18 12:00:00</Text>
+            </View>
+            <Text
+              style={[
+                a.text_md,
+                a.text_family_ddin,
+                a.font_bold,
+                {color: '#F66455'},
+              ]}>
+              +10
+            </Text>
+          </View>
         </View>
-      </View>
+      </Layout.Center>
     </Layout.Screen>
   )
 }

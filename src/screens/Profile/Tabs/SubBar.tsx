@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
+import React, { PropsWithChildren, useEffect, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import {atoms as a, useTheme} from '#/alf'
 import { Text } from "#/components/Typography";
+import * as Layout from '#/components/Layout'
 
-const SubBar = (props: {
+type SubBarProps = {
   items: {key: string, label: string}[],
-}) => {
+}
+
+const SubBar = (props: PropsWithChildren<SubBarProps>) => {
   const { items } = props;
   const [activeTab, setActiveTab] = useState('');
 
@@ -14,29 +17,37 @@ const SubBar = (props: {
     setActiveTab(items[0].key)
   }, [items]);
 
-  return <View style={styles.wrap}>
-    {items.map(tab => {
-      return <Pressable
-        key={tab.key}
-        onPress={() => setActiveTab(tab.key)}
-        accessibilityLabel={tab.label}
-        accessibilityHint=""
-      >
-        <View
-          style={[
-            styles.tabItem,
-            activeTab === tab.key && styles.activeTab,
-          ]}
+  return <Layout.Center>
+    <View style={styles.wrap}>
+      {items.map(tab => {
+        return <Pressable
+          key={tab.key}
+          onPress={() => setActiveTab(tab.key)}
+          accessibilityLabel={tab.label}
+          accessibilityHint=""
         >
-          <Text
+          <View
             style={[
-              styles.tabText ,
-              activeTab === tab.key && styles.activeTabText,
-            ]}>{tab.label}</Text>
-        </View>
-      </Pressable>
-    })}
-  </View>
+              styles.tabItem,
+              activeTab === tab.key && styles.activeTab,
+            ]}
+          >
+            <Text
+              style={[
+                styles.tabText ,
+                activeTab === tab.key && styles.activeTabText,
+              ]}>{tab.label}</Text>
+          </View>
+        </Pressable>
+      })}
+    </View>
+    {React.Children.map(props.children, (child, i) => (
+      React.cloneElement(child, {
+        // @ts-ignore
+        feed: activeTab,
+      })
+    ))}
+  </Layout.Center>
 }
 
 export default SubBar;

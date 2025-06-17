@@ -15,7 +15,6 @@ export interface TabBarProps {
 
   onSelect?: (index: number) => void
   onPressSelected?: (index: number) => void
-  position?: 'center' | 'left'
 }
 
 // How much of the previous/next item we're showing
@@ -28,7 +27,6 @@ export function TabBar({
   items,
   onSelect,
   onPressSelected,
-  position = 'center'
 }: TabBarProps) {
   const t = useTheme()
   const scrollElRef = useRef<ScrollView>(null)
@@ -189,6 +187,7 @@ const desktopStyles = StyleSheet.create({
     right: 0,
     top: '100%',
     borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: '#D4DBE2'
   },
 })
 
