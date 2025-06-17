@@ -86,16 +86,18 @@ export async function requestAPI(url: string, config: RequestConfig) {
       },
     })
   } catch (e: any) {
+    const resData = e.response?.data
     response = {
       data: {
-        code: e.status,
-        message: e.message,
+        code: resData?.code ?? e.status,
+        message: resData?.message ?? e.message,
         data: null,
       },
     }
   }
 
   if (response?.data?.code === 401) {
+    console.log('trigger 401')
     throttleLogout()
   }
 
