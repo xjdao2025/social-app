@@ -19,11 +19,13 @@ import {getInitialState, reducer} from './reducer'
 export {isSignupQueued} from './util'
 import {addSessionDebugLog} from './logging'
 export type {SessionAccount} from '#/state/session/types'
+import {isEmail, isPhoneNumber} from '#/lib/validator'
 import {logger} from '#/logger'
 import {
   type SessionApiContext,
   type SessionStateContext,
 } from '#/state/session/types'
+import server from '#/server'
 
 const StateContext = React.createContext<SessionStateContext>({
   accounts: [],
@@ -67,6 +69,32 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [],
   )
 
+  const resumeSession = React.useCallback<SessionApiContext['resumeSession']>(
+    async storedAccount => {
+      addSessionDebugLog({
+        type: 'method:start',
+        method: 'resumeSession',
+        account: storedAccount,
+      })
+      const signal = cancelPendingTask()
+      const {agent, account} = await createAgentAndResume(
+        storedAccount,
+        onAgentSessionChange,
+      )
+
+      if (signal.aborted) {
+        return
+      }
+      dispatch({
+        type: 'switched-to-account',
+        newAgent: agent,
+        newAccount: account,
+      })
+      addSessionDebugLog({type: 'method:end', method: 'resumeSession', account})
+    },
+    [onAgentSessionChange, cancelPendingTask],
+  )
+  /** deprecated */
   const createAccount = React.useCallback<SessionApiContext['createAccount']>(
     async (params, metrics) => {
       addSessionDebugLog({type: 'method:start', method: 'createAccount'})
@@ -93,29 +121,66 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const login = React.useCallback<SessionApiContext['login']>(
     async (params, logContext) => {
-      addSessionDebugLog({type: 'method:start', method: 'login'})
-      const signal = cancelPendingTask()
-      const {agent, account} = await createAgentAndLogin(
-        params,
-        onAgentSessionChange,
+      const identifier = params.identifier
+      const accountType = isPhoneNumber(identifier) ? 2 : 1
+      const loginRes = await server.dao(
+        'POST /user/login',
+        {
+          phone: isPhoneNumber(identifier) ? identifier : '',
+          email: isEmail(identifier) ? identifier : '',
+          password: params.password,
+          domainName: '',
+          loginType: accountType,
+        },
+        {getWholeBizData: true},
       )
-
-      if (signal.aborted) {
-        return
+      if (!loginRes.data) {
+        throw new Error(loginRes.message)
       }
-      dispatch({
-        type: 'switched-to-account',
-        newAgent: agent,
-        newAccount: account,
-      })
-      logger.metric(
-        'account:loggedIn',
-        {logContext, withPassword: true},
-        {statsig: true},
+      const daoToken = loginRes.data?.token
+      const bskyToken = loginRes.data?.blueSkyToken
+
+      const userInfoRes = await server.dao(
+        'POST /user/login-user-detail',
+        undefined,
+        {getWholeBizData: true, headers: {Authorization: daoToken}},
       )
-      addSessionDebugLog({type: 'method:end', method: 'login', account})
+      if (!userInfoRes.data) {
+        throw new Error(userInfoRes.message)
+      }
+      const userInfo = userInfoRes.data
+      const fakeAccount: persisted.PersistedAccount = {
+        accessJwt: bskyToken,
+        daoJwt: daoToken,
+        did: userInfo?.did!,
+        handle: userInfo?.domainName!, // "zhengzhou.web5.rivtower.cc",
+        service: params.service, // "https://web5.rivtower.cc/"
+      }
+
+      resumeSession(fakeAccount)
+      // addSessionDebugLog({type: 'method:start', method: 'login'})
+      // const signal = cancelPendingTask()
+      // const {agent, account} = await createAgentAndLogin(
+      //   params,
+      //   onAgentSessionChange,
+      // )
+
+      // if (signal.aborted) {
+      //   return
+      // }
+      // dispatch({
+      //   type: 'switched-to-account',
+      //   newAgent: agent,
+      //   newAccount: account,
+      // })
+      // logger.metric(
+      //   'account:loggedIn',
+      //   {logContext, withPassword: true},
+      //   {statsig: true},
+      // )
+      // addSessionDebugLog({type: 'method:end', method: 'login', account})
     },
-    [onAgentSessionChange, cancelPendingTask],
+    [resumeSession],
   )
 
   const logoutCurrentAccount = React.useCallback<
@@ -154,32 +219,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       addSessionDebugLog({type: 'method:end', method: 'logout'})
     },
     [cancelPendingTask],
-  )
-
-  const resumeSession = React.useCallback<SessionApiContext['resumeSession']>(
-    async storedAccount => {
-      addSessionDebugLog({
-        type: 'method:start',
-        method: 'resumeSession',
-        account: storedAccount,
-      })
-      const signal = cancelPendingTask()
-      const {agent, account} = await createAgentAndResume(
-        storedAccount,
-        onAgentSessionChange,
-      )
-
-      if (signal.aborted) {
-        return
-      }
-      dispatch({
-        type: 'switched-to-account',
-        newAgent: agent,
-        newAccount: account,
-      })
-      addSessionDebugLog({type: 'method:end', method: 'resumeSession', account})
-    },
-    [onAgentSessionChange, cancelPendingTask],
   )
 
   const removeAccount = React.useCallback<SessionApiContext['removeAccount']>(

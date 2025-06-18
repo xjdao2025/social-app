@@ -11,7 +11,7 @@ export const SERVER = DAO_SERVICE
 
 function getToken() {
   const session = get('session')
-  return session.currentAccount?.accessJwt
+  return session.currentAccount?.daoJwt
 }
 
 const throttleLogout = throttle(
@@ -83,6 +83,7 @@ export async function requestAPI(url: string, config: RequestConfig) {
       headers: {
         Authorization: getToken(),
         'Accept-Language': 'en',
+        ...config.headers,
       },
     })
   } catch (e: any) {
@@ -98,6 +99,8 @@ export async function requestAPI(url: string, config: RequestConfig) {
 
   if (response?.data?.code === 401) {
     console.log('trigger 401')
+    // window.alert(`401: ${url}`);
+    debugger
     throttleLogout()
   }
 

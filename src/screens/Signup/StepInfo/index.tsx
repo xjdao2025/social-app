@@ -6,11 +6,13 @@ import * as EmailValidator from 'email-validator'
 import type tldts from 'tldts'
 
 import {isEmailMaybeInvalid} from '#/lib/strings/email'
+import {isPhoneNumber, validateAccount} from '#/lib/validator'
 import {logger} from '#/logger'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
-import {is13, is18, useSignupContext} from '#/screens/Signup/state'
+import {useSignupContext} from '#/screens/Signup/state'
 import {Policies} from '#/screens/Signup/StepInfo/Policies'
 import {atoms as a, native} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import * as DateField from '#/components/forms/DateField'
 import {type DateFieldRef} from '#/components/forms/DateField/types'
 import {FormError} from '#/components/forms/FormError'
@@ -18,8 +20,11 @@ import {FormError} from '#/components/forms/FormError'
 import * as TextField from '#/components/forms/TextField'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
+import {ShieldCheck_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
 import {Loader} from '#/components/Loader'
+import useSMS from '#/hooks/useSMS'
+import server from '#/server'
 import {BackNextButtons} from '../BackNextButtons'
 
 function sanitizeDate(date: Date): Date {
@@ -50,10 +55,14 @@ export function StepInfo({
   const emailValueRef = useRef<string>(state.email)
   const prevEmailValueRef = useRef<string>(state.email)
   const passwordValueRef = useRef<string>(state.password)
+  const captchaValueRef = useRef<string>(state.captcha)
+  const captchaAPI = useSMS()
 
   const emailInputRef = useRef<TextInput>(null)
   const passwordInputRef = useRef<TextInput>(null)
+  const captchaInputRef = useRef<TextInput>(null)
   const birthdateInputRef = useRef<DateFieldRef>(null)
+  const [presubmitLoading, setPresubmitLoading] = React.useState<boolean>(false)
 
   const [hasWarnedEmail, setHasWarnedEmail] = React.useState<boolean>(false)
 
@@ -68,15 +77,16 @@ export function StepInfo({
     import('react-native-view-shot/src/index')
   }, [])
 
-  const onNextPress = () => {
+  const onNextPress = async () => {
     const inviteCode = inviteCodeValueRef.current
     const email = emailValueRef.current
     const emailChanged = prevEmailValueRef.current !== email
     const password = passwordValueRef.current
+    const captchaCode = captchaValueRef.current
 
-    if (!is13(state.dateOfBirth)) {
-      return
-    }
+    // if (!is13(state.dateOfBirth)) {
+    //   return
+    // }
 
     if (state.serviceDescription?.inviteCodeRequired && !inviteCode) {
       return dispatch({
@@ -92,28 +102,37 @@ export function StepInfo({
         field: 'email',
       })
     }
-    if (!EmailValidator.validate(email)) {
+    if (!validateAccount(email)) {
       return dispatch({
         type: 'setError',
         value: _(msg`Your email appears to be invalid.`),
         field: 'email',
       })
     }
-    if (emailChanged && tldtsRef.current) {
-      if (isEmailMaybeInvalid(email, tldtsRef.current)) {
-        prevEmailValueRef.current = email
-        setHasWarnedEmail(true)
-        return dispatch({
-          type: 'setError',
-          value: _(
-            msg`Please double-check that you have entered your email address correctly.`,
-          ),
-        })
-      }
-    } else if (hasWarnedEmail) {
-      setHasWarnedEmail(false)
-    }
+    // if (emailChanged && tldtsRef.current) {
+    //   if (isEmailMaybeInvalid(email, tldtsRef.current)) {
+    //     prevEmailValueRef.current = email
+    //     setHasWarnedEmail(true)
+    //     return dispatch({
+    //       type: 'setError',
+    //       value: _(
+    //         msg`Please double-check that you have entered your email address correctly.`,
+    //       ),
+    //     })
+    //   }
+    // } else if (hasWarnedEmail) {
+    //   setHasWarnedEmail(false)
+    // }
     prevEmailValueRef.current = email
+
+    if (!captchaCode) {
+      return dispatch({
+        type: 'setError',
+        value: '请输入验证码',
+        field: 'captcha',
+      })
+    }
+
     if (!password) {
       return dispatch({
         type: 'setError',
@@ -121,6 +140,7 @@ export function StepInfo({
         field: 'password',
       })
     }
+
     if (password.length < 8) {
       return dispatch({
         type: 'setError',
@@ -128,10 +148,37 @@ export function StepInfo({
         field: 'password',
       })
     }
+    const isPhone = isPhoneNumber(email)
+    // dispatch({ type: 'setIsLoading', value: true })
+    setPresubmitLoading(true)
+    const resData = await server.dao(
+      'POST /user/pre-register',
+      {
+        registerType: isPhone ? 2 : 1,
+        phone: isPhone ? email : '',
+        email: !isPhone ? email : '',
+        phoneRegion: '86',
+        verifyCode: captchaCode,
+      },
+      {getWholeBizData: true},
+    )
+    setPresubmitLoading(false)
+    const registerUserId = resData.data
+    // dispatch({ type: 'setIsLoading', value: false })
+    if (!registerUserId) {
+      return dispatch({
+        type: 'setError',
+        value: resData.message || '注册失败，请稍后再试(#0001)',
+      })
+    }
 
+    dispatch({type: 'setRegisterId', value: registerUserId})
     dispatch({type: 'setInviteCode', value: inviteCode})
     dispatch({type: 'setEmail', value: email})
+    dispatch({type: 'setCaptcha', value: captchaCode})
     dispatch({type: 'setPassword', value: password})
+    // dispatch({ type:  })
+
     dispatch({type: 'next'})
     logger.metric(
       'signup:nextPressed',
@@ -205,12 +252,12 @@ export function StepInfo({
                     if (
                       state.errorField === 'email' &&
                       value.trim().length > 0 &&
-                      EmailValidator.validate(value.trim())
+                      validateAccount(value.trim())
                     ) {
                       dispatch({type: 'clearError'})
                     }
                   }}
-                  label={_(msg`Enter your email address`)}
+                  label="手机号或电子邮箱地址"
                   defaultValue={state.email}
                   autoCapitalize="none"
                   autoComplete="email"
@@ -221,6 +268,61 @@ export function StepInfo({
                     passwordInputRef.current?.focus(),
                   )}
                 />
+              </TextField.Root>
+            </View>
+            <View>
+              <TextField.LabelText>验证码</TextField.LabelText>
+              <TextField.Root isInvalid={state.errorField === 'captcha'}>
+                <TextField.Icon icon={Shield} />
+                <TextField.Input
+                  testID="captchaInput"
+                  inputRef={captchaInputRef}
+                  onChangeText={value => {
+                    captchaValueRef.current = value
+                    if (state.errorField === 'captcha' && value.length >= 4) {
+                      dispatch({type: 'clearError'})
+                    }
+                  }}
+                  label="验证码"
+                  defaultValue=""
+                  // secureTextEntry
+                  // autoComplete=""
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                  submitBehavior={native('blurAndSubmit')}
+                  onSubmitEditing={native(() =>
+                    passwordInputRef.current?.focus(),
+                  )}
+                  // passwordRules="minlength: 8;"
+                />
+                <Button
+                  testID="sendCaptchaButton"
+                  // onPress={onPressForgotPassword}
+                  label="发送验证码"
+                  accessibilityHint={_(msg`send sms code`)}
+                  variant="solid"
+                  // color="secondary"
+                  style={[
+                    a.rounded_sm,
+                    // t.atoms.bg_contrast_100,
+                    {marginLeft: 'auto', left: 6, padding: 6},
+                    a.z_10,
+                  ]}
+                  onPress={() => {
+                    if (captchaAPI.ticking) return
+                    captchaAPI.send(emailValueRef.current, 3).catch(e => {
+                      dispatch({
+                        type: 'setError',
+                        value: e.message,
+                        field: 'email',
+                      })
+                    })
+                  }}>
+                  <ButtonText
+                    style={{color: captchaAPI.ticking ? '#6F869F' : '#1083FE'}}>
+                    {captchaAPI.countdownText || '发送验证码'}
+                  </ButtonText>
+                </Button>
               </TextField.Root>
             </View>
             <View>
@@ -273,16 +375,16 @@ export function StepInfo({
             </View>
             <Policies
               serviceDescription={state.serviceDescription}
-              needsGuardian={!is18(state.dateOfBirth)}
-              under13={!is13(state.dateOfBirth)}
+              needsGuardian={false} // {!is18(state.dateOfBirth)}
+              under13={false} // {!is13(state.dateOfBirth)}
             />
           </>
         ) : undefined}
       </View>
       <BackNextButtons
-        hideNext={!is13(state.dateOfBirth)}
+        // hideNext={!is13(state.dateOfBirth)}
         showRetry={isServerError}
-        isLoading={state.isLoading}
+        isLoading={presubmitLoading || state.isLoading}
         onBackPress={onPressBack}
         onNextPress={onNextPress}
         onRetryPress={refetchServer}

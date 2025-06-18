@@ -1,4 +1,4 @@
-import {AtpSessionData, AtpSessionEvent, BskyAgent} from '@atproto/api'
+import {type AtpSessionData, type AtpSessionEvent, BskyAgent} from '@atproto/api'
 import {TID} from '@atproto/common-web'
 
 import {networkRetry} from '#/lib/async/retry'
@@ -19,7 +19,7 @@ import {
   configureModerationForAccount,
   configureModerationForGuest,
 } from './moderation'
-import {SessionAccount} from './types'
+import {type SessionAccount} from './types'
 import {isSessionExpired, isSignupQueued} from './util'
 
 export function createPublicAgent() {
@@ -152,17 +152,17 @@ export async function createAgentAndCreateAccount(
           },
         ])
 
-        if (getAge(birthDate) < 18) {
-          await agent.api.com.atproto.repo.putRecord({
-            repo: account.did,
-            collection: 'chat.bsky.actor.declaration',
-            rkey: 'self',
-            record: {
-              $type: 'chat.bsky.actor.declaration',
-              allowIncoming: 'none',
-            },
-          })
-        }
+        // if (getAge(birthDate) < 18) {
+        //   await agent.api.com.atproto.repo.putRecord({
+        //     repo: account.did,
+        //     collection: 'chat.bsky.actor.declaration',
+        //     rkey: 'self',
+        //     record: {
+        //       $type: 'chat.bsky.actor.declaration',
+        //       allowIncoming: 'none',
+        //     },
+        //   })
+        // }
       })
     } catch (e: any) {
       logger.error(e, {
@@ -201,6 +201,7 @@ export function agentToSessionAccount(
     service: agent.service.toString(),
     did: agent.session.did,
     handle: agent.session.handle,
+    daoJwt: agent.session.daoJwt,
     email: agent.session.email,
     emailConfirmed: agent.session.emailConfirmed || false,
     emailAuthFactor: agent.session.emailAuthFactor || false,
@@ -216,11 +217,12 @@ export function agentToSessionAccount(
 
 export function sessionAccountToSession(
   account: SessionAccount,
-): AtpSessionData {
+): AtpSessionData & {daoJwt?: string} {
   return {
     // Sorted in the same property order as when returned by BskyAgent (alphabetical).
     accessJwt: account.accessJwt ?? '',
     did: account.did,
+    daoJwt: account.daoJwt,
     email: account.email,
     emailAuthFactor: account.emailAuthFactor,
     emailConfirmed: account.emailConfirmed,

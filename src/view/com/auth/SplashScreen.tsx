@@ -134,7 +134,7 @@ export const SplashScreen = ({
             </View>
           </ErrorBoundary>
         </View>
-        <Footer />
+        {/* <Footer /> */}
       </Layout.Center>
       <AppClipOverlay
         visible={showClipOverlay}

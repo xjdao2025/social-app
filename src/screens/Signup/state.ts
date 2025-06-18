@@ -6,15 +6,17 @@ import {
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import * as EmailValidator from 'email-validator'
 
 import {DEFAULT_SERVICE} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {getAge} from '#/lib/strings/time'
+import {validateAccount} from '#/lib/validator'
 import {logger} from '#/logger'
+import {type PersistedAccount} from '#/state/persisted'
 import {useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
+import server from '#/server'
 
 export type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
@@ -37,6 +39,7 @@ type ErrorField =
   | 'handle'
   | 'password'
   | 'date-of-birth'
+  | 'captcha'
 
 export type SignupState = {
   hasPrev: boolean
@@ -49,6 +52,10 @@ export type SignupState = {
   email: string
   password: string
   inviteCode: string
+  /** 验证码 */
+  captcha: string
+  /** pre-register 接口返回的id */
+  registerId: string
   handle: string
 
   error: string
@@ -80,6 +87,8 @@ export type SignupAction =
   | {type: 'setIsLoading'; value: boolean}
   | {type: 'submit'; task: SubmitTask}
   | {type: 'incrementBackgroundCount'}
+  | {type: 'setCaptcha'; value: string}
+  | {type: 'setRegisterId'; value: string}
 
 export const initialState: SignupState = {
   hasPrev: false,
@@ -91,7 +100,9 @@ export const initialState: SignupState = {
   dateOfBirth: DEFAULT_DATE,
   email: '',
   password: '',
+  captcha: '',
   handle: '',
+  registerId: '',
   inviteCode: '',
 
   error: '',
@@ -107,18 +118,19 @@ export const initialState: SignupState = {
     email: 0,
     handle: 0,
     password: 0,
+    captcha: 0,
     'date-of-birth': 0,
   },
   backgroundCount: 0,
 }
 
-export function is13(date: Date) {
-  return getAge(date) >= 13
-}
+// export function is13(date: Date) {
+//   return getAge(date) >= 13
+// }
 
-export function is18(date: Date) {
-  return getAge(date) >= 18
-}
+// export function is18(date: Date) {
+//   return getAge(date) >= 18
+// }
 
 export function reducer(s: SignupState, a: SignupAction): SignupState {
   let next = {...s}
@@ -161,6 +173,14 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
 
     case 'setEmail': {
       next.email = a.value
+      break
+    }
+    case 'setCaptcha': {
+      next.captcha = a.value
+      break
+    }
+    case 'setRegisterId': {
+      next.registerId = a.value
       break
     }
     case 'setPassword': {
@@ -250,7 +270,7 @@ export const useSignupContext = () => React.useContext(SignupContext)
 
 export function useSubmitSignup() {
   const {_} = useLingui()
-  const {createAccount} = useSessionApi()
+  const {resumeSession} = useSessionApi()
   const onboardingDispatch = useOnboardingDispatch()
 
   return useCallback(
@@ -263,7 +283,7 @@ export function useSubmitSignup() {
           field: 'email',
         })
       }
-      if (!EmailValidator.validate(state.email)) {
+      if (!validateAccount(state.email)) {
         dispatch({type: 'setStep', value: SignupStep.INFO})
         return dispatch({
           type: 'setError',
@@ -305,25 +325,60 @@ export function useSubmitSignup() {
       dispatch({type: 'setIsLoading', value: true})
 
       try {
-        await createAccount(
+        const registerRes = await server.dao(
+          'POST /user/register',
           {
-            service: state.serviceUrl,
-            email: state.email,
-            handle: createFullHandle(state.handle, state.userDomain),
+            userId: state.registerId,
             password: state.password,
-            birthDate: state.dateOfBirth,
-            inviteCode: state.inviteCode.trim(),
-            verificationCode: state.pendingSubmit?.verificationCode,
+            birthday: state.dateOfBirth.toISOString(),
+            domainName: createFullHandle(state.handle, state.userDomain),
           },
-          {
-            signupDuration: Date.now() - state.signupStartTime,
-            fieldErrorsTotal: Object.values(state.fieldErrors).reduce(
-              (a, b) => a + b,
-              0,
-            ),
-            backgroundCount: state.backgroundCount,
-          },
+          {getWholeBizData: true},
         )
+        if (!registerRes.data) {
+          throw new Error(registerRes.message)
+        }
+        const daoToken = registerRes.data?.token
+        const bskyToken = registerRes.data?.blueSkyToken
+        debugger
+        const userInfoRes = await server.dao(
+          'POST /user/login-user-detail',
+          undefined,
+          {getWholeBizData: true, headers: {Authorization: daoToken}},
+        )
+        if (!userInfoRes.data) {
+          throw new Error(userInfoRes.message)
+        }
+        const userInfo = userInfoRes.data
+        const fakeAccount: PersistedAccount = {
+          accessJwt: bskyToken,
+          daoJwt: daoToken,
+          did: userInfo?.did!,
+          handle: userInfo?.domainName!, // "zhengzhou.web5.rivtower.cc",
+          service: state.serviceUrl, // "https://web5.rivtower.cc/"
+        }
+
+        resumeSession(fakeAccount)
+
+        // await createAccount(
+        //   {
+        //     service: state.serviceUrl,
+        //     email: state.email,
+        //     handle: createFullHandle(state.handle, state.userDomain),
+        //     password: state.password,
+        //     birthDate: state.dateOfBirth,
+        //     inviteCode: state.inviteCode.trim(),
+        //     verificationCode: state.pendingSubmit?.verificationCode,
+        //   },
+        //   {
+        //     signupDuration: Date.now() - state.signupStartTime,
+        //     fieldErrorsTotal: Object.values(state.fieldErrors).reduce(
+        //       (a, b) => a + b,
+        //       0,
+        //     ),
+        //     backgroundCount: state.backgroundCount,
+        //   },
+        // )
 
         /*
          * Must happen last so that if the user has multiple tabs open and
@@ -363,6 +418,6 @@ export function useSubmitSignup() {
         dispatch({type: 'setIsLoading', value: false})
       }
     },
-    [_, onboardingDispatch, createAccount],
+    [_, onboardingDispatch, resumeSession],
   )
 }

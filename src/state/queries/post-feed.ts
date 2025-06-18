@@ -57,6 +57,16 @@ type ListUri = string
 
 export type ProposalStatus = 'all' | 'inprogress' | 'pass' | 'fail'
 
+export const mapProposalStatusToCode: Record<
+  ProposalStatus,
+  APIDao.DomainEnumsProposalStatus
+> = {
+  all: 0,
+  inprogress: 1,
+  pass: 2,
+  fail: 3,
+}
+
 export type FeedDescriptor =
   | 'following'
   | `author|${ActorDid}|${AuthorFilter}`

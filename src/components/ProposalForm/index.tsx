@@ -22,6 +22,9 @@ const BOTTOM_BAR_HEIGHT = 61
 export default function ProposalFormModal() {
   const {currentAccount} = useSession()
   const [active, setActive] = useState(false)
+  if (!currentAccount) {
+    return null
+  }
   return (
     <>
       <ProposalAffixTrigger onPress={() => setActive(true)} />

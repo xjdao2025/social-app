@@ -185,7 +185,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
 
             <View
               style={[a.w_full, a.py_lg, a.flex_row, a.gap_md, a.align_center]}>
-              <AppLanguageDropdown />
+              {/* <AppLanguageDropdown /> */}
               <Text
                 style={[
                   a.flex_1,

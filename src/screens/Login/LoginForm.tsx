@@ -105,25 +105,25 @@ export const LoginForm = ({
     try {
       // try to guess the handle if the user just gave their own username
       let fullIdent = identifier
-      if (
-        !identifier.includes('@') && // not an email
-        !identifier.includes('.') && // not a domain
-        serviceDescription &&
-        serviceDescription.availableUserDomains.length > 0
-      ) {
-        let matched = false
-        for (const domain of serviceDescription.availableUserDomains) {
-          if (fullIdent.endsWith(domain)) {
-            matched = true
-          }
-        }
-        if (!matched) {
-          fullIdent = createFullHandle(
-            identifier,
-            serviceDescription.availableUserDomains[0],
-          )
-        }
-      }
+      // if (
+      //   !identifier.includes('@') && // not an email
+      //   !identifier.includes('.') && // not a domain
+      //   serviceDescription &&
+      //   serviceDescription.availableUserDomains.length > 0
+      // ) {
+      //   let matched = false
+      //   for (const domain of serviceDescription.availableUserDomains) {
+      //     if (fullIdent.endsWith(domain)) {
+      //       matched = true
+      //     }
+      //   }
+      //   if (!matched) {
+      //     fullIdent = createFullHandle(
+      //       identifier,
+      //       serviceDescription.availableUserDomains[0],
+      //     )
+      //   }
+      // }
 
       // TODO remove double login
       await login(
@@ -198,7 +198,7 @@ export const LoginForm = ({
             <TextField.Icon icon={At} />
             <TextField.Input
               testID="loginUsernameInput"
-              label={_(msg`Username or email address`)}
+              label="手机号或电子邮箱地址"
               autoCapitalize="none"
               autoFocus
               autoCorrect={false}
