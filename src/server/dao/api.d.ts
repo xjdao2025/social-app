@@ -11,6 +11,7 @@ declare namespace APIDao {
     pageSize: number
   }
 
+  /** POST /user-medal/page */
   interface NetCorePalExtensionsDtoPagedDataOfUserMedalPageVo {
     items: Array<WebEndPointsUserMedalUserMedalPageVo>
 
@@ -40,6 +41,55 @@ declare namespace APIDao {
     resetPasswordType: WebEndPointsUserResetPasswordType
   }
 
+  interface WebEndPointsUserUserDeleteReq {
+    /** 邮箱 */
+    email: string
+
+    /** 手机号 */
+    phone: string
+
+    /** 如果是手机号，需要传区号 */
+    phoneRegion: string
+
+    /** 验证码 */
+    verifyCode: string
+
+    userDeleteType: WebEndPointsUserUserDeleteType
+  }
+
+  /** POST /user/login-user-detail */
+  interface WebEndPointsUserUserDetailVo {
+    /** 用户Id */
+    id: string
+
+    /** 邮箱 */
+    email: string
+
+    /** 手机号 */
+    phone: string
+
+    /** 手机区号 */
+    phoneRegion: string
+
+    /** 用户昵称 */
+    nickName: string
+
+    /** 完整用户名，域名 */
+    domainName: string
+
+    /** DID */
+    did: string
+
+    /** 积分 */
+    score: number
+
+    /** 是否是节点用户 */
+    nodeUser: boolean
+
+    /** 是否禁用 */
+    disable: boolean
+  }
+
   interface WebEndPointsUserUserEditProfileReq {
     /** 用户头像 */
     avatar: string
@@ -67,6 +117,7 @@ declare namespace APIDao {
     loginType: WebEndPointsUserLoginType
   }
 
+  /** POST /user/login */
   interface WebEndPointsUserLoginTokenVo {
     /** 访问非 BlueSky 的接口携带该 Token */
     token: string
@@ -128,6 +179,7 @@ declare namespace APIDao {
     domainName: string
   }
 
+  /** POST /user/register */
   interface WebEndPointsUserRegisterTokenVo {
     /** 访问非 BlueSky 的接口携带该 Token */
     token: string
@@ -186,6 +238,7 @@ declare namespace APIDao {
     pageSize: number
   }
 
+  /** POST /score/user-sore-record-page */
   interface NetCorePalExtensionsDtoPagedDataOfUserScoreRecordPageVo {
     items: Array<WebEndPointsScoreUserScoreRecordPageVo>
 
@@ -232,6 +285,7 @@ declare namespace APIDao {
     type: number
   }
 
+  /** POST /proposal/my-proposal-list */
   interface WebEndPointsProposalMyProposalVo {
     /** 提案 Id */
     proposalId: string
@@ -268,6 +322,7 @@ declare namespace APIDao {
     proposalId: string
   }
 
+  /** POST /proposal/detail */
   interface WebEndPointsProposalProposalDetailVo {
     /** 提案 Id */
     proposalId: string
@@ -318,6 +373,7 @@ declare namespace APIDao {
     status: DomainEnumsProposalStatus
   }
 
+  /** POST /proposal/page */
   interface NetCorePalExtensionsDtoPagedDataOfProposalPageVo {
     items: Array<WebEndPointsProposalProposalPageVo>
 
@@ -338,6 +394,7 @@ declare namespace APIDao {
     choose: DomainEnumsVoteType
   }
 
+  /** POST /node/list */
   interface WebEndPointsNodeNodeListVo {
     /** 节点 Id */
     nodeId: string
@@ -352,6 +409,7 @@ declare namespace APIDao {
     description: string
   }
 
+  /** POST /global-config/foundation-info */
   interface WebEndPointsGlobalConfigFoundationInfoVo {
     /** 基金规模 */
     fundScale: number
@@ -373,6 +431,7 @@ declare namespace APIDao {
     fileType: DomainEnumsFileType
   }
 
+  /** POST /file/upload */
   interface WebApplicationVoFileUploadSuccessVo {
     /** 文件 Id */
     fileId: string
@@ -388,6 +447,7 @@ declare namespace APIDao {
     codeType: WebUtilsCodeType
   }
 
+  /** POST /banner/list */
   interface WebApplicationVoBannerVo {
     /** BannerId */
     id: string
@@ -413,8 +473,11 @@ declare namespace APIDao {
     getTime?: string
   }
 
-  /** 重置密码类型 {"x-enumNames":["Unknown","Email","Phone"]} */
+  /** 重置密码验证类型类型 {"x-enumNames":["Unknown","Email","Phone"]} */
   type WebEndPointsUserResetPasswordType = 0 | 1 | 2
+
+  /** 删除账户验证类型 {"x-enumNames":["Unknown","Email","Phone"]} */
+  type WebEndPointsUserUserDeleteType = 0 | 1 | 2
 
   /** 登录类型 {"x-enumNames":["Unknown","DomainName","Email","Phone"]} */
   type WebEndPointsUserLoginType = 0 | 1 | 2 | 3

@@ -14,6 +14,16 @@ const apiMap = {
     APIDao.WebEndPointsUserResetPasswordReq,
     boolean
   >('/user/reset-password', 'POST'),
+  /** 删除用户 */
+  'POST /user/delete': defineAPI<APIDao.WebEndPointsUserUserDeleteReq, boolean>(
+    '/user/delete',
+    'POST',
+  ),
+  /** C端-获取当前登录用户的详细信息 */
+  'POST /user/login-user-detail': defineAPI<
+    null,
+    APIDao.WebEndPointsUserUserDetailVo
+  >('/user/login-user-detail', 'POST'),
   /** 编辑个人资料 */
   'POST /user/edit-profile': defineAPI<
     APIDao.WebEndPointsUserUserEditProfileReq,
@@ -118,7 +128,7 @@ const apiMap = {
   'POST /file/upload': defineAPI<
     APIDao.WebEndPointsFileFileUploadForm,
     APIDao.WebApplicationVoFileUploadSuccessVo
-  >('/file/upload', 'POST', {divider: {formData: ['']}}),
+  >('/file/upload', 'POST', {divider: {formData: ['file', 'fileType']}}),
   /** 发送邮件 */
   'POST /email/send': defineAPI<
     APIDao.WebEndPointsEmailSendEmailRequest,

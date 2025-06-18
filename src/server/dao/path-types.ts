@@ -11,6 +11,8 @@ export type APITypeTuple = {
     APIDao.WebEndPointsUserResetPasswordReq,
     boolean,
   ]
+  'POST /user/delete': [APIDao.WebEndPointsUserUserDeleteReq, boolean]
+  'POST /user/login-user-detail': [null, APIDao.WebEndPointsUserUserDetailVo]
   'POST /user/edit-profile': [
     APIDao.WebEndPointsUserUserEditProfileReq,
     boolean,

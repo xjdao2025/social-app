@@ -38,11 +38,20 @@ export default function generateService(paths, dataTypes, config) {
             return;
         }
         const { url, method, parameters, response } = pathConfig;
-        const { divider, type: requestType } = generateParameterTsType(parameters, method, userConfig.typeNameSpace, mentionedSchema);
-        const { type: responseType } = response ? generateParameterTsType([response], method, userConfig.typeNameSpace, mentionedSchema) : { type: null };
+        const { divider, type: requestType } = generateParameterTsType(parameters, method, userConfig.typeNameSpace, mentionedSchema, dataTypes);
+        const { type: responseType } = response ? generateParameterTsType([response], method, userConfig.typeNameSpace, mentionedSchema, dataTypes) : { type: null };
         // if (response?.type === 'array') {
         //   console.log('array check:', responseType);
         // }
+        const tempResponseType = response.type === 'array' ? response.arrayElementType?.type : response.type;
+        // console.log(mentionedSchema[tempResponseType], tempResponseType);
+        if (mentionedSchema[tempResponseType]) {
+            if (!dataTypes[tempResponseType].paths) {
+                dataTypes[tempResponseType].paths = [];
+
+            }
+            dataTypes[tempResponseType].paths.push(`${method} ${url}`);
+        }
         const apiDefine = pathTypingRender(method, url, requestType, responseType, divider, pathConfig.description);
         outputPaths.push(`${indent(1)}/** ${pathConfig.description ?? ''} */\n${indent(1)}${apiDefine}`);
         outputPathIOTypes.push(`${indent(1)}"${method} ${url}": [${requestType}, ${responseType}]`);
@@ -74,11 +83,12 @@ function pathTypingRender(method, url, requestType, responseType, divider, descr
 }
 /** 参数位置分流器, 用于区分字段是在path、query、body等位置上 */
 function appendDivider(ctx, position, keyName) {
+    if (!keyName) return;
     if (!ctx[position])
         ctx[position] = [];
     ctx[position].push(keyName);
 }
-function generateParameterTsType(parameters, method, typeNameSpacePrefix, metionedTypeMap) {
+function generateParameterTsType(parameters, method, typeNameSpacePrefix, metionedTypeMap, dataTypes) {
     const divider = {};
     const inlineTypes = [];
     const refTypes = [];
@@ -108,6 +118,13 @@ function generateParameterTsType(parameters, method, typeNameSpacePrefix, metion
             if (method === 'GET' || parameter.in === 'formData')
                 appendDivider(divider, parameter.in, parameter.name);
         }
+        if (parameter.in === 'formData' && !parameter.name) {
+            if (dataTypes[parameter.type]) {
+                dataTypes[parameter.type].properties?.forEach(item => {
+                    appendDivider(divider, parameter.in, item.name);
+                })
+            }
+        }
         if (!parameter.name) {
             refTypes.push(formatType(parameter));
             return;
@@ -129,6 +146,12 @@ function appendDesc(dataType, indentLevel = 2) {
     if (descs.length === 1)
         return `${indent(indentLevel)}/** ${descs[0].replaceAll(/\r?\n/g, '\n' + indent(indentLevel + 1))} */\n`;
     return `${indent(indentLevel)}/** ${descs.map(str => str?.replaceAll(/\r?\n/g, '\n' + indent(indentLevel + 1))).join(' ')} */\n`;
+}
+function appendConnectionPath(dataType, indentLevel = 1) {
+    if (dataType.paths?.length) {
+        return `${indent(indentLevel)}/** ${dataType.paths.map(str => str?.replaceAll(/\r?\n/g, '\n' + indent(indentLevel + 1))).join(' ')} */\n`;
+    }
+    return '';
 }
 function renderSchema(dataType, dataTypeRenderList) {
     if (!dataType) {
@@ -154,7 +177,7 @@ function renderSchema(dataType, dataTypeRenderList) {
     const propertyStr = dataType.properties?.map(property => {
         return `${appendDesc(property)}${indent(2)}${property.name}${!property.required ? '?' : ''}: ${formatType(property)};\n\n`;
     }).join('');
-    return `${indent(1)}interface ${dataType.name} {\n\n${propertyStr}${indent(1)}}\n\n\n`;
+    return `${appendConnectionPath(dataType)}${indent(1)}interface ${dataType.name} {\n\n${propertyStr}${indent(1)}}\n\n\n`;
 }
 /**
  * 生成API namespace 类型定义库
