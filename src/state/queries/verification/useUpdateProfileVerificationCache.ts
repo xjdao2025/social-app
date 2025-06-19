@@ -4,6 +4,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useAgent} from '#/state/session'
+import server from '#/server'
 import type * as bsky from '#/types/bsky'
 
 /**
@@ -21,8 +22,12 @@ export function useUpdateProfileVerificationCache() {
         const {data: updated} = await agent.getProfile({
           actor: profile.did ?? '',
         })
-        // todo 转发一个到己方服务
-
+        // 转发一个到己方服务
+        server.dao('POST /user/edit-profile', {
+          avatar: updated.avatar!,
+          nickName: updated.displayName!,
+          introduction: updated.description!,
+        })
         updateProfileShadow(qc, profile.did, {
           verification: updated.verification,
         })
