@@ -122,14 +122,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const login = React.useCallback<SessionApiContext['login']>(
     async (params, logContext) => {
       const identifier = params.identifier
-      const accountType = isPhoneNumber(identifier) ? 2 : 1
+      const accountType = isPhoneNumber(identifier)
+        ? 3
+        : isEmail(identifier)
+        ? 2
+        : 1
       const loginRes = await server.dao(
         'POST /user/login',
         {
-          phone: isPhoneNumber(identifier) ? identifier : '',
-          email: isEmail(identifier) ? identifier : '',
+          phone: accountType === 3 ? identifier : '',
+          email: accountType === 2 ? identifier : '',
           password: params.password,
-          domainName: '',
+          domainName: accountType === 1 ? identifier : '',
           loginType: accountType,
         },
         {getWholeBizData: true},
