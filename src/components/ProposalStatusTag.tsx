@@ -22,6 +22,7 @@ export type ProposalStatusTagProps = {
 
 export default function ProposalStatusTag(props: ProposalStatusTagProps) {
   const {status, style} = props
+  if (!status) return null
   const cfg = statusCfgMap[status as ProposalStatus]
   return (
     <View
