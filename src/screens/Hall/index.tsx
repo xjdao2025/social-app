@@ -2,7 +2,7 @@ import {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import Animated, {useAnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
-import {type NavigationProp,useNavigation} from '@react-navigation/native'
+import {type NavigationProp, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import {useRequest} from 'ahooks'
 
@@ -11,7 +11,6 @@ import {extractAssetUrl} from '#/lib/extractAssetUrl'
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
 import {type AllNavigatorParams} from '#/lib/routes/types'
 import {listenProposalCreated, listenSoftReset} from '#/state/events'
-import {type ProposalStatus} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {HomeHeaderLayoutMobile} from '#/view/com/home/HomeHeaderLayoutMobile'
@@ -21,15 +20,16 @@ import * as Layout from '#/components/Layout'
 import ProposalFormModal from '#/components/ProposalForm'
 import {Text} from '#/components/Typography'
 import server from '#/server'
+import {ProposalStatus} from '#/server/dao/enums'
 import {ProfileFeedSection} from '../Profile/Sections/Feed'
 import {type SectionRef} from '../Profile/Sections/types'
 import NodeInfo from './components/NodeInfo'
 
 const proposalStageOptions: Array<{key: ProposalStatus; label: string}> = [
-  {key: 'all', label: '全部'},
-  {key: 'inprogress', label: '审核中'},
-  {key: 'pass', label: '通过'},
-  {key: 'fail', label: '未通过'},
+  {key: ProposalStatus.Unknown, label: '全部'},
+  {key: ProposalStatus.InProgress, label: '审核中'},
+  {key: ProposalStatus.Pass, label: '通过'},
+  {key: ProposalStatus.Fail, label: '未通过'},
 ]
 
 export default function HallScreen() {
@@ -54,7 +54,10 @@ export default function HallScreen() {
     // only invalidate if there's 1 page
     // more than 1 page can trigger some UI freakouts on iOS and android
     // -prf
-    if (currentTabKey === 'all' || currentTabKey === 'inprogress') {
+    if (
+      currentTabKey === ProposalStatus.Unknown ||
+      currentTabKey === ProposalStatus.InProgress
+    ) {
       queryClient.invalidateQueries({
         queryKey: FEED_RQKEY(`proposal|${currentTabKey}`),
       })

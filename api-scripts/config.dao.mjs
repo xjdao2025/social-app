@@ -55,7 +55,7 @@ const config = {
     buildEnum("DomainEnumsProposalStatus", () => {
       schema.enumVariableName = "ProposalStatus";
       schema.enums = [
-        // { value: 0, name: "UNKNOWN" },
+        { value: 0, name: "Unknown" },
         { value: 1, name: "InProgress" },
         { value: 2, name: "Pass" },
         { value: 3, name: "Fail" },

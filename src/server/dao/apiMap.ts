@@ -89,6 +89,11 @@ const apiMap = {
     APIDao.WebEndPointsProposalDeleteMyProposalReq,
     boolean
   >('/proposal/delete-my-proposal', 'POST'),
+  /** 我的投票选择 */
+  'POST /proposal/my-proposal-choice': defineAPI<
+    APIDao.WebEndPointsProposalMyProposalChoiceReq,
+    APIDao.WebEndPointsProposalMyProposalChoiceVo
+  >('/proposal/my-proposal-choice', 'POST'),
   /** 我的提案列表 */
   'POST /proposal/my-proposal-list': defineAPI<
     APIDao.WebEndPointsProposalMyProposalReq,

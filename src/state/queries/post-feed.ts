@@ -36,6 +36,7 @@ import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {useAgent} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {KnownError} from '#/view/com/posts/PostFeedErrorMessage'
+import {type ProposalStatus} from '#/server/dao/enums'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from '../preferences/moderation-opts'
 import {usePreferencesQuery} from './preferences'
@@ -55,17 +56,7 @@ export type AuthorFilter =
 type FeedUri = string
 type ListUri = string
 
-export type ProposalStatus = 'all' | 'inprogress' | 'pass' | 'fail'
-
-export const mapProposalStatusToCode: Record<
-  ProposalStatus,
-  APIDao.DomainEnumsProposalStatus
-> = {
-  all: 0,
-  inprogress: 1,
-  pass: 2,
-  fail: 3,
-}
+// export type ProposalStatus = 'all' | 'inprogress' | 'pass' | 'fail'
 
 export type FeedDescriptor =
   | 'following'

@@ -50,6 +50,10 @@ export type APITypeTuple = {
     APIDao.WebEndPointsProposalDeleteMyProposalReq,
     boolean,
   ]
+  'POST /proposal/my-proposal-choice': [
+    APIDao.WebEndPointsProposalMyProposalChoiceReq,
+    APIDao.WebEndPointsProposalMyProposalChoiceVo,
+  ]
   'POST /proposal/my-proposal-list': [
     APIDao.WebEndPointsProposalMyProposalReq,
     Array<APIDao.WebEndPointsProposalMyProposalVo>,

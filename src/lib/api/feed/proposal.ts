@@ -1,10 +1,7 @@
 import {type AppBskyFeedDefs, type BskyAgent} from '@atproto/api'
 
-import {
-  mapProposalStatusToCode,
-  type ProposalStatus,
-} from '#/state/queries/post-feed'
 import server from '#/server'
+import {type ProposalStatus} from '#/server/dao/enums'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
 type RequestParams = {
@@ -25,7 +22,7 @@ async function fetchProposal(
   pageSize: number,
 ) {
   const res = await server.dao('POST /proposal/page', {
-    status: mapProposalStatusToCode[status],
+    status: +status,
     pageNum,
     pageSize,
   })
@@ -37,7 +34,7 @@ async function fetchProposal(
 
 export class ProposalFeedAPI implements FeedAPI {
   agent: BskyAgent
-  params: RequestParams = {state: 'all'}
+  params: RequestParams = {state: 0}
   constructor({params, agent}: {params: RequestParams; agent: BskyAgent}) {
     this.agent = agent
     this.params = params

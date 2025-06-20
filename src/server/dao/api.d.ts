@@ -284,6 +284,17 @@ declare namespace APIDao {
     proposalId: string
   }
 
+  /** POST /proposal/my-proposal-choice */
+  interface WebEndPointsProposalMyProposalChoiceReq {
+    /** 提案 Id */
+    proposalId: string
+  }
+
+  /** POST /proposal/my-proposal-choice */
+  interface WebEndPointsProposalMyProposalChoiceVo {
+    choice: DomainEnumsVoteType
+  }
+
   /** POST /proposal/my-proposal-list */
   interface WebEndPointsProposalMyProposalReq {
     /** 类型 0-全部，1-我发布的，2-我参与的 */
@@ -338,6 +349,12 @@ declare namespace APIDao {
 
     /** 发起方名称 */
     initiatorId: string
+
+    /** 发起方 Did */
+    initiatorDid: string
+
+    /** 发起方域名 */
+    initiatorDomainName: string
 
     /** 发起方名称 */
     initiatorName: string
@@ -511,8 +528,11 @@ declare namespace APIDao {
     createdAt: string
   }
 
+  /** 投票选项 {"x-enumNames":["Unknown","Agree","Oppose"]} */
+  type DomainEnumsVoteType = 1 | 2
+
   /** 提案状态 {"x-enumNames":["Unknown","Review","Pass","Oppose"]} */
-  type DomainEnumsProposalStatus = 1 | 2 | 3
+  type DomainEnumsProposalStatus = 0 | 1 | 2 | 3
 
   interface WebEndPointsProposalProposalPageVo {
     /** 提案 Id */
@@ -544,9 +564,6 @@ declare namespace APIDao {
     /** 创建时间 {"format":"date-time"} */
     createdAt: string
   }
-
-  /** 投票选项 {"x-enumNames":["Unknown","Agree","Oppose"]} */
-  type DomainEnumsVoteType = 1 | 2
 
   /** 积分来源类型 0-未知 1-打赏 2-赠送 3-后台发放 {"x-enumNames":["Unknown","Reward","Send","AdminDistribution"]} */
   type DomainEnumsScoreSourceType = 0 | 1 | 2 | 3
