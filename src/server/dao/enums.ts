@@ -4,6 +4,7 @@
 /** */
 /** APIDao.DomainEnumsVoteType 投票选项 {"x-enumNames":["Unknown","Agree","Oppose"]} */
 export enum ProposalVoteType {
+  Unknown = 0,
   Agree = 1,
   Oppose = 2,
 }

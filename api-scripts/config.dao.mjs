@@ -65,7 +65,7 @@ const config = {
     buildEnum("DomainEnumsVoteType", () => {
       schema.enumVariableName = "ProposalVoteType";
       schema.enums = [
-        // { value: 0, name: "UNKNOWN" },
+        { value: 0, name: "Unknown" },
         { value: 1, name: "Agree" },
         { value: 2, name: "Oppose" },
       ]

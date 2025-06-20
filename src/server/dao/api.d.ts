@@ -529,7 +529,7 @@ declare namespace APIDao {
   }
 
   /** 投票选项 {"x-enumNames":["Unknown","Agree","Oppose"]} */
-  type DomainEnumsVoteType = 1 | 2
+  type DomainEnumsVoteType = 0 | 1 | 2
 
   /** 提案状态 {"x-enumNames":["Unknown","Review","Pass","Oppose"]} */
   type DomainEnumsProposalStatus = 0 | 1 | 2 | 3
