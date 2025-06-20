@@ -6,12 +6,14 @@ import {moderatePost, RichText as RichTextAPI} from '@atproto/api'
 import {useNavigation} from '@react-navigation/native'
 import {useRequest} from 'ahooks'
 import {format} from 'date-fns'
+import {isNil} from 'lodash'
 
 import {parseFileComposeId} from '#/lib/extractAssetUrl'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
+import {emitProposalCreated} from '#/state/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   fillThreadModerationCache,
@@ -32,6 +34,7 @@ import server from '#/server'
 import {ProposalStatus, ProposalVoteType} from '#/server/dao/enums'
 import ProposalAuthor from './ProposalAuthor'
 import ProposalEmbeds from './ProposalEmbeds'
+import parserHTMLFile, {type HTMLBlock} from './util'
 import VoteConfirm, {type VoteConfirmRef} from './VoteConfirm'
 const {Header} = Layout
 
@@ -43,16 +46,34 @@ export default function ProposalDetailScreen({route}: Props) {
   const {currentAccount} = useSession()
   const navigation = useNavigation()
   const {gtMobile} = useBreakpoints()
+  const delControl = Prompt.usePromptControl()
+  const voteConfirmRef = useRef<VoteConfirmRef>(null)
   const {data: currentUserInfo} = useRequest(async () => {
     const res = await server.dao('POST /user/login-user-detail')
     return res
   })
 
-  const delControl = Prompt.usePromptControl()
-  const voteConfirmRef = useRef<VoteConfirmRef>(null)
-  const {data: proposalInfo} = useRequest(
+  const {data: votedInfo, run: reloadVoteInfo} = useRequest(
     async () => {
-      const res = await server.dao('POST /proposal/detail', {proposalId})
+      const res = await server.dao('POST /proposal/my-proposal-choice', {
+        proposalId,
+      })
+      return res
+    },
+    {
+      ready: !!currentAccount?.did && !!proposalId,
+      refreshDeps: [proposalId],
+    },
+  )
+
+  const {data: proposalInfo, run: reloadProposalInfo} = useRequest(
+    async () => {
+      const res = (await server.dao('POST /proposal/detail', {proposalId})) as
+        | null
+        | (APIDao.WebEndPointsProposalProposalDetailVo & {
+            content: string
+            blocks: HTMLBlock[]
+          })
       // if (res) {
       //   res.attachId = "2-559c9cd426ea4c3b87a6a8667d3e2bdb-proposal_content.txt";
       // }
@@ -66,12 +87,12 @@ export default function ProposalDetailScreen({route}: Props) {
         //
         if (fileBlob) {
           const fileContent = await fileBlob.text()
+          const blocks = parserHTMLFile(fileContent)
           res.content = fileContent
+          res.blocks = blocks
         }
       }
-      return res as
-        | null
-        | (APIDao.WebEndPointsProposalProposalDetailVo & {content: string})
+      return res
     },
     {
       ready: !!proposalId,
@@ -79,45 +100,52 @@ export default function ProposalDetailScreen({route}: Props) {
     },
   )
   const t = useTheme()
-  const mockEmbed = {
-    $type: 'app.bsky.embed.images#view',
-    images: [
-      {
-        thumb:
-          'https://bsky.rivtower.cc/img/feed_thumbnail/plain/did:plc:pc5gxd5my6uooild5drcixdm/bafkreigzzzfwbraggh4zfxws6qladwrpwvpihscaqigkgb5zusvi6zfixu@jpeg',
-        fullsize:
-          'https://bsky.rivtower.cc/img/feed_fullsize/plain/did:plc:pc5gxd5my6uooild5drcixdm/bafkreigzzzfwbraggh4zfxws6qladwrpwvpihscaqigkgb5zusvi6zfixu@jpeg',
-        alt: '',
-        aspectRatio: {width: 474, height: 474},
-      },
-      {
-        thumb:
-          'https://bsky.rivtower.cc/img/feed_thumbnail/plain/did:plc:pc5gxd5my6uooild5drcixdm/bafkreigzzzfwbraggh4zfxws6qladwrpwvpihscaqigkgb5zusvi6zfixu@jpeg',
-        fullsize:
-          'https://bsky.rivtower.cc/img/feed_fullsize/plain/did:plc:pc5gxd5my6uooild5drcixdm/bafkreigzzzfwbraggh4zfxws6qladwrpwvpihscaqigkgb5zusvi6zfixu@jpeg',
-        alt: '',
-        aspectRatio: {width: 474, height: 474},
-      },
-    ],
+
+  const reload = () => {
+    reloadVoteInfo()
+    reloadProposalInfo()
   }
 
-  const mockAuthor = proposalInfo?.initiatorId
+  // const mockEmbed = {
+  //   $type: 'app.bsky.embed.images#view',
+  //   images: [
+  //     {
+  //       thumb:
+  //         'https://bsky.rivtower.cc/img/feed_thumbnail/plain/did:plc:pc5gxd5my6uooild5drcixdm/bafkreigzzzfwbraggh4zfxws6qladwrpwvpihscaqigkgb5zusvi6zfixu@jpeg',
+  //       fullsize:
+  //         'https://bsky.rivtower.cc/img/feed_fullsize/plain/did:plc:pc5gxd5my6uooild5drcixdm/bafkreigzzzfwbraggh4zfxws6qladwrpwvpihscaqigkgb5zusvi6zfixu@jpeg',
+  //       alt: '',
+  //       aspectRatio: {width: 474, height: 474},
+  //     },
+  //     {
+  //       thumb:
+  //         'https://bsky.rivtower.cc/img/feed_thumbnail/plain/did:plc:pc5gxd5my6uooild5drcixdm/bafkreigzzzfwbraggh4zfxws6qladwrpwvpihscaqigkgb5zusvi6zfixu@jpeg',
+  //       fullsize:
+  //         'https://bsky.rivtower.cc/img/feed_fullsize/plain/did:plc:pc5gxd5my6uooild5drcixdm/bafkreigzzzfwbraggh4zfxws6qladwrpwvpihscaqigkgb5zusvi6zfixu@jpeg',
+  //       alt: '',
+  //       aspectRatio: {width: 474, height: 474},
+  //     },
+  //   ],
+  // }
+
+  const mockAuthor = proposalInfo?.initiatorDid
     ? {
         avatar: proposalInfo?.initiatorAvatar,
         // createdAt: '2025-06-03T05:34:27.189Z',
-        did: proposalInfo?.initiatorId, // 'did:plc:pc5gxd5my6uooild5drcixdm',
-        displayName: proposalInfo?.initiatorName, // '',
-        handle: proposalInfo?.initiatorName, // 'zhengzhou.web5.rivtower.cc',
+        did: proposalInfo?.initiatorDid, // 'did:plc:pc5gxd5my6uooild5drcixdm',
+        displayName:
+          proposalInfo?.initiatorName ?? proposalInfo.initiatorDomainName, // '',
+        handle: proposalInfo?.initiatorDomainName, // 'zhengzhou.web5.rivtower.cc',
         labels: [],
         viewer: {muted: false, blockedBy: false},
       }
     : null
 
   const canDelProposal =
-    currentAccount?.did && currentAccount?.did === proposalInfo?.initiatorId
+    currentAccount?.did && currentAccount?.did === proposalInfo?.initiatorDid
   const canVote =
     currentUserInfo?.nodeUser &&
-    true && // todo not voted
+    votedInfo?.choice === ProposalVoteType.Unknown &&
     proposalInfo?.status === ProposalStatus.InProgress
   // if(!propsosalDetail) return null;
 
@@ -191,7 +219,32 @@ export default function ProposalDetailScreen({route}: Props) {
         <Animated.ScrollView
           style={[a.flex_1, a.px_lg, a.pb_lg]}
           contentContainerStyle={a.flex_grow}>
-          <pre dangerouslySetInnerHTML={{__html: proposalInfo?.content}} />
+          {/* <pre dangerouslySetInnerHTML={{ __html: proposalInfo?.content }} /> */}
+          {proposalInfo?.blocks?.map((block, index) => {
+            if (block.type === 'images') {
+              return (
+                <ProposalEmbeds
+                  key={index}
+                  embed={{
+                    $type: 'app.bsky.embed.images#view',
+                    images: block.srcs.map(imgSrc => ({
+                      thumb: imgSrc,
+                      fullsize: imgSrc,
+                      alt: '',
+                      aspectRatio: {width: 474, height: 474},
+                    })),
+                  }}
+                />
+              )
+            }
+            return (
+              <pre
+                key={index}
+                style={{margin: 0}}
+                dangerouslySetInnerHTML={{__html: block.content}}
+              />
+            )
+          })}
           {/* <View style={[styles.blockTitle]}>
             <Text style={[a.text_md]}>proposalId: {proposalId}</Text>
           </View>
@@ -260,6 +313,7 @@ export default function ProposalDetailScreen({route}: Props) {
           })
           if (flag) {
             Toast.show('删除成功', 'check', 'center')
+            emitProposalCreated()
             navigation.goBack()
           }
         }}
@@ -276,6 +330,7 @@ export default function ProposalDetailScreen({route}: Props) {
           })
           if (flag) {
             Toast.show('投票成功', 'check', 'center')
+            reload()
           }
           // Toast.show('报错', 'xmark');
         }}

@@ -34,6 +34,7 @@ import {
   type Shadow,
   usePostShadow,
 } from '#/state/cache/post-shadow'
+import {emitProposalCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {precacheProfile} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -42,6 +43,7 @@ import {FeedNameText} from '#/view/com/util/FeedInfoText'
 import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {PostMeta} from '#/view/com/util/PostMeta'
+import * as Toast from '#/view/com/util/Toast'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
@@ -56,6 +58,7 @@ import ProposalStatusTag from '#/components/ProposalStatusTag'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text} from '#/components/Typography'
+import server from '#/server'
 import {ProposalStatus} from '#/server/dao/enums'
 import * as bsky from '#/types/bsky'
 import {Link, TextLink, TextLinkOnWebOnly} from '../util/Link'
@@ -393,8 +396,15 @@ let FeedItemInner = ({
         title="要删除这则贴文吗？"
         description="如果你删除这则贴文，则以后将无法恢复。"
         confirmButtonCta="删除"
-        onConfirm={() => {
-          debugger
+        onConfirm={async () => {
+          const flag = await server.dao('POST /proposal/delete-my-proposal', {
+            proposalId: post.proposalId,
+          })
+          if (flag) {
+            Toast.show('删除成功', 'check', 'center')
+            emitProposalCreated()
+            // navigation.goBack()
+          }
         }}
         confirmButtonColor="negative"
       />

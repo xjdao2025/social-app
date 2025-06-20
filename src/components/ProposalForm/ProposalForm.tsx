@@ -512,9 +512,7 @@ export default function ProposalForm(
         throw new Error(submitRes.message)
       }
 
-      if (postUri) {
-        emitProposalCreated()
-      }
+      emitProposalCreated()
       onClose()
       Toast.show('提案创建成功')
     } catch (e: any) {

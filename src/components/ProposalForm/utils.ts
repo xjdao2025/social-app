@@ -24,7 +24,7 @@ export function renderBlockToHTML(
       mediaDom = `<div style="${videoBoxStyle}"><video controls autoPlay loop muted playsInline style="${videoStyle}"><source src="${uploadedEmbed.video}" type="${uploadedEmbed.mime}" /></video></div>`
     }
 
-    mediaDom = `<div style="${mediaBoxStyle}">${mediaDom}</div>`
+    mediaDom = `\n<div style="${mediaBoxStyle}">${mediaDom}</div>`
   }
 
   if (block.type === 'content') {

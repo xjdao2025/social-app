@@ -328,28 +328,25 @@ function ProfileScreenLoaded({
         {() => <></>}
         {() => <></>}
         {({headerHeight, isFocused, scrollElRef}) => (
-          console.log('isFocused', isFocused),
-          (
-            <SubBar
-              items={[
-                {
-                  key: `proposal|0|${profile.did}`,
-                  label: '全部',
-                },
-                {key: `proposal|1|${profile.did}`, label: '我发布的'},
-                {key: `proposal|2|${profile.did}`, label: '我参与的'},
-              ]}>
-              <ProfileFeedSection
-                ref={proposalSectionRef}
-                feed={`author|${profile.did}|posts_and_author_threads`}
-                headerHeight={headerHeight}
-                isFocused={isFocused}
-                scrollElRef={scrollElRef as ListRef}
-                ignoreFilterFor={profile.did}
-                setScrollViewTag={setScrollViewTag}
-              />
-            </SubBar>
-          )
+          <SubBar
+            items={[
+              {
+                key: `proposal|0|${profile.did}`,
+                label: '全部',
+              },
+              {key: `proposal|1|${profile.did}`, label: '我发布的'},
+              {key: `proposal|2|${profile.did}`, label: '我参与的'},
+            ]}>
+            <ProfileFeedSection
+              ref={proposalSectionRef}
+              feed={`author|${profile.did}|posts_and_author_threads`}
+              headerHeight={headerHeight}
+              isFocused={isFocused}
+              scrollElRef={scrollElRef as ListRef}
+              ignoreFilterFor={profile.did}
+              setScrollViewTag={setScrollViewTag}
+            />
+          </SubBar>
         )}
         {/* {showListsTab && !profile.associated?.labeler
           ? ({ headerHeight, isFocused, scrollElRef }) => (

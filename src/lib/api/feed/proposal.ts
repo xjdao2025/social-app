@@ -85,18 +85,18 @@ function restructFeedItem(
       ...item,
       cid: item.proposalId,
       author: {
-        did: item.initiatorId,
-        displayName: item.initiatorName,
+        did: item.initiatorDid,
+        displayName: item.initiatorName || item.initiatorDomainName,
         avatar: item.initiatorAvatar,
-        handle: '',
+        handle: item.initiatorDomainName,
       },
       record: {
         $type: 'app.bsky.feed.post',
         text: item.name,
-        createdAt: '2025-06-19T05:24:38.345Z',
+        createdAt: item.createdAt, // '2025-06-19T05:24:38.345Z',
         langs: ['zh'],
       },
-      uri: '',
+      uri: `at://${item.initiatorId}/proposal/${item.proposalId}`,
       indexedAt: item.createdAt,
     },
   }

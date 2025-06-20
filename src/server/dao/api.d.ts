@@ -331,6 +331,12 @@ declare namespace APIDao {
 
     /** 创建时间 {"format":"date-time"} */
     createdAt: string
+
+    /** 发起方 Did */
+    initiatorDid: string
+
+    /** 发起方域名 */
+    initiatorDomainName: string
   }
 
   /** POST /proposal/detail */
@@ -543,6 +549,12 @@ declare namespace APIDao {
 
     /** 发起方名称 */
     initiatorId: string
+
+    /** 发起方 Did */
+    initiatorDid: string
+
+    /** 发起方域名 */
+    initiatorDomainName: string
 
     /** 发起方名称 */
     initiatorName: string
