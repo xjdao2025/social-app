@@ -3,7 +3,11 @@ import {Pressable, StyleSheet, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {moderatePost, RichText as RichTextAPI} from '@atproto/api'
+import {useNavigation} from '@react-navigation/native'
+import {useRequest} from 'ahooks'
+import {format} from 'date-fns'
 
+import {parseFileComposeId} from '#/lib/extractAssetUrl'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -13,18 +17,22 @@ import {
   fillThreadModerationCache,
   ThreadModerationCache,
 } from '#/state/queries/post-thread'
+import {useProfileQuery} from '#/state/queries/profile'
+import {useSession} from '#/state/session'
 import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import * as Layout from '#/components/Layout'
 import * as Prompt from '#/components/Prompt'
-import ProposalStatusTag, {ProposalStatus} from '#/components/ProposalStatusTag'
+import ProposalStatusTag from '#/components/ProposalStatusTag'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import server from '#/server'
+import {ProposalStatus, ProposalVoteType} from '#/server/dao/enums'
 import ProposalAuthor from './ProposalAuthor'
 import ProposalEmbeds from './ProposalEmbeds'
-import VoltConfirm, {type VoltConfirmRef} from './VoltConfirm'
+import VoteConfirm, {type VoteConfirmRef} from './VoteConfirm'
 const {Header} = Layout
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProposalDetail'>
@@ -32,9 +40,44 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProposalDetail'>
 export default function ProposalDetailScreen({route}: Props) {
   const {proposalId} = route.params
   const headerRef = useRef<View | null>(null)
+  const {currentAccount} = useSession()
+  const navigation = useNavigation()
   const {gtMobile} = useBreakpoints()
+  const {data: currentUserInfo} = useRequest(async () => {
+    const res = await server.dao('POST /user/login-user-detail')
+    return res
+  })
+
   const delControl = Prompt.usePromptControl()
-  const voltConfirmRef = useRef<VoltConfirmRef>(null)
+  const voteConfirmRef = useRef<VoteConfirmRef>(null)
+  const {data: proposalInfo} = useRequest(
+    async () => {
+      const res = await server.dao('POST /proposal/detail', {proposalId})
+      // if (res) {
+      //   res.attachId = "2-559c9cd426ea4c3b87a6a8667d3e2bdb-proposal_content.txt";
+      // }
+      if (res?.attachId) {
+        const {fileType, fileId} = parseFileComposeId(res.attachId)!
+        const fileBlob = await server.dao(
+          'GET /file/download',
+          {fileId, fileType},
+          {responseType: 'blob'},
+        )
+        //
+        if (fileBlob) {
+          const fileContent = await fileBlob.text()
+          res.content = fileContent
+        }
+      }
+      return res as
+        | null
+        | (APIDao.WebEndPointsProposalProposalDetailVo & {content: string})
+    },
+    {
+      ready: !!proposalId,
+      refreshDeps: [proposalId],
+    },
+  )
   const t = useTheme()
   const mockEmbed = {
     $type: 'app.bsky.embed.images#view',
@@ -58,18 +101,24 @@ export default function ProposalDetailScreen({route}: Props) {
     ],
   }
 
-  const mockAuthor = {
-    avatar:
-      'https://bsky.rivtower.cc/img/avatar/plain/did:plc:pc5gxd5my6uooild5drcixdm/bafkreibjmsjgiof6p5wt6h574xqixwmlvmigttg7ohuykruclanmvmkflq@jpeg',
-    createdAt: '2025-06-03T05:34:27.189Z',
-    did: 'did:plc:pc5gxd5my6uooild5drcixdm',
-    displayName: '',
-    handle: 'zhengzhou.web5.rivtower.cc',
-    labels: [],
-    viewer: {muted: false, blockedBy: false},
-  }
+  const mockAuthor = proposalInfo?.initiatorId
+    ? {
+        avatar: proposalInfo?.initiatorAvatar,
+        // createdAt: '2025-06-03T05:34:27.189Z',
+        did: proposalInfo?.initiatorId, // 'did:plc:pc5gxd5my6uooild5drcixdm',
+        displayName: proposalInfo?.initiatorName, // '',
+        handle: proposalInfo?.initiatorName, // 'zhengzhou.web5.rivtower.cc',
+        labels: [],
+        viewer: {muted: false, blockedBy: false},
+      }
+    : null
 
-  const canDelProposal = true
+  const canDelProposal =
+    currentAccount?.did && currentAccount?.did === proposalInfo?.initiatorId
+  const canVote =
+    currentUserInfo?.nodeUser &&
+    true && // todo not voted
+    proposalInfo?.status === ProposalStatus.InProgress
   // if(!propsosalDetail) return null;
 
   return (
@@ -108,10 +157,10 @@ export default function ProposalDetailScreen({route}: Props) {
       </Header.Outer>
       <View style={[styles.main]}>
         <View style={[a.px_lg, a.pt_lg]}>
-          <ProposalAuthor author={mockAuthor} />
+          {mockAuthor && <ProposalAuthor author={mockAuthor} />}
         </View>
         <View style={[a.px_lg, a.pt_md]}>
-          <Text style={[a.text_xl, a.font_bold]}>提案名称</Text>
+          <Text style={[a.text_xl, a.font_bold]}>{proposalInfo?.name}</Text>
         </View>
         <View
           style={[
@@ -121,17 +170,19 @@ export default function ProposalDetailScreen({route}: Props) {
             a.my_md,
             a.px_lg,
           ]}>
-          <ProposalStatusTag status={ProposalStatus.InProgress} />
-          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-            <Image
-              accessibilityIgnoresInvertColors
-              style={{width: 16, height: 16}}
-              source={require('#/assets/clock.svg')}
-            />
-            <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-              0000/00/00 00:00
-            </Text>
-          </View>
+          <ProposalStatusTag status={proposalInfo?.status} />
+          {proposalInfo?.createdAt && (
+            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <Image
+                accessibilityIgnoresInvertColors
+                style={{width: 16, height: 16}}
+                source={require('#/assets/clock.svg')}
+              />
+              <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+                {format(new Date(proposalInfo.createdAt), 'yyyy/MM/dd HH:mm')}
+              </Text>
+            </View>
+          )}
         </View>
         <View style={[a.px_lg]}>
           <View style={[styles.spliter]} />
@@ -140,14 +191,15 @@ export default function ProposalDetailScreen({route}: Props) {
         <Animated.ScrollView
           style={[a.flex_1, a.px_lg, a.pb_lg]}
           contentContainerStyle={a.flex_grow}>
-          <View style={[styles.blockTitle]}>
+          <pre dangerouslySetInnerHTML={{__html: proposalInfo?.content}} />
+          {/* <View style={[styles.blockTitle]}>
             <Text style={[a.text_md]}>proposalId: {proposalId}</Text>
           </View>
           <View style={[styles.blockContent]}>
             <RichText
               enableTags
               selectable
-              value={new RichTextAPI({text: '123'})}
+              value={new RichTextAPI({ text: '<span style="color: red">3132</span>' })}
               style={[a.flex_1, a.text_xl]}
               // authorHandle={post.author.handle}
               shouldProxyLinks={true}
@@ -155,36 +207,16 @@ export default function ProposalDetailScreen({route}: Props) {
             <View style={[a.py_xs]}>
               <ProposalEmbeds embed={mockEmbed} />
             </View>
-          </View>
-          <View style={[styles.blockTitle]}>
-            <Text style={[a.text_md]}>proposalId: {proposalId}</Text>
-          </View>
-          <View style={[styles.blockContent]}>
-            <RichText
-              enableTags
-              selectable
-              value={new RichTextAPI({text: '123'})}
-              style={[a.flex_1, a.text_xl]}
-              // authorHandle={post.author.handle}
-              shouldProxyLinks={true}
-            />
-            <View style={[a.py_xs]}>
-              <ProposalEmbeds embed={mockEmbed} />
-            </View>
-          </View>
-          <View
-            style={[
-              {
-                height: 2000,
-                backgroundImage:
-                  'linear-gradient(71deg, #DEF2FE 10.27%, #B5D3FF 28.82%, #D9D7FA 96.02%)',
-              },
-            ]}
+          </View> */}
+          <VoteResult
+            agree={proposalInfo?.agreeVotes}
+            disagree={proposalInfo?.opposeVotes}
+            status={proposalInfo?.status}
+            endDate={proposalInfo?.endAt}
           />
-          <VoltResult agree={40} disagree={60} />
         </Animated.ScrollView>
 
-        {true ? (
+        {canVote ? (
           <View
             style={[
               a.flex_row,
@@ -192,20 +224,24 @@ export default function ProposalDetailScreen({route}: Props) {
               a.px_lg,
               a.gap_sm,
               a.py_sm,
-              styles.voltActionBorder,
+              styles.voteActionBorder,
             ]}>
             <SkewButton
               label="disagree"
               position="left"
               color="#FD615B"
-              onPress={() => voltConfirmRef.current?.open('disagree')}>
+              onPress={() =>
+                voteConfirmRef.current?.open(ProposalVoteType.Oppose)
+              }>
               <Text style={[a.text_md, {color: '#fff'}]}>反对</Text>
             </SkewButton>
             <SkewButton
               label="agree"
               position="right"
               color="#1083FE"
-              onPress={() => voltConfirmRef.current?.open('agree')}>
+              onPress={() =>
+                voteConfirmRef.current?.open(ProposalVoteType.Agree)
+              }>
               <Text style={[a.text_md, {color: '#fff'}]}>同意</Text>
             </SkewButton>
           </View>
@@ -218,17 +254,29 @@ export default function ProposalDetailScreen({route}: Props) {
         title="要删除这则贴文吗？"
         description="如果你删除这则贴文，则以后将无法恢复。"
         confirmButtonCta="删除"
-        onConfirm={() => {
-          debugger
+        onConfirm={async () => {
+          const flag = await server.dao('POST /proposal/delete-my-proposal', {
+            proposalId,
+          })
+          if (flag) {
+            Toast.show('删除成功', 'check', 'center')
+            navigation.goBack()
+          }
         }}
         confirmButtonColor="negative"
       />
 
-      <VoltConfirm
-        ref={voltConfirmRef}
-        onConfirm={async voltFor => {
-          console.log('goingt to volt', voltFor)
-          Toast.show('投票成功', 'check', 'center')
+      <VoteConfirm
+        ref={voteConfirmRef}
+        onConfirm={async voteFor => {
+          console.log('goingt to vote', voteFor)
+          const flag = await server.dao('POST /proposal/vote', {
+            proposalId,
+            choose: voteFor,
+          })
+          if (flag) {
+            Toast.show('投票成功', 'check', 'center')
+          }
           // Toast.show('报错', 'xmark');
         }}
       />
@@ -279,13 +327,20 @@ function SkewButton({
   )
 }
 
-type VoltResultProps = {
+type VoteResultProps = {
   agree: number | undefined
   disagree: number | undefined
+  status: ProposalStatus | undefined
+  endDate: string | undefined
 }
 
-function VoltResult(props: VoltResultProps) {
-  const {agree: unsafe_agree, disagree: unsafe_disagree} = props
+function VoteResult(props: VoteResultProps) {
+  const {
+    agree: unsafe_agree,
+    disagree: unsafe_disagree,
+    status,
+    endDate,
+  } = props
   const t = useTheme()
   const {agreeVal, disagreeVal, agreePercent, disagreePercent} = useMemo(() => {
     const agree = unsafe_agree || 0
@@ -318,12 +373,18 @@ function VoltResult(props: VoltResultProps) {
             总投票数: {agreeVal + disagreeVal}
           </Text>
         </View>
-        <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-          截止时间: 0000/00/00 00:00:00
-        </Text>
-        <Text style={[a.text_xs, a.font_bold, {color: '#FD615B'}]}>已结束</Text>
+        {status && status !== ProposalStatus.InProgress ? (
+          <Text style={[a.text_xs, a.font_bold, {color: '#FD615B'}]}>
+            已结束
+          </Text>
+        ) : (
+          <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+            截止时间:{' '}
+            {endDate ? format(new Date(endDate), 'yyyy/MM/dd HH:mm:ss') : '-'}
+          </Text>
+        )}
       </View>
-      <View style={[a.mt_sm, voltStyles.border, a.p_lg]}>
+      <View style={[a.mt_sm, voteStyles.border, a.p_lg]}>
         <View style={[a.mb_md]}>
           <Text style={[a.text_xs, t.atoms.text_contrast_low]}>
             你已选: 同意/不同意
@@ -331,35 +392,35 @@ function VoltResult(props: VoltResultProps) {
         </View>
         <View style={[a.flex_row, a.align_center, a.gap_md, a.pb_md]}>
           <Text>同意</Text>
-          <View style={voltStyles.bar}>
+          <View style={voteStyles.bar}>
             <View
               style={[
-                voltStyles.barInner,
+                voteStyles.barInner,
                 {backgroundColor: '#1083FE', width: agreePercent},
               ]}
             />
           </View>
-          <View>
+          <View style={{width: 18}}>
             <Text>{agreeVal}</Text>
           </View>
-          <View>
+          <View style={{width: 45}}>
             <Text>({agreePercent})</Text>
           </View>
         </View>
         <View style={[a.flex_row, a.align_center, a.gap_md]}>
           <Text>反对</Text>
-          <View style={voltStyles.bar}>
+          <View style={voteStyles.bar}>
             <View
               style={[
-                voltStyles.barInner,
+                voteStyles.barInner,
                 {backgroundColor: '#FD615B', width: disagreePercent},
               ]}
             />
           </View>
-          <View>
+          <View style={{width: 18}}>
             <Text>{disagreeVal}</Text>
           </View>
-          <View>
+          <View style={{width: 45}}>
             <Text>({disagreePercent})</Text>
           </View>
         </View>
@@ -394,7 +455,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#D4DBE2',
   },
-  voltButtonReject: {
+  voteButtonReject: {
     flex: 1,
     backgroundColor: '#FD615B',
     transform: 'skewX(-30deg) translateX(4px)',
@@ -406,7 +467,7 @@ const styles = StyleSheet.create({
     // borderBottomRightRadius: 100,
     height: 44,
   },
-  voltButtonAgree: {
+  voteButtonAgree: {
     flex: 1,
     backgroundColor: '#1083FE',
     transform: 'skewX(-30deg)  translateX(-4px)',
@@ -435,14 +496,14 @@ const styles = StyleSheet.create({
     height: 44,
     transform: 'skewX(-30deg)  translateX(-4px)',
   },
-  voltActionBorder: {
+  voteActionBorder: {
     borderTopColor: '#D4DBE2',
     borderTopWidth: 0.5,
     borderStyle: 'solid',
   },
 })
 
-const voltStyles = StyleSheet.create({
+const voteStyles = StyleSheet.create({
   border: {
     borderWidth: 0.5,
     borderColor: '#d4dbe2',

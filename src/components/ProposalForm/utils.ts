@@ -1,3 +1,4 @@
+import {StyleSheet} from 'react-native'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {$Typed, AppBskyEmbedImages} from '@atproto/api'
 
@@ -15,22 +16,22 @@ export function renderBlockToHTML(
     if (uploadedEmbed.images) {
       mediaDom = uploadedEmbed.images
         .map((embed, index) => {
-          return `<img src="${embed.url}" alt="image" />`
+          return `<div style="${imgBoxStyle}"><img style="${imgStyle}" src="${embed.url}" alt="image" /></div>`
         })
         .join('')
     }
     if (uploadedEmbed.video) {
-      mediaDom = `<video controls autoPlay loop muted playsInline style="width: 100%; height: 100%; object-fit: cover;"><source src="${uploadedEmbed.video}" type="${uploadedEmbed.mime}" /></video>`
+      mediaDom = `<div style="${videoBoxStyle}"><video controls autoPlay loop muted playsInline style="${videoStyle}"><source src="${uploadedEmbed.video}" type="${uploadedEmbed.mime}" /></video></div>`
     }
 
-    mediaDom = `<div>${mediaDom}</div>`
+    mediaDom = `<div style="${mediaBoxStyle}">${mediaDom}</div>`
   }
 
   if (block.type === 'content') {
-    return `<p>${block.richtext.unicodeText}</p>${mediaDom}`
+    return `<p style="${pStyle}">${block.richtext.unicodeText}</p>${mediaDom}`
   }
   if (block.type === 'module-title') {
-    return `<h2>${block.richtext.unicodeText}</h2>`
+    return `<h2 style="${h2Style}">${block.richtext.unicodeText}</h2>`
   }
   return `<p>unknwon block type: ${block.type}</p>`
 }
@@ -81,3 +82,57 @@ export function videoInfoToFile(asset: ImagePickerAsset): File {
   }
   return new File([u8arr], 'video.mp4', {type: mime})
 }
+
+const pStyle = [
+  'padding-top: 16px',
+  'color: rgb(11, 15, 20)',
+  'font-size: 14px',
+  'line-height: 17px',
+  'white-space:normal',
+  'margin: 0',
+].join(';')
+
+const h2Style = [
+  'margin-top: 16px',
+  'padding: 12px',
+  'border-radius: 6px',
+  'background-color: rgba(16, 131, 254, 0.1)',
+  'font-size: 16px',
+  'line-height: 20px',
+  'color: rgb(11, 15, 20)',
+  'white-space:normal',
+  'margin-bottom: 0',
+].join(';')
+
+const mediaBoxStyle = [
+  'margin-top: 16px',
+  'display: flex',
+  'flex-direction: row',
+  'gap: 8px',
+  'justify-content: center',
+  // "max-height: 180px"
+].join(';')
+
+const imgStyle = [
+  'position: absolute',
+  'width: 100%',
+  'height: 100%',
+  'object-fit: cover',
+].join(';')
+
+const imgBoxStyle = [
+  'position: relative',
+
+  'max-height: 50%',
+  'max-width: 50%',
+  'flex: 1 1 0',
+  'border-radius: 8px',
+  'overflow: hidden',
+  'aspect-ratio: 1 / 1',
+].join(';')
+
+const videoBoxStyle = ['border-radius: 8px', 'overflow: hidden'].join(';')
+
+const videoStyle = ['width: 100%', 'height: 100%', 'object-fit: cover'].join(
+  ';',
+)

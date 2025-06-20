@@ -512,7 +512,7 @@ declare namespace APIDao {
   }
 
   /** 提案状态 {"x-enumNames":["Unknown","Review","Pass","Oppose"]} */
-  type DomainEnumsProposalStatus = 0 | 1 | 2 | 3
+  type DomainEnumsProposalStatus = 1 | 2 | 3
 
   interface WebEndPointsProposalProposalPageVo {
     /** 提案 Id */
@@ -546,7 +546,7 @@ declare namespace APIDao {
   }
 
   /** 投票选项 {"x-enumNames":["Unknown","Agree","Oppose"]} */
-  type DomainEnumsVoteType = 0 | 1 | 2
+  type DomainEnumsVoteType = 1 | 2
 
   /** 积分来源类型 0-未知 1-打赏 2-赠送 3-后台发放 {"x-enumNames":["Unknown","Reward","Send","AdminDistribution"]} */
   type DomainEnumsScoreSourceType = 0 | 1 | 2 | 3

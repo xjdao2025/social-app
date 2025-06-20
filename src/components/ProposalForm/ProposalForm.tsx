@@ -477,13 +477,15 @@ export default function ProposalForm(
       const endDate = proposalState.endDate
       const contentBlocks = blocks.slice(1)
 
-      console.log(blocks)
       const blocksHtml = await Promise.all(
         contentBlocks.map(async block => {
           const resolveEmbed = await uploadEmbeds(block)
           return renderBlockToHTML(block, resolveEmbed, currentDid)
         }),
       )
+
+      // setTestResult(blocksHtml.join('\n'));
+      // return;
 
       const contentBlob = new Blob([blocksHtml.join('\n')], {
         type: 'text/plain',
@@ -515,25 +517,6 @@ export default function ProposalForm(
       }
       onClose()
       Toast.show('提案创建成功')
-      // postUri = (
-      //   await apilib.post(agent, queryClient, {
-      //     thread,
-      //     replyTo: undefined, // replyTo?.uri,
-      //     onStateChange: setPublishingStage,
-      //     langs: toPostLanguages(langPrefs.postLanguage),
-      //   })
-      // ).uris[0]
-      // try {
-      //   await whenAppViewReady(agent, postUri, res => {
-      //     const postedThread = res.data.thread
-      //     return AppBskyFeedDefs.isThreadViewPost(postedThread)
-      //   })
-      // } catch (waitErr: any) {
-      //   logger.error(waitErr, {
-      //     message: `Waiting for app view failed`,
-      //   })
-      //   // Keep going because the post *was* published.
-      // }
     } catch (e: any) {
       // logger.error(e, {
       //   message: `Composer: create post failed`,

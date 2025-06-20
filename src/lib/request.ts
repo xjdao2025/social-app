@@ -105,7 +105,8 @@ export async function requestAPI(url: string, config: RequestConfig) {
   }
 
   const bizDataOnly = config.getWholeBizData !== true
-  if (bizDataOnly) response.data = response.data.data
+  if (bizDataOnly && config.responseType !== 'blob')
+    response.data = response.data.data
 
   const getResponse = config.getWholeResponse === true
   return getResponse ? response : response.data

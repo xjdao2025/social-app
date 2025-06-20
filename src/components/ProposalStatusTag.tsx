@@ -1,13 +1,14 @@
 import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
 
 import {atoms as a} from '#/alf'
+import {ProposalStatus} from '#/server/dao/enums'
 import {Text} from './Typography'
 
-export enum ProposalStatus {
-  InProgress,
-  Fail,
-  Pass,
-}
+// export enum ProposalStatus {
+//   InProgress = 1,
+//   Pass,
+//   Fail,
+// }
 
 const statusCfgMap = {
   [ProposalStatus.InProgress]: {text: '审核中', styleName: 'inprogress'},

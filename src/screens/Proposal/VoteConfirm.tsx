@@ -10,34 +10,37 @@ import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
 import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
+import {ProposalVoteType} from '#/server/dao/enums'
 
-type VoltType = 'agree' | 'disagree'
+// type VoteType = 'agree' | 'disagree'
 
-type VoltConfirmProps = {
+type VoteConfirmProps = {
   // controls
   zIndex?: number
-  onConfirm: (voltFor: VoltType) => Promise<void>
+  onConfirm: (voteFor: ProposalVoteType) => Promise<void>
 }
 
-export type VoltConfirmRef = {
-  open(nextVoltFor: VoltType): void
+export type VoteConfirmRef = {
+  open(nextVoteFor: ProposalVoteType): void
 }
 
-const VoltConfirm = forwardRef<VoltConfirmRef, VoltConfirmProps>(
-  function VoltConfirm(props, ref) {
+const VoteConfirm = forwardRef<VoteConfirmRef, VoteConfirmProps>(
+  function VoteConfirm(props, ref) {
     const {zIndex = 1000, onConfirm} = props
     const [popupVisible, setPopupVisible] = useState(false)
     const [showPopupDelayedExit, setShowPopupDelayedExit] =
       useState(popupVisible)
-    const [voltFor, setVoltFor] = useState<VoltType>('agree')
+    const [voteFor, setVoteFor] = useState<ProposalVoteType>(
+      ProposalVoteType.Agree,
+    )
     const t = useTheme()
 
     useImperativeHandle(
       ref,
       () => {
         return {
-          open(nextVoltFor: VoltType) {
-            setVoltFor(nextVoltFor)
+          open(nextVoteFor: ProposalVoteType) {
+            setVoteFor(nextVoteFor)
             setPopupVisible(true)
           },
         }
@@ -88,8 +91,8 @@ const VoltConfirm = forwardRef<VoltConfirmRef, VoltConfirmProps>(
             ]}>
             <Image
               accessibilityIgnoresInvertColors
-              style={[styles.voltIcon]}
-              source={require('#/assets/proposal/volt.png')}
+              style={[styles.voteIcon]}
+              source={require('#/assets/proposal/vote.png')}
             />
             <TouchableWithoutFeedback
               accessibilityRole="button"
@@ -108,9 +111,14 @@ const VoltConfirm = forwardRef<VoltConfirmRef, VoltConfirmProps>(
                 style={[
                   a.text_4xl,
                   a.font_bold,
-                  {color: voltFor === 'agree' ? '#1083FE' : '#FD615B'},
+                  {
+                    color:
+                      voteFor === ProposalVoteType.Agree
+                        ? '#1083FE'
+                        : '#FD615B',
+                  },
                 ]}>
-                {voltFor === 'agree' ? '同意' : '反对'}
+                {voteFor === ProposalVoteType.Agree ? '同意' : '反对'}
               </Text>
             </View>
             <Button
@@ -120,9 +128,9 @@ const VoltConfirm = forwardRef<VoltConfirmRef, VoltConfirmProps>(
                 a.rounded_sm,
                 {backgroundColor: '#1083FE'},
               ]}
-              label="volt"
+              label="vote"
               onPress={async () => {
-                await onConfirm(voltFor)
+                await onConfirm(voteFor)
                 setPopupVisible(false)
               }}>
               <Text style={[a.text_md, {color: colors.white}]}>确认</Text>
@@ -135,7 +143,7 @@ const VoltConfirm = forwardRef<VoltConfirmRef, VoltConfirmProps>(
     )
   },
 )
-export default VoltConfirm
+export default VoteConfirm
 
 const styles = StyleSheet.create({
   bgLight: {
@@ -173,7 +181,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     // overflow: 'scroll',
   },
-  voltIcon: {
+  voteIcon: {
     position: 'absolute',
     top: -120,
     right: 84,

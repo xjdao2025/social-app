@@ -52,15 +52,24 @@ const config = {
   /** 可以在这里修改schema以符合前端代码真是的需求 */
   beforeRenderSchema(schema) {
     const buildEnum = buildEnumHOF(schema);
-    // buildEnum("DobStatus", () => {
-    //   schema.enumVariableName = "EVENT_STATUS";
-    //   schema.enums = [
-    //     // { value: 0, name: "UNKNOWN" },
-    //     { value: 1, name: "COMING_SOON" },
-    //     { value: 2, name: "OPEN" },
-    //     { value: 3, name: "CLOSED" },
-    //   ]
-    // });
+    buildEnum("DomainEnumsProposalStatus", () => {
+      schema.enumVariableName = "ProposalStatus";
+      schema.enums = [
+        // { value: 0, name: "UNKNOWN" },
+        { value: 1, name: "InProgress" },
+        { value: 2, name: "Pass" },
+        { value: 3, name: "Fail" },
+      ]
+    });
+
+    buildEnum("DomainEnumsVoteType", () => {
+      schema.enumVariableName = "ProposalVoteType";
+      schema.enums = [
+        // { value: 0, name: "UNKNOWN" },
+        { value: 1, name: "Agree" },
+        { value: 2, name: "Oppose" },
+      ]
+    });
   },
 };
 export default config;
