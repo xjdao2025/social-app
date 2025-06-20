@@ -1,19 +1,25 @@
 import {Pressable, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
 import {useNavigation} from '@react-navigation/native'
+import {useRequest} from 'ahooks'
 
+import {parseFileComposeId} from '#/lib/extractAssetUrl'
 import {type NavigationProp} from '#/lib/routes/types'
 import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import server from '#/server'
 
 export default function HallDocListScreen() {
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
-
+  const {data: foundInfo} = useRequest(async () => {
+    return server.dao('POST /global-config/foundation-info')
+  })
   return (
     <Layout.Screen testID="HallDocList">
-      <Pressable accessibilityRole="button"
+      <Pressable
+        accessibilityRole="button"
         accessibilityIgnoresInvertColors
         style={{position: 'absolute', left: 16, top: 18, zIndex: 1}}
         onPress={() => navigation.goBack()}>
@@ -46,29 +52,42 @@ export default function HallDocListScreen() {
         </View>
       </View>
       <View style={styles.card}>
-        <View
-          style={[
-            a.flex_row,
-            a.gap_sm,
-            a.px_lg,
-            a.py_xl,
-            a.align_center,
-            styles.item,
-          ]}>
-          <View style={[a.flex_0]}>
-            <Image
-              accessibilityIgnoresInvertColors
-              style={{width: 24, height: 24}}
-              source={require('#/assets/hall/doc.png')}
-            />
-          </View>
-          <View style={[a.flex_1]}>
-            <Text style={[a.text_md]}>文档名称文档名称文档名称文档名称</Text>
-          </View>
-          <Pressable accessibilityRole="button" style={[styles.button]} accessibilityIgnoresInvertColors>
-            <Text style={[t.atoms.text_contrast_medium]}>查看</Text>
-          </Pressable>
-        </View>
+        {foundInfo?.foundationPublicDocument?.map(fileId => {
+          const fileInfo = parseFileComposeId(fileId)
+          if (!fileInfo) return null
+
+          return (
+            <View
+              key={fileId}
+              style={[
+                a.flex_row,
+                a.gap_sm,
+                a.px_lg,
+                a.py_xl,
+                a.align_center,
+                styles.item,
+              ]}>
+              <View style={[a.flex_0]}>
+                <Image
+                  accessibilityIgnoresInvertColors
+                  style={{width: 24, height: 24}}
+                  source={require('#/assets/hall/doc.png')}
+                />
+              </View>
+              <View style={[a.flex_1]}>
+                <Text style={[a.text_md]}>{fileInfo.fileName}</Text>
+              </View>
+              <a href={fileInfo.url}>
+                <Pressable
+                  accessibilityRole="button"
+                  style={[styles.button]}
+                  accessibilityIgnoresInvertColors>
+                  <Text style={[t.atoms.text_contrast_medium]}>查看</Text>
+                </Pressable>
+              </a>
+            </View>
+          )
+        })}
       </View>
     </Layout.Screen>
   )

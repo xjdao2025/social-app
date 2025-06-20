@@ -22,7 +22,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useActorStatus} from '#/lib/actor-status'
 import {isReasonFeedSource, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {MAX_POST_LINES} from '#/lib/constants'
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+// import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -61,15 +61,15 @@ import {Link, TextLink, TextLinkOnWebOnly} from '../util/Link'
 
 interface FeedItemProps {
   record: AppBskyFeedPost.Record
-  reason:
-    | AppBskyFeedDefs.ReasonRepost
-    | AppBskyFeedDefs.ReasonPin
-    | ReasonFeedSource
-    | {[k: string]: unknown; $type: string}
-    | undefined
+  // reason:
+  //   | AppBskyFeedDefs.ReasonRepost
+  //   | AppBskyFeedDefs.ReasonPin
+  //   | ReasonFeedSource
+  //   | {[k: string]: unknown; $type: string}
+  //   | undefined
   moderation: ModerationDecision
   parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
-  showReplyTo: boolean
+  // showReplyTo: boolean
   isThreadChild?: boolean
   isThreadLastChild?: boolean
   isThreadParent?: boolean
@@ -92,12 +92,12 @@ export function PostProposalItem(
     listDid,
     post,
     record,
-    reason,
+    // reason,
     feedContext,
     reqId,
     moderation,
     parentAuthor,
-    showReplyTo,
+    // showReplyTo,
     isThreadChild,
     isThreadLastChild,
     isThreadParent,
@@ -107,6 +107,7 @@ export function PostProposalItem(
     rootPost,
     onShowLess,
   } = props
+
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
     () =>
@@ -127,12 +128,12 @@ export function PostProposalItem(
         key={postShadowed.uri}
         post={postShadowed}
         record={record}
-        reason={reason}
+        // reason={reason}
         feedContext={feedContext}
         reqId={reqId}
         richText={richText}
         parentAuthor={parentAuthor}
-        showReplyTo={showReplyTo}
+        // showReplyTo={showReplyTo}
         moderation={moderation}
         isThreadChild={isThreadChild}
         isThreadLastChild={isThreadLastChild}
@@ -151,30 +152,30 @@ export function PostProposalItem(
 let FeedItemInner = ({
   listDid,
   post,
-  record,
-  reason,
+  // record,
+  // reason,
   feedContext,
   reqId,
   richText,
   moderation,
-  parentAuthor,
-  showReplyTo,
+  // parentAuthor,
+  // showReplyTo,
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
   hideTopBorder,
-  isParentBlocked,
-  isParentNotFound,
+  // isParentBlocked,
+  // isParentNotFound,
   rootPost,
   onShowLess,
 }: FeedItemProps & {
   richText: RichTextAPI
-  post: Shadow<AppBskyFeedDefs.PostView>
+  post: APIDao.WebEndPointsProposalProposalPageVo & AppBskyFeedDefs.PostView
   rootPost: AppBskyFeedDefs.PostView
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
 }): React.ReactNode => {
   const queryClient = useQueryClient()
-  const {openComposer} = useOpenComposer()
+  // const {openComposer} = useOpenComposer()
   const delControl = Prompt.usePromptControl()
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -184,8 +185,8 @@ let FeedItemInner = ({
   //   const urip = new AtUri(post.uri)
   //   return makeProfileLink(post.author, 'post', urip.rkey)
   // }, [post.uri, post.author])
-  const href = '/proposal/proposal-id-xx1'
-  const {sendInteraction} = useFeedFeedbackContext()
+  const href = `/proposal/${post.proposalId}`
+  // const {sendInteraction} = useFeedFeedbackContext()
 
   // const onPressReply = () => {
   //   sendInteraction({
@@ -207,39 +208,39 @@ let FeedItemInner = ({
   // }
 
   const onOpenAuthor = () => {
-    sendInteraction({
-      item: post.uri,
-      event: 'app.bsky.feed.defs#clickthroughAuthor',
-      feedContext,
-      reqId,
-    })
+    // sendInteraction({
+    //   item: post.uri,
+    //   event: 'app.bsky.feed.defs#clickthroughAuthor',
+    //   feedContext,
+    //   reqId,
+    // })
   }
 
   const onOpenReposter = () => {
-    sendInteraction({
-      item: post.uri,
-      event: 'app.bsky.feed.defs#clickthroughReposter',
-      feedContext,
-      reqId,
-    })
+    // sendInteraction({
+    //   item: post.uri,
+    //   event: 'app.bsky.feed.defs#clickthroughReposter',
+    //   feedContext,
+    //   reqId,
+    // })
   }
 
   const onOpenEmbed = () => {
-    sendInteraction({
-      item: post.uri,
-      event: 'app.bsky.feed.defs#clickthroughEmbed',
-      feedContext,
-      reqId,
-    })
+    // sendInteraction({
+    //   item: post.uri,
+    //   event: 'app.bsky.feed.defs#clickthroughEmbed',
+    //   feedContext,
+    //   reqId,
+    // })
   }
 
   const onBeforePress = () => {
-    sendInteraction({
-      item: post.uri,
-      event: 'app.bsky.feed.defs#clickthroughItem',
-      feedContext,
-      reqId,
-    })
+    // sendInteraction({
+    //   item: post.uri,
+    //   event: 'app.bsky.feed.defs#clickthroughItem',
+    //   feedContext,
+    //   reqId,
+    // })
     precacheProfile(queryClient, post.author)
   }
 
@@ -315,7 +316,7 @@ let FeedItemInner = ({
               profile={post.author}
               moderation={moderation.ui('avatar')}
               type={post.author.associated?.labeler ? 'labeler' : 'user'}
-              onBeforePress={onOpenAuthor}
+              // onBeforePress={onOpenAuthor}
               live={live}
             />
             {isThreadParent && (
@@ -338,7 +339,7 @@ let FeedItemInner = ({
                 moderation={moderation}
                 timestamp={post.indexedAt}
                 postHref={href}
-                onOpenAuthor={onOpenAuthor}
+                // onOpenAuthor={onOpenAuthor}
                 style={{flex: 1}}
               />
               {isOwner && listDid === currentAccount?.did && (
@@ -467,10 +468,10 @@ let PostContent = ({
       {richText.text ? (
         <View style={styles.postTextContainer}>
           <Text style={[a.mt_xs, a.text_sm, t.atoms.text_contrast_high]}>
-            XX Proposal Title
+            {post.name}
           </Text>
           <ProposalStatusTag status={ProposalStatus.Fail} style={[a.mt_sm]} />
-          <VoltState agree={100} disagree={5} />
+          <VoltState agree={post.agreeVotes} disagree={post.opposeVotes} />
           {/* <RichText
             enableTags
             testID="postText"

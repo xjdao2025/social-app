@@ -8,12 +8,7 @@ import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {type ComposerImage} from '#/state/gallery'
 import {type Gif} from '#/state/queries/tenor'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
-import {type EmbedDraft} from '#/view/com/composer/state/composer'
-import {
-  createVideoState,
-  type VideoAction,
-  videoReducer,
-} from '#/view/com/composer/state/video'
+import {createVideoState, type VideoAction, type VideoMedia, videoReducer} from './video'
 
 type ImagesMedia = {
   type: 'images'
@@ -37,16 +32,15 @@ export type BlockAction =
   | {
       type: 'embed_add_video'
       asset: ImagePickerAsset
-      abortController: AbortController
     }
   | {type: 'embed_remove_video'}
   | {type: 'embed_update_video'; videoAction: VideoAction}
   | {type: 'embed_add_uri'; uri: string}
   | {type: 'embed_remove_quote'}
   | {type: 'embed_remove_link'}
-  | {type: 'embed_add_gif'; gif: Gif}
-  | {type: 'embed_update_gif'; alt: string}
-  | {type: 'embed_remove_gif'}
+// | { type: 'embed_add_gif'; gif: Gif }
+// | { type: 'embed_update_gif'; alt: string }
+// | { type: 'embed_remove_gif' }
 
 export type ProposalAction =
   // | { type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record }
@@ -70,12 +64,21 @@ export type ProposalAction =
     }
   | {type: 'set_end_date'; date: ProposalState['endDate']}
 
+type Link = {
+  type: 'link'
+  uri: string
+}
+
 export type ProposalBlockType = {
   id: string
   type: 'title' | 'module-title' | 'content'
   richtext: RichText
   labels: SelfLabel[]
-  embed: EmbedDraft
+  embed: {
+    quote: Link | undefined
+    media: ImagesMedia | VideoMedia | undefined
+    link: Link | undefined
+  }
   shortenedGraphemeLength: number
 }
 
@@ -154,10 +157,10 @@ export function proposalReducer(
       const indexToRemove = state.blocks.findIndex(p => p.id === action.blockId)
       let nextBlocks = [...state.blocks]
       if (indexToRemove !== -1) {
-        const postToRemove = state.blocks[indexToRemove]
-        if (postToRemove.embed.media?.type === 'video') {
-          postToRemove.embed.media.video.abortController.abort()
-        }
+        // const postToRemove = state.blocks[indexToRemove]
+        // if (postToRemove.embed.media?.type === 'video') {
+        //   postToRemove.embed.media.video.abortController.abort()
+        // }
         nextBlocks.splice(indexToRemove, 1)
         nextActiveBlockIndex = Math.max(0, indexToRemove - 1)
       }
@@ -293,7 +296,7 @@ function blockReducer(
       if (!prevMedia) {
         nextMedia = {
           type: 'video',
-          video: createVideoState(action.asset, action.abortController),
+          video: createVideoState(action.asset),
         }
       }
       return {
@@ -326,7 +329,7 @@ function blockReducer(
       const prevMedia = state.embed.media
       let nextMedia = prevMedia
       if (prevMedia?.type === 'video') {
-        prevMedia.video.abortController.abort()
+        // prevMedia.video.abortController.abort()
         nextMedia = undefined
       }
       let nextLabels = state.labels
@@ -394,55 +397,55 @@ function blockReducer(
         },
       }
     }
-    case 'embed_add_gif': {
-      const prevMedia = state.embed.media
-      let nextMedia = prevMedia
-      if (!prevMedia) {
-        nextMedia = {
-          type: 'gif',
-          gif: action.gif,
-          alt: '',
-        }
-      }
-      return {
-        ...state,
-        embed: {
-          ...state.embed,
-          media: nextMedia,
-        },
-      }
-    }
-    case 'embed_update_gif': {
-      const prevMedia = state.embed.media
-      let nextMedia = prevMedia
-      if (prevMedia?.type === 'gif') {
-        nextMedia = {
-          ...prevMedia,
-          alt: action.alt,
-        }
-      }
-      return {
-        ...state,
-        embed: {
-          ...state.embed,
-          media: nextMedia,
-        },
-      }
-    }
-    case 'embed_remove_gif': {
-      const prevMedia = state.embed.media
-      let nextMedia = prevMedia
-      if (prevMedia?.type === 'gif') {
-        nextMedia = undefined
-      }
-      return {
-        ...state,
-        embed: {
-          ...state.embed,
-          media: nextMedia,
-        },
-      }
-    }
+    // case 'embed_add_gif': {
+    //   const prevMedia = state.embed.media
+    //   let nextMedia = prevMedia
+    //   if (!prevMedia) {
+    //     nextMedia = {
+    //       type: 'gif',
+    //       gif: action.gif,
+    //       alt: '',
+    //     }
+    //   }
+    //   return {
+    //     ...state,
+    //     embed: {
+    //       ...state.embed,
+    //       media: nextMedia,
+    //     },
+    //   }
+    // }
+    // case 'embed_update_gif': {
+    //   const prevMedia = state.embed.media
+    //   let nextMedia = prevMedia
+    //   if (prevMedia?.type === 'gif') {
+    //     nextMedia = {
+    //       ...prevMedia,
+    //       alt: action.alt,
+    //     }
+    //   }
+    //   return {
+    //     ...state,
+    //     embed: {
+    //       ...state.embed,
+    //       media: nextMedia,
+    //     },
+    //   }
+    // }
+    // case 'embed_remove_gif': {
+    //   const prevMedia = state.embed.media
+    //   let nextMedia = prevMedia
+    //   if (prevMedia?.type === 'gif') {
+    //     nextMedia = undefined
+    //   }
+    //   return {
+    //     ...state,
+    //     embed: {
+    //       ...state.embed,
+    //       media: nextMedia,
+    //     },
+    //   }
+    // }
   }
 }
 

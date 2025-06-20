@@ -1,20 +1,27 @@
 import {Pressable, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
 import {useNavigation} from '@react-navigation/native'
+import {useRequest} from 'ahooks'
 
+import {extractAssetUrl} from '#/lib/extractAssetUrl'
 import {type NavigationProp} from '#/lib/routes/types'
 import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import server from '#/server'
 import NodeInfo from './components/NodeInfo'
 
 export default function HallNodeListScreen() {
   const navigation = useNavigation<NavigationProp>()
   const t = useTheme()
-
+  const {data: nodeList} = useRequest(async () => {
+    const res = await server.dao('POST /node/list')
+    return res
+  })
   return (
     <Layout.Screen testID="HallNodeList">
-      <Pressable accessibilityRole="button"
+      <Pressable
+        accessibilityRole="button"
         accessibilityIgnoresInvertColors
         style={{position: 'absolute', left: 16, top: 18, zIndex: 1}}
         onPress={() => navigation.goBack()}>
@@ -33,42 +40,44 @@ export default function HallNodeListScreen() {
       </View>
 
       <View style={styles.card}>
-        <View
-          style={[
-            a.flex_row,
-            a.gap_sm,
-            a.px_lg,
-            a.py_xl,
-            a.align_center,
-            styles.item,
-          ]}>
+        {nodeList?.map(node => (
           <View
+            key={node.nodeId}
             style={[
-              a.flex_0,
-              a.rounded_full,
-              {width: 44, height: 44, overflow: 'hidden'},
+              a.flex_row,
+              a.gap_sm,
+              a.px_lg,
+              a.py_xl,
+              a.align_center,
+              styles.item,
             ]}>
-            <Image
-              accessibilityIgnoresInvertColors
-              style={{width: '100%', height: '100%'}}
-              source={{
-                uri: 'https://bsky.rivtower.cc/img/avatar/plain/did:plc:pc5gxd5my6uooild5drcixdm/bafkreibjmsjgiof6p5wt6h574xqixwmlvmigttg7ohuykruclanmvmkflq@jpeg',
-              }}
+            <View
+              style={[
+                a.flex_0,
+                a.rounded_full,
+                {width: 44, height: 44, overflow: 'hidden'},
+              ]}>
+              <Image
+                accessibilityIgnoresInvertColors
+                style={{width: '100%', height: '100%'}}
+                source={{
+                  uri: extractAssetUrl(node.logo),
+                }}
+              />
+            </View>
+            <View style={[a.flex_1]}>
+              <Text style={[a.text_md]}>{node.name}</Text>
+            </View>
+            <NodeInfo
+              node={node}
+              trigger={
+                <View style={[styles.button]} accessibilityIgnoresInvertColors>
+                  <Text style={[t.atoms.text_contrast_medium]}>查看</Text>
+                </View>
+              }
             />
           </View>
-          <View style={[a.flex_1]}>
-            <Text style={[a.text_md]}>
-              节点名称节点名称节点名称节点名称节点名称节点名称
-            </Text>
-          </View>
-          <NodeInfo
-            trigger={
-              <View style={[styles.button]} accessibilityIgnoresInvertColors>
-                <Text style={[t.atoms.text_contrast_medium]}>查看</Text>
-              </View>
-            }
-          />
-        </View>
+        ))}
       </View>
     </Layout.Screen>
   )

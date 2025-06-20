@@ -28,6 +28,7 @@ export type ImageMeta = {
   width: number
   height: number
   mime: string
+  file?: File
 }
 
 export type ImageSource = ImageMeta & {
@@ -72,6 +73,7 @@ export async function createComposerImage(
       width: raw.width,
       height: raw.height,
       mime: raw.mime,
+      file: raw.file,
     },
   }
 }

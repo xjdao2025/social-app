@@ -43,12 +43,18 @@ export default function generateService(paths, dataTypes, config) {
         // if (response?.type === 'array') {
         //   console.log('array check:', responseType);
         // }
+        const maybeRequestType = parameters[0]?.type;
+        if(maybeRequestType && mentionedSchema[maybeRequestType]) {
+            if (!dataTypes[maybeRequestType].paths) {
+                dataTypes[maybeRequestType].paths = [];
+            }
+            dataTypes[maybeRequestType].paths.push(`${method} ${url}`);
+        }
         const tempResponseType = response.type === 'array' ? response.arrayElementType?.type : response.type;
         // console.log(mentionedSchema[tempResponseType], tempResponseType);
         if (mentionedSchema[tempResponseType]) {
             if (!dataTypes[tempResponseType].paths) {
                 dataTypes[tempResponseType].paths = [];
-
             }
             dataTypes[tempResponseType].paths.push(`${method} ${url}`);
         }

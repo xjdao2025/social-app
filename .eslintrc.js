@@ -21,6 +21,7 @@ module.exports = {
     'react/no-unescaped-entities': 0,
     'react/prop-types': 0,
     'react-native/no-inline-styles': 0,
+    'react-native-a11y/has-valid-accessibility-ignores-invert-colors': 0,
     'bsky-internal/avoid-unwrapped-text': [
       'error',
       {

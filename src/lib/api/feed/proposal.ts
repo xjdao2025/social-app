@@ -1,11 +1,38 @@
 import {type AppBskyFeedDefs, type BskyAgent} from '@atproto/api'
 
-import {type ProposalStatus} from '#/state/queries/post-feed'
+import {
+  mapProposalStatusToCode,
+  type ProposalStatus,
+} from '#/state/queries/post-feed'
+import server from '#/server'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
 type RequestParams = {
   state: ProposalStatus
   did?: string
+}
+
+async function fetchMyProposal(
+  type: APIDao.WebEndPointsProposalMyProposalReq['type'],
+) {
+  const items = await server.dao('POST /proposal/my-proposal-list', {type})
+  return items?.map(restructFeedItem)
+}
+
+async function fetchProposal(
+  status: ProposalStatus,
+  pageNum: number,
+  pageSize: number,
+) {
+  const res = await server.dao('POST /proposal/page', {
+    status: mapProposalStatusToCode[status],
+    pageNum,
+    pageSize,
+  })
+  return {
+    ...res,
+    items: res?.items?.map(restructFeedItem),
+  }
 }
 
 export class ProposalFeedAPI implements FeedAPI {
@@ -16,38 +43,64 @@ export class ProposalFeedAPI implements FeedAPI {
     this.params = params
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    // todo 提案接口
-    const res = await this.agent.getTimeline({
-      limit: 1,
-    })
-    return res.data.feed[0]
+  async peekLatest() {
+    const {state, did} = this.params
+    if (did) {
+      const items = await fetchMyProposal(+state)
+      return items?.[0] ?? null
+    }
+    const res = await fetchProposal(state, 1, 1)
+    return res?.items?.[0] || null
   }
 
-  async fetch({
-    cursor,
-    limit,
-  }: {
-    cursor: string | undefined
-    limit: number
-  }): Promise<FeedAPIResponse> {
+  async fetch({cursor, limit}: {cursor: string | undefined; limit: number}) {
     const {state, did} = this.params
-    const page = cursor || 1
-    // todo 提案接口
+    const page = cursor ? +cursor : 1
     console.log('proposal request params:', {state, did, page})
-    const res = await this.agent.getTimeline({
-      cursor,
-      limit,
-    })
 
-    if (res.success) {
+    if (did) {
+      const items = await fetchMyProposal(+state)
       return {
-        cursor: res.data.cursor,
-        feed: res.data.feed,
+        feed: items || [],
+      }
+    }
+
+    const res = await fetchProposal(state, 1, limit)
+    if (res?.items) {
+      return {
+        cursor: `${
+          res.pageIndex * res.pageSize > res.total ? '' : res.pageIndex + 1
+        }`,
+        feed: res.items,
       }
     }
     return {
       feed: [],
     }
+  }
+}
+
+function restructFeedItem(
+  item: APIDao.WebEndPointsProposalProposalPageVo,
+): AppBskyFeedDefs.FeedViewPost {
+  return {
+    post: {
+      ...item,
+      cid: item.proposalId,
+      author: {
+        did: item.initiatorId,
+        displayName: item.initiatorName,
+        avatar: item.initiatorAvatar,
+        handle: '',
+      },
+      record: {
+        $type: 'app.bsky.feed.post',
+        text: item.name,
+        createdAt: '2025-06-19T05:24:38.345Z',
+        langs: ['zh'],
+      },
+      uri: '',
+      indexedAt: item.createdAt,
+    },
   }
 }

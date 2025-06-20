@@ -1,12 +1,12 @@
-import {createUploadTask, FileSystemUploadType} from 'expo-file-system'
-import {AppBskyVideoDefs, BskyAgent} from '@atproto/api'
-import {I18n} from '@lingui/core'
+import {type AppBskyVideoDefs} from '@atproto/api'
+import {type BskyAgent} from '@atproto/api'
+import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {nanoid} from 'nanoid/non-secure'
 
 import {AbortError} from '#/lib/async/cancelable'
 import {ServerError} from '#/lib/media/video/errors'
-import {CompressedVideo} from '#/lib/media/video/types'
+import {type CompressedVideo} from '#/lib/media/video/types'
 import {getServiceAuthToken, getVideoUploadLimits} from './upload.shared'
 import {createVideoEndpointUrl, mimeToExt} from './util'
 
@@ -35,6 +35,14 @@ export async function uploadVideo({
     name: `${nanoid(12)}.${mimeToExt(video.mimeType)}`,
   })
 
+  let bytes = video.bytes
+  if (!bytes) {
+    if (signal.aborted) {
+      throw new AbortError()
+    }
+    bytes = await fetch(video.uri).then(res => res.arrayBuffer())
+  }
+
   if (signal.aborted) {
     throw new AbortError()
   }
@@ -43,37 +51,45 @@ export async function uploadVideo({
     lxm: 'com.atproto.repo.uploadBlob',
     exp: Date.now() / 1000 + 60 * 30, // 30 minutes
   })
-  const uploadTask = createUploadTask(
-    uri,
-    video.uri,
-    {
-      headers: {
-        'content-type': video.mimeType,
-        Authorization: `Bearer ${token}`,
-      },
-      httpMethod: 'POST',
-      uploadType: FileSystemUploadType.BINARY_CONTENT,
+
+  if (signal.aborted) {
+    throw new AbortError()
+  }
+  const xhr = new XMLHttpRequest()
+  const res = await new Promise<AppBskyVideoDefs.JobStatus>(
+    (resolve, reject) => {
+      xhr.upload.addEventListener('progress', e => {
+        const progress = e.loaded / e.total
+        setProgress(progress)
+      })
+      xhr.onloadend = () => {
+        if (signal.aborted) {
+          reject(new AbortError())
+        } else if (xhr.readyState === 4) {
+          const uploadRes = JSON.parse(
+            xhr.responseText,
+          ) as AppBskyVideoDefs.JobStatus
+          resolve(uploadRes)
+        } else {
+          reject(new ServerError(_(msg`Failed to upload video`)))
+        }
+      }
+      xhr.onerror = () => {
+        reject(new ServerError(_(msg`Failed to upload video`)))
+      }
+      xhr.open('POST', uri)
+      xhr.setRequestHeader('Content-Type', video.mimeType)
+      xhr.setRequestHeader('Authorization', `Bearer ${token}`)
+      xhr.send(bytes)
     },
-    p => setProgress(p.totalBytesSent / p.totalBytesExpectedToSend),
   )
 
-  if (signal.aborted) {
-    throw new AbortError()
-  }
-  const res = await uploadTask.uploadAsync()
-
-  if (!res?.body) {
-    throw new Error('No response')
-  }
-
-  const responseBody = JSON.parse(res.body) as AppBskyVideoDefs.JobStatus
-
-  if (!responseBody.jobId) {
-    throw new ServerError(responseBody.error || _(msg`Failed to upload video`))
+  if (!res.jobId) {
+    throw new ServerError(res.error || _(msg`Failed to upload video`))
   }
 
   if (signal.aborted) {
     throw new AbortError()
   }
-  return responseBody
+  return res
 }

@@ -1,17 +1,26 @@
-import {useEffect, useRef, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import Animated, {useAnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
-import {useNavigation} from '@react-navigation/native'
+import {type NavigationProp,useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
+import {useRequest} from 'ahooks'
 
-import {type NavigationProp} from '#/lib/routes/types'
+import displayNumber from '#/lib/displayNumber'
+import {extractAssetUrl} from '#/lib/extractAssetUrl'
+import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
+import {type AllNavigatorParams} from '#/lib/routes/types'
+import {listenProposalCreated, listenSoftReset} from '#/state/events'
 import {type ProposalStatus} from '#/state/queries/post-feed'
+import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
+import {truncateAndInvalidate} from '#/state/queries/util'
 import {HomeHeaderLayoutMobile} from '#/view/com/home/HomeHeaderLayoutMobile'
 import {type ListRef} from '#/view/com/util/List'
-import { atoms as a, useBreakpoints, useTheme } from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import ProposalFormModal from '#/components/ProposalForm'
 import {Text} from '#/components/Typography'
+import server from '#/server'
 import {ProfileFeedSection} from '../Profile/Sections/Feed'
 import {type SectionRef} from '../Profile/Sections/types'
 import NodeInfo from './components/NodeInfo'
@@ -27,7 +36,60 @@ export default function HallScreen() {
   const t = useTheme()
   const [headerOpacity, setHeaderOpacity] = useState(0)
   const [currentTabKey, setTabKey] = useState(proposalStageOptions[0].key)
-  const navigation = useNavigation<NavigationProp>()
+  const queryClient = useQueryClient()
+  const navigation = useNavigation<NavigationProp<AllNavigatorParams>>()
+  const {data: nodeList} = useRequest(async () => {
+    const res = await server.dao('POST /node/list')
+    return res
+  })
+  const {data: foundInfo} = useRequest(async () => {
+    return server.dao('POST /global-config/foundation-info')
+  })
+  const scrollElRef = useAnimatedRef()
+  const postsSectionRef = useRef<SectionRef>(null)
+  const isPageFocused = true
+
+  const onProposalCreated = useCallback(() => {
+    // NOTE
+    // only invalidate if there's 1 page
+    // more than 1 page can trigger some UI freakouts on iOS and android
+    // -prf
+    if (currentTabKey === 'all' || currentTabKey === 'inprogress') {
+      queryClient.invalidateQueries({
+        queryKey: FEED_RQKEY(`proposal|${currentTabKey}`),
+      })
+    }
+  }, [queryClient, currentTabKey])
+  useEffect(() => {
+    return listenProposalCreated(onProposalCreated)
+  }, [onProposalCreated])
+
+  const onSoftReset = useCallback(() => {
+    const isScreenFocused =
+      getTabState(getRootNavigation(navigation).getState(), 'Hall') ===
+      TabState.InsideAtRoot
+    if (isScreenFocused && isPageFocused) {
+      postsSectionRef.current?.scrollToTop()
+      // scrollToTop()
+      truncateAndInvalidate(
+        queryClient,
+        FEED_RQKEY(`proposal|${currentTabKey}`),
+      )
+      // setHasNew(false)
+      // logEvent('feed:refresh', {
+      //   feedType: feed.split('|')[0],
+      //   feedUrl: feed,
+      //   reason: 'soft-reset',
+      // })
+    }
+  }, [navigation, isPageFocused, queryClient, currentTabKey, postsSectionRef])
+
+  useEffect(() => {
+    if (!isPageFocused) {
+      return
+    }
+    return listenSoftReset(onSoftReset)
+  }, [onSoftReset, isPageFocused])
 
   useEffect(() => {
     const f = () => {
@@ -48,10 +110,6 @@ export default function HallScreen() {
     }
   }, [])
 
-  const scrollElRef = useAnimatedRef()
-
-  const postsSectionRef = useRef<SectionRef>(null)
-
   return (
     <Layout.Screen testID="hallScreen">
       <HomeHeaderLayoutMobile
@@ -71,7 +129,9 @@ export default function HallScreen() {
               onPress={() => {
                 navigation.push('HallDocList')
               }}>
-              <Text style={[t.atoms.text_contrast_medium, a.text_sm]}>更多</Text>
+              <Text style={[t.atoms.text_contrast_medium, a.text_sm]}>
+                更多
+              </Text>
               <Image
                 style={{width: 14, height: 14}}
                 source={require('#/assets/expand-right.svg')}
@@ -95,7 +155,7 @@ export default function HallScreen() {
                     a.text_family_ddin,
                     a.font_bold,
                   ]}>
-                  000,000
+                  {displayNumber(foundInfo?.fundScale)}
                 </Text>
               </View>
             </View>
@@ -113,7 +173,7 @@ export default function HallScreen() {
                   a.text_family_ddin,
                   a.font_bold,
                 ]}>
-                000,000
+                {displayNumber(foundInfo?.issuePointsScale)}
               </Text>
             </View>
           </View>
@@ -121,23 +181,30 @@ export default function HallScreen() {
         <View style={[styles.cardWrapper]}>
           <View style={[styles.card, a.pt_lg]}>
             <View
-              style={[a.flex_row, a.align_baseline, a.justify_between, a.px_lg]}>
+              style={[
+                a.flex_row,
+                a.align_baseline,
+                a.justify_between,
+                a.px_lg,
+              ]}>
               <Text style={[t.atoms.text, a.text_lg, a.font_bold]}>节点</Text>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityIgnoresInvertColors
-                style={[a.flex_row]}
-                onPress={() => {
-                  navigation.push('HallNodeList')
-                }}>
-                <Text style={[t.atoms.text_contrast_medium, a.text_sm]}>
-                  更多
-                </Text>
-                <Image
-                  style={{width: 14, height: 14}}
-                  source={require('#/assets/expand-right.svg')}
-                />
-              </Pressable>
+              {(nodeList?.length ?? 0) > 4 && (
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityIgnoresInvertColors
+                  style={[a.flex_row]}
+                  onPress={() => {
+                    navigation.push('HallNodeList')
+                  }}>
+                  <Text style={[t.atoms.text_contrast_medium, a.text_sm]}>
+                    更多
+                  </Text>
+                  <Image
+                    style={{width: 14, height: 14}}
+                    source={require('#/assets/expand-right.svg')}
+                  />
+                </Pressable>
+              )}
             </View>
 
             <View
@@ -148,26 +215,26 @@ export default function HallScreen() {
                 a.mt_lg,
                 a.justify_between,
               ]}>
-              {Array.from({length: 4}, (_, idx) => {
-                return (
-                  <NodeInfo
-                    key={idx}
-                    trigger={
-                      <View
-                        style={[
-                          a.flex_0,
-                          {
-                            width: 64,
-                            height: 64,
-                            borderRadius: '50%',
-                            backgroundColor: '#ff0',
-                          },
-                        ]}
-                      />
-                    }
-                  />
-                )
-              })}
+              {nodeList?.slice(0, 4).map(node => (
+                <NodeInfo
+                  key={node.nodeId}
+                  node={node}
+                  trigger={
+                    <Image
+                      source={{uri: extractAssetUrl(node.logo)}}
+                      style={[
+                        a.flex_0,
+                        {
+                          width: 64,
+                          height: 64,
+                          borderRadius: '50%',
+                          backgroundColor: '#ff0',
+                        },
+                      ]}
+                    />
+                  }
+                />
+              ))}
             </View>
 
             <View
@@ -213,7 +280,6 @@ export default function HallScreen() {
                 })}
               </View>
             </View>
-
             <ProfileFeedSection
               ref={postsSectionRef}
               // feed={`author|did:plc:pc5gxd5my6uooild5drcixdm|posts_and_author_threads`}

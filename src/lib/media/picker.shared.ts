@@ -32,11 +32,14 @@ export async function openPicker(opts?: ImagePickerOptions) {
       Toast.show(t`Only image files are supported`, 'exclamation-circle')
       return false
     })
-    .map(image => ({
-      mime: image.mimeType || 'image/jpeg',
-      height: image.height,
-      width: image.width,
-      path: image.uri,
-      size: getDataUriSize(image.uri),
-    }))
+    .map(image => {
+      return {
+        mime: image.mimeType || 'image/jpeg',
+        height: image.height,
+        width: image.width,
+        path: image.uri,
+        file: image.file,
+        size: getDataUriSize(image.uri),
+      }
+    })
 }

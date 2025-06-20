@@ -264,7 +264,6 @@ let PostFeed = ({
     () => !isFetching && !data?.pages?.some(page => page.slices.length),
     [isFetching, data],
   )
-
   const checkForNew = React.useCallback(async () => {
     // Discover always has fresh content
     if (feedUriOrActorDid === DISCOVER_FEED_URI) {
@@ -515,7 +514,6 @@ let PostFeed = ({
               }
               const itemType =
                 feedKind === 'proposal' ? 'proposalItem' : 'sliceItem'
-
               if (slice.isFallbackMarker) {
                 arr.push({
                   type: 'fallbackMarker',
@@ -525,6 +523,7 @@ let PostFeed = ({
               } else if (slice.isIncompleteThread && slice.items.length >= 3) {
                 const beforeLast = slice.items.length - 2
                 const last = slice.items.length - 1
+
                 arr.push(
                   sliceItem({
                     type: itemType,
@@ -782,12 +781,12 @@ let PostFeed = ({
             listDid={feedTab}
             post={item.post}
             record={item.record}
-            reason={indexInSlice === 0 ? slice.reason : undefined}
+            // reason={indexInSlice === 0 ? slice.reason : undefined}
             feedContext={slice.feedContext}
             reqId={slice.reqId}
             moderation={item.moderation}
             parentAuthor={item.parentAuthor}
-            showReplyTo={row.showReplyTo}
+            // showReplyTo={row.showReplyTo}
             isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
             isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
             isThreadLastChild={

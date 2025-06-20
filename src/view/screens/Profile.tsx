@@ -41,14 +41,14 @@ import {type ListRef} from '#/view/com/util/List'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
+import {ProfileTabsAll} from '#/screens/Profile/Tabs/All'
+import SubBar from '#/screens/Profile/Tabs/SubBar'
 import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
 import {navigate} from '#/Navigation'
 import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
-import { ProfileTabsAll } from "#/screens/Profile/Tabs/All";
-import SubBar from "#/screens/Profile/Tabs/SubBar";
 
 interface SectionRef {
   scrollToTop: () => void
@@ -185,6 +185,7 @@ function ProfileScreenLoaded({
   const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
 
   const postsSectionRef = React.useRef<SectionRef>(null)
+  const proposalSectionRef = React.useRef<SectionRef>(null)
   const repliesSectionRef = React.useRef<SectionRef>(null)
   const mediaSectionRef = React.useRef<SectionRef>(null)
   const videosSectionRef = React.useRef<SectionRef>(null)
@@ -216,28 +217,23 @@ function ProfileScreenLoaded({
   const listCount = (profile.associated?.lists || 0) - starterPackCount
   const showListsTab = hasSession && (isMe || listCount > 0)
 
-  const sectionTitles = ['全部','任务','商品','活动','提案']
+  const sectionTitles = ['全部', '任务', '商品', '活动', '提案']
 
-  const scrollSectionToTop = useCallback(
-    (index: number) => {
-      // if (index === filtersIndex) {
-      //   labelsSectionRef.current?.scrollToTop()
-      // } else if (index === postsIndex) {
-      //   postsSectionRef.current?.scrollToTop()
-      // } else if (index === repliesIndex) {
-      //   repliesSectionRef.current?.scrollToTop()
-      // } else if (index === mediaIndex) {
-      //   mediaSectionRef.current?.scrollToTop()
-      // } else if (index === videosIndex) {
-      //   videosSectionRef.current?.scrollToTop()
-      // } else if (index === likesIndex) {
-      //   likesSectionRef.current?.scrollToTop()
-      // }
-    },
-    [
-
-    ],
-  )
+  const scrollSectionToTop = useCallback((index: number) => {
+    // if (index === filtersIndex) {
+    //   labelsSectionRef.current?.scrollToTop()
+    // } else if (index === postsIndex) {
+    //   postsSectionRef.current?.scrollToTop()
+    // } else if (index === repliesIndex) {
+    //   repliesSectionRef.current?.scrollToTop()
+    // } else if (index === mediaIndex) {
+    //   mediaSectionRef.current?.scrollToTop()
+    // } else if (index === videosIndex) {
+    //   videosSectionRef.current?.scrollToTop()
+    // } else if (index === likesIndex) {
+    //   likesSectionRef.current?.scrollToTop()
+    // }
+  }, [])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -290,7 +286,7 @@ function ProfileScreenLoaded({
       </ExpoScrollForwarderView>
     )
   }
-
+  console.log('currentPage', currentPage)
   return (
     <ScreenHider
       testID="profileView"
@@ -305,19 +301,46 @@ function ProfileScreenLoaded({
         onCurrentPageSelected={onCurrentPageSelected}
         renderHeader={renderHeader}
         allowHeaderOverScroll>
-        {currentPage === 0
-          ? ({headerHeight, isFocused, scrollElRef}) => (
+        {({headerHeight, isFocused, scrollElRef}) => (
+          <SubBar
+            items={[
+              {
+                key: `author|${profile.did}|posts_and_author_threads`,
+                label: '贴文',
+              },
+              {key: `author|${profile.did}|posts_with_replies`, label: '回复'},
+              {key: `author|${profile.did}|posts_with_media`, label: '媒体'},
+              {key: `author|${profile.did}|posts_with_video`, label: '视频'},
+              {key: `likes|${profile.did}`, label: '喜欢'},
+            ]}>
+            <ProfileFeedSection
+              ref={postsSectionRef}
+              feed={`author|${profile.did}|posts_and_author_threads`}
+              headerHeight={headerHeight}
+              isFocused={isFocused}
+              scrollElRef={scrollElRef as ListRef}
+              ignoreFilterFor={profile.did}
+              setScrollViewTag={setScrollViewTag}
+            />
+          </SubBar>
+        )}
+        {() => <></>}
+        {() => <></>}
+        {() => <></>}
+        {({headerHeight, isFocused, scrollElRef}) => (
+          console.log('isFocused', isFocused),
+          (
             <SubBar
-              items={[{
-                key: `author|${profile.did}|posts_and_author_threads`, label: '贴文' },
-                { key: `author|${profile.did}|posts_with_replies`, label: '回复' },
-                { key: `author|${profile.did}|posts_with_media`, label: '媒体' },
-                { key: `author|${profile.did}|posts_with_video`, label: '视频' },
-                { key: `likes|${profile.did}`, label: '喜欢' },
-              ]}
-            >
+              items={[
+                {
+                  key: `proposal|0|${profile.did}`,
+                  label: '全部',
+                },
+                {key: `proposal|1|${profile.did}`, label: '我发布的'},
+                {key: `proposal|2|${profile.did}`, label: '我参与的'},
+              ]}>
               <ProfileFeedSection
-                ref={postsSectionRef}
+                ref={proposalSectionRef}
                 feed={`author|${profile.did}|posts_and_author_threads`}
                 headerHeight={headerHeight}
                 isFocused={isFocused}
@@ -326,20 +349,20 @@ function ProfileScreenLoaded({
                 setScrollViewTag={setScrollViewTag}
               />
             </SubBar>
-            )
-          : null}
-        {showListsTab && !profile.associated?.labeler
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileLists
-                ref={listsSectionRef}
-                did={profile.did}
-                scrollElRef={scrollElRef as ListRef}
-                headerOffset={headerHeight}
-                enabled={isFocused}
-                setScrollViewTag={setScrollViewTag}
-              />
-            )
-          : null}
+          )
+        )}
+        {/* {showListsTab && !profile.associated?.labeler
+          ? ({ headerHeight, isFocused, scrollElRef }) => (
+            <ProfileLists
+              ref={listsSectionRef}
+              did={profile.did}
+              scrollElRef={scrollElRef as ListRef}
+              headerOffset={headerHeight}
+              enabled={isFocused}
+              setScrollViewTag={setScrollViewTag}
+            />
+          )
+          : null} */}
       </PagerWithHeader>
     </ScreenHider>
   )

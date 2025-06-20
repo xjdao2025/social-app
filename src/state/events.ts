@@ -45,3 +45,12 @@ export function listenPostCreated(fn: () => void): UnlistenFn {
   emitter.on('post-created', fn)
   return () => emitter.off('post-created', fn)
 }
+
+export function emitProposalCreated() {
+  emitter.emit('proposal-created')
+}
+
+export function listenProposalCreated(fn: () => void): UnlistenFn {
+  emitter.on('proposal-created', fn)
+  return () => emitter.off('proposal-created', fn)
+}

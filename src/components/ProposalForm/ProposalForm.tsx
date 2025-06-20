@@ -44,7 +44,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   type AppBskyFeedGetPostThread,
   type BskyAgent,
   type RichText,
@@ -74,7 +74,7 @@ import {colors, s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
-import {emitPostCreated} from '#/state/events'
+import {emitProposalCreated} from '#/state/events'
 import {type ComposerImage, pasteImage} from '#/state/gallery'
 import {useModalControls} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
@@ -145,6 +145,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '#/../modules/bottom-sheet'
+import server from '#/server'
 import {DateTimeField} from '../forms/DateField/DateTimeField'
 import {
   type BlockAction,
@@ -153,6 +154,7 @@ import {
   type ProposalBlockType,
   proposalReducer,
 } from './state'
+import {renderBlockToHTML, uploadEmbeds, videoInfoToFile} from './utils'
 
 type CancelRef = {
   onPressCancel: () => void
@@ -205,6 +207,7 @@ export default function ProposalForm(
   const [publishingStage, setPublishingStage] = useState('')
   const [error, setError] = useState('')
   const {data: currentProfile} = useProfileQuery({did: currentDid})
+  const [testResult, setTestResult] = useState('')
 
   const [proposalState, proposalDispatch] = useReducer(
     proposalReducer,
@@ -238,35 +241,85 @@ export default function ProposalForm(
 
   const selectVideo = React.useCallback(
     (blockId: string, asset: ImagePickerAsset) => {
-      const abortController = new AbortController()
-      proposalDispatch({
-        type: 'update_block',
-        blockId: blockId,
-        blockAction: {
-          type: 'embed_add_video',
-          asset,
-          abortController,
-        },
-      })
-      processVideo(
-        asset,
-        videoAction => {
+      ;(async () => {
+        proposalDispatch({
+          type: 'update_block',
+          blockId: blockId,
+          blockAction: {
+            type: 'embed_add_video',
+            asset,
+          },
+        })
+        const file = videoInfoToFile(asset)
+        const res = await server.dao(
+          'POST /file/upload',
+          {
+            file: file,
+            fileType: 2,
+          },
+          {getWholeBizData: true},
+        )
+        const resData = res.data
+        if (resData?.fileId) {
           proposalDispatch({
             type: 'update_block',
-            blockId,
+            blockId: blockId,
             blockAction: {
               type: 'embed_update_video',
-              videoAction,
+              videoAction: {
+                type: 'to_done',
+                fileId: resData.fileId,
+              },
             },
           })
-        },
-        agent,
-        currentDid,
-        abortController.signal,
-        _,
-      )
+        } else {
+          proposalDispatch({
+            type: 'update_block',
+            blockId: blockId,
+            blockAction: {
+              type: 'embed_update_video',
+              videoAction: {
+                type: 'to_error',
+                error: res.message,
+              },
+            },
+          })
+        }
+
+        // const abortController = new AbortController()
+        // proposalDispatch({
+        //   type: 'update_block',
+        //   blockId,
+        //   blockAction: {
+        //     type: 'embed_update_video',
+        //     videoAction: {
+        //       type: "to_done",
+        //       blobRef: asset.file!,
+        //       signal: abortController.signal
+        //     },
+        //   },
+        // })
+        // processVideo(
+        //   asset,
+        //   videoAction => {
+        //     console.log('videoAction', videoAction);
+        //     proposalDispatch({
+        //       type: 'update_block',
+        //       blockId,
+        //       blockAction: {
+        //         type: 'embed_update_video',
+        //         videoAction,
+        //       },
+        //     })
+        //   },
+        //   agent,
+        //   currentDid,
+        //   abortController.signal,
+        //   _,
+        // )
+      })()
     },
-    [_, agent, currentDid, proposalDispatch],
+    [proposalDispatch],
   )
 
   const onInitVideo = useNonReactiveCallback(() => {
@@ -358,28 +411,29 @@ export default function ProposalForm(
   }, [onPressCancel, closeAllDialogs, closeAllModals])
 
   const missingAltError = useMemo(() => {
-    if (!requireAltTextEnabled) {
-      return
-    }
-    for (let i = 0; i < blocks.length; i++) {
-      const media = blocks[i].embed.media
-      if (media) {
-        if (media.type === 'images' && media.images.some(img => !img.alt)) {
-          return _(msg`One or more images is missing alt text.`)
-        }
-        if (media.type === 'gif' && !media.alt) {
-          return _(msg`One or more GIFs is missing alt text.`)
-        }
-        if (
-          media.type === 'video' &&
-          media.video.status !== 'error' &&
-          !media.video.altText
-        ) {
-          return _(msg`One or more videos is missing alt text.`)
-        }
-      }
-    }
-  }, [blocks, requireAltTextEnabled, _])
+    return false
+    // if (!requireAltTextEnabled) {
+    //   return
+    // }
+    // for (let i = 0; i < blocks.length; i++) {
+    //   const media = blocks[i].embed.media
+    //   if (media) {
+    //     if (media.type === 'images' && media.images.some(img => !img.alt)) {
+    //       return _(msg`One or more images is missing alt text.`)
+    //     }
+    //     if (media.type === 'gif' && !media.alt) {
+    //       return _(msg`One or more GIFs is missing alt text.`)
+    //     }
+    //     if (
+    //       media.type === 'video' &&
+    //       media.video.status !== 'error' &&
+    //       !media.video.altText
+    //     ) {
+    //       return _(msg`One or more videos is missing alt text.`)
+    //     }
+    //   }
+    // }
+  }, []) // requireAltTextEnabled
 
   const canPost =
     !missingAltError &&
@@ -419,8 +473,48 @@ export default function ProposalForm(
 
     let postUri
     try {
-      // todo
-      console.log(queryClient)
+      const title = blocks[0].richtext.unicodeText.toString()
+      const endDate = proposalState.endDate
+      const contentBlocks = blocks.slice(1)
+
+      console.log(blocks)
+      const blocksHtml = await Promise.all(
+        contentBlocks.map(async block => {
+          const resolveEmbed = await uploadEmbeds(block)
+          return renderBlockToHTML(block, resolveEmbed, currentDid)
+        }),
+      )
+
+      const contentBlob = new Blob([blocksHtml.join('\n')], {
+        type: 'text/plain',
+      })
+      const attachFile = new File([contentBlob], 'proposal_content.txt', {
+        type: 'text/plain',
+      })
+      const uploadRes = await server.dao('POST /file/upload', {
+        file: attachFile,
+        fileType: 2,
+      })
+
+      const submitRes = await server.dao(
+        'POST /proposal/create',
+        {
+          name: title,
+          endAt: new Date(endDate).toISOString(),
+          attachId: uploadRes?.fileId!,
+        },
+        {getWholeBizData: true},
+      )
+
+      if (!submitRes.data) {
+        throw new Error(submitRes.message)
+      }
+
+      if (postUri) {
+        emitProposalCreated()
+      }
+      onClose()
+      Toast.show('提案创建成功')
       // postUri = (
       //   await apilib.post(agent, queryClient, {
       //     thread,
@@ -441,10 +535,10 @@ export default function ProposalForm(
       //   // Keep going because the post *was* published.
       // }
     } catch (e: any) {
-      logger.error(e, {
-        message: `Composer: create post failed`,
-        hasImages: blocks.some(p => p.embed.media?.type === 'images'),
-      })
+      // logger.error(e, {
+      //   message: `Composer: create post failed`,
+      //   hasImages: blocks.some(p => p.embed.media?.type === 'images'),
+      // })
 
       let err = cleanError(e.message)
       if (err.includes('not locate record')) {
@@ -483,45 +577,39 @@ export default function ProposalForm(
         })
       }
     }
-    if (postUri) {
-      emitPostCreated()
-    }
-    setLangPrefs.savePostLanguageToHistory()
-    if (initQuote) {
-      // We want to wait for the quote count to update before we call `onPost`, which will refetch data
-      whenAppViewReady(agent, initQuote.uri, res => {
-        const quotedThread = res.data.thread
-        if (
-          AppBskyFeedDefs.isThreadViewPost(quotedThread) &&
-          quotedThread.post.quoteCount !== initQuote.quoteCount
-        ) {
-          onPost?.(postUri)
-          return true
-        }
-        return false
-      })
-    } else {
-      onPost?.(postUri)
-    }
-    onClose()
-    Toast.show(
-      blocks.length > 1
-        ? _(msg`Your posts have been published`)
-        : _(msg`Your post has been published`),
-    )
+
+    // setLangPrefs.savePostLanguageToHistory()
+    // if (initQuote) {
+    //   // We want to wait for the quote count to update before we call `onPost`, which will refetch data
+    //   whenAppViewReady(agent, initQuote.uri, res => {
+    //     const quotedThread = res.data.thread
+    //     if (
+    //       AppBskyFeedDefs.isThreadViewPost(quotedThread) &&
+    //       quotedThread.post.quoteCount !== initQuote.quoteCount
+    //     ) {
+    //       onPost?.(postUri)
+    //       return true
+    //     }
+    //     return false
+    //   })
+    // } else {
+    //   onPost?.(postUri)
+    // }
   }, [
     _,
-    agent,
+    // agent,
     canPost,
     isPublishing,
     langPrefs.postLanguage,
     onClose,
-    onPost,
-    initQuote,
+    // onPost,
+    // initQuote,
     // replyTo,
-    setLangPrefs,
-    queryClient,
+    // setLangPrefs,
+    // queryClient,
     blocks,
+    currentDid,
+    proposalState.endDate,
   ])
 
   // Preserves the referential identity passed to each post item.
@@ -678,7 +766,9 @@ export default function ProposalForm(
               type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
               style={[a.ml_sm]}
             />
-            <NewText style={[a.text_md]}>组织名称</NewText>
+            <NewText style={[a.text_md]}>
+              {currentProfile?.displayName || currentAccount?.handle}
+            </NewText>
           </View>
           <Animated.ScrollView
             ref={scrollViewRef}
@@ -729,6 +819,7 @@ export default function ProposalForm(
                 />
               </View>
             </View>
+            <div dangerouslySetInnerHTML={{__html: testResult}} />
           </Animated.ScrollView>
 
           {/* {!isWebFooterSticky && footer} */}
@@ -1058,7 +1149,7 @@ function Embeds({
   canRemoveQuote,
   isActivePost,
 }: {
-  embed: EmbedDraft
+  embed: ProposalBlockType['embed']
   dispatch: (action: BlockAction) => void
   clearVideo: () => void
   canRemoveQuote: boolean
@@ -1071,21 +1162,21 @@ function Embeds({
         <Gallery images={embed.media.images} dispatch={dispatch} />
       )}
 
-      {embed.media?.type === 'gif' && (
+      {/* {embed.media?.type === 'gif' && (
         <View style={[a.relative, a.mt_lg]} key={embed.media.gif.url}>
           <ExternalEmbedGif
             gif={embed.media.gif}
-            onRemove={() => dispatch({type: 'embed_remove_gif'})}
+            onRemove={() => dispatch({ type: 'embed_remove_gif' })}
           />
           <GifAltTextDialog
             gif={embed.media.gif}
             altText={embed.media.alt ?? ''}
             onSubmit={(altText: string) => {
-              dispatch({type: 'embed_update_gif', alt: altText})
+              dispatch({ type: 'embed_update_gif', alt: altText })
             }}
           />
         </View>
-      )}
+      )} */}
 
       {!embed.media && embed.link && (
         <View style={[a.relative, a.mt_lg]} key={embed.link.uri}>
@@ -1104,16 +1195,16 @@ function Embeds({
             entering={native(ZoomIn)}
             exiting={native(ZoomOut)}>
             {video.asset &&
-              (video.status === 'compressing' ? (
+              (video.status === 'uploading' ? (
                 <VideoTranscodeProgress
                   asset={video.asset}
                   progress={video.progress}
                   clear={clearVideo}
                 />
-              ) : video.video ? (
+              ) : video.fileId ? (
                 <VideoPreview
                   asset={video.asset}
-                  video={video.video}
+                  video={{uri: video.asset.uri}}
                   isActivePost={isActivePost}
                   clear={clearVideo}
                 />

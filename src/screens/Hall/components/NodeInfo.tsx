@@ -2,24 +2,16 @@ import {type ReactNode} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
 
+import {extractAssetUrl} from '#/lib/extractAssetUrl'
 import {atoms as a} from '#/alf'
 import Popup from '#/components/Popup'
 import {Text} from '#/components/Typography'
 type NodeInfoProps = {
   trigger: ReactNode
+  node: APIDao.WebEndPointsNodeNodeListVo
 }
 
-const text = `
-adfadf
-  adsjglaf
-adfadf
-adfadf
-  adsjglaf
-adfadf
-adfadf
-`
-
-export default function NodeInfo({trigger}: NodeInfoProps) {
+export default function NodeInfo({trigger, node}: NodeInfoProps) {
   return (
     <Popup trigger={trigger} height={'80vh'}>
       <View style={[a.p_lg]}>
@@ -31,14 +23,14 @@ export default function NodeInfo({trigger}: NodeInfoProps) {
             accessibilityIgnoresInvertColors
             style={[styles.logo]}
             source={{
-              uri: 'https://bsky.rivtower.cc/img/avatar/plain/did:plc:pc5gxd5my6uooild5drcixdm/bafkreibjmsjgiof6p5wt6h574xqixwmlvmigttg7ohuykruclanmvmkflq@jpeg',
+              uri: extractAssetUrl(node.logo),
             }}
             alt=""
           />
-          <Text style={[a.text_2xl]}>节点名称</Text>
+          <Text style={[a.text_2xl]}>{node.name}</Text>
         </View>
         <View style={[a.my_xl, styles.spliter]} />
-        <Text style={[a.text_md]}>{text}</Text>
+        <Text style={[a.text_md]}>{node.description}</Text>
       </View>
     </Popup>
   )
