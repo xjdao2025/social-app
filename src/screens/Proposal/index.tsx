@@ -266,6 +266,7 @@ export default function ProposalDetailScreen({route}: Props) {
             disagree={proposalInfo?.opposeVotes}
             status={proposalInfo?.status}
             endDate={proposalInfo?.endAt}
+            votedInfo={votedInfo}
           />
         </Animated.ScrollView>
 
@@ -387,6 +388,7 @@ type VoteResultProps = {
   disagree: number | undefined
   status: ProposalStatus | undefined
   endDate: string | undefined
+  votedInfo: APIDao.WebEndPointsProposalMyProposalChoiceVo | null | undefined
 }
 
 function VoteResult(props: VoteResultProps) {
@@ -395,6 +397,7 @@ function VoteResult(props: VoteResultProps) {
     disagree: unsafe_disagree,
     status,
     endDate,
+    votedInfo,
   } = props
   const t = useTheme()
   const {agreeVal, disagreeVal, agreePercent, disagreePercent} = useMemo(() => {
@@ -440,11 +443,16 @@ function VoteResult(props: VoteResultProps) {
         )}
       </View>
       <View style={[a.mt_sm, voteStyles.border, a.p_lg]}>
-        <View style={[a.mb_md]}>
-          <Text style={[a.text_xs, t.atoms.text_contrast_low]}>
-            你已选: 同意/不同意
-          </Text>
-        </View>
+        {(votedInfo?.choice === ProposalVoteType.Agree ||
+          votedInfo?.choice === ProposalVoteType.Oppose) && (
+          <View style={[a.mb_md]}>
+            <Text style={[a.text_xs, t.atoms.text_contrast_low]}>
+              你已选:{' '}
+              {votedInfo?.choice === ProposalVoteType.Agree ? '同意' : '反对'}
+            </Text>
+          </View>
+        )}
+
         <View style={[a.flex_row, a.align_center, a.gap_md, a.pb_md]}>
           <Text>同意</Text>
           <View style={voteStyles.bar}>

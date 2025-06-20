@@ -12,8 +12,6 @@ import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 import {ProposalVoteType} from '#/server/dao/enums'
 
-// type VoteType = 'agree' | 'disagree'
-
 type VoteConfirmProps = {
   // controls
   zIndex?: number
