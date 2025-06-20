@@ -1,18 +1,35 @@
-import { Pressable, StyleSheet, View } from "react-native";
-import { Image } from "expo-image";
+import { useEffect, useRef, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { useRequest } from "ahooks";
+import { format } from "date-fns";
 
+import MedalEmpty from "#/screens/MedalsWall/MedalEmpty";
 import MedalsHeader from "#/screens/MedalsWall/MedalsHeader";
 import { atoms as a, useBreakpoints, useTheme } from '#/alf'
 import * as Layout from '#/components/Layout'
+import OssImage from "#/components/OssImage";
 import { Text } from "#/components/Typography";
-import { useEffect, useRef, useState } from "react";
-
+import server from "#/server";
+import BottomView from "./BottomView";
 
 const MedalsWallScreen = () => {
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
+  const { gtMobile } = useBreakpoints()
   const contentRef = useRef<HTMLDivElement | undefined>(undefined);
   const [headerOpacity, setHeaderOpacity] = useState(0)
+
+  const { data: userMedals } = useRequest(async () => {
+    const result = await server.dao('POST /user-medal/page', {
+      pageNum: 1,
+      pageSize: 500,
+    })
+    const received = result?.items.filter(m => !!m.getTime)
+    return {
+      received,
+      receivedTotal: received?.length,
+      medals: result?.items
+    }
+  })
 
   useEffect(() => {
     const f = () => {
@@ -26,6 +43,8 @@ const MedalsWallScreen = () => {
 
   }, []);
 
+  const isEmpty = userMedals?.medals?.length === 0
+
   return <Layout.Screen testID="MedalsWallScreen">
     <View
       style={[
@@ -36,8 +55,11 @@ const MedalsWallScreen = () => {
         },
       ]}
     >
-      <View style={{height: 285 + 48}} />
-      <MedalsHeader />
+      <View style={{ height: 285 + 48 }} />
+      <MedalsHeader
+        list={userMedals?.received}
+        total={userMedals?.receivedTotal}
+      />
       <View style={styles.content}>
         <View
           style={[
@@ -53,18 +75,27 @@ const MedalsWallScreen = () => {
         </View>
         <View style={styles.content_inner}>
           <View style={styles.inner}>
-            {new Array(5).fill(2).map(() => {
-              return <View style={styles.medal_item}>
-                <Image
-                  accessibilityIgnoresInvertColors
-                  style={{ width: 80, aspectRatio: 1 }}
-                  source={require('#/assets/medals/mdal1.png')}
-                />
-                <Text style={[styles.medal_item_title, t.atoms.text_contrast_high]}>珍爱地球</Text>
-                <Text style={[styles.medal_item_time, t.atoms.text_contrast_low]}>2023.08.01 获得</Text>
-              </View>
-            })}
+            {isEmpty ? <MedalEmpty />
+            : <>
+                {userMedals?.medals?.map((md) => {
+                  return <View
+                    style={styles.medal_item}
+                    key={md.medalId}
+                  >
+                    <OssImage
+                      attachId={md.attachId}
+                      style={{ width: 80, aspectRatio: 1, filter: !md.getTime ? 'grayscale(100%)' : ''}}
+                    />
+                    <Text style={[styles.medal_item_title, t.atoms.text_contrast_high]}>{md.name}</Text>
+                    <Text style={[styles.medal_item_time, t.atoms.text_contrast_low]}>
+                      {md.getTime ? `${format(new Date(md.getTime), 'yyyy.MM.dd')} 获得` : '未获得'}
+                    </Text>
+                  </View>
+                })}
+              </>
+            }
           </View>
+          {!isEmpty && <BottomView />}
         </View>
       </View>
     </View>
@@ -90,8 +121,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F1F3F5',
     paddingInline: 16,
     position: 'relative',
-    // minHeight: 'calc(100vh - 285px - 48px)',
-    minHeight: '100vh'
+    minHeight: 'calc(100vh - 285px - 48px)',
   },
   content_title: {
     fontSize: 16,
@@ -108,7 +138,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 20
+    gap: 20,
+    minHeight: 'calc(100% - 50px)'
   },
   medal_item: {
     width: 90,

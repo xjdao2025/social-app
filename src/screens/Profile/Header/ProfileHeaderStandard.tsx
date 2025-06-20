@@ -282,7 +282,7 @@ let ProfileHeaderStandard = ({
             </Button>
           </View>
           <ProfileHeaderHandle profile={profile} />
-          <ProfileHeaderMedal profile={profile} />
+          {isMe && <ProfileHeaderMedal profile={profile} />}
         </View>
         {!isPlaceholderProfile && !isBlockedUser && (
           <View style={a.gap_md}>

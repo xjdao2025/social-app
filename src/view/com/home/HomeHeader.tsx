@@ -8,18 +8,16 @@ import {RenderTabBarFnProps} from '#/view/com/pager/Pager'
 import {TabBar} from '../pager/TabBar'
 import {HomeHeaderLayout} from './HomeHeaderLayout'
 import { Text } from "#/components/Typography";
-import { Dimensions, View } from "react-native";
+import { Dimensions, Linking, TouchableWithoutFeedback, View } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { atoms as a, useBreakpoints, useTheme } from '#/alf'
+import { useRequest } from "ahooks";
+import server from "#/server";
+import OssImage from "#/components/OssImage";
 
-const defaultDataWith6Colors = [
-  "#B0604D",
-  "#899F9C",
-  "#B3C680",
-  "#5C6265",
-  "#F5D399",
-  "#F1F1F1",
-];
+const validateLink = (url: string) => {
+  const link = url.match(/https?:\/\/(.*)/);
+}
 
 export function HomeHeader(
   props: RenderTabBarFnProps & {
@@ -32,6 +30,8 @@ export function HomeHeader(
   const {hasSession} = useSession()
   const navigation = useNavigation<NavigationProp>()
   const {gtMobile} = useBreakpoints()
+
+  const { data: bannerList } = useRequest(() => server.dao('POST /banner/list'))
 
   const hasPinnedCustom = React.useMemo<boolean>(() => {
     if (!hasSession) return false
@@ -71,27 +71,36 @@ export function HomeHeader(
     <HomeHeaderLayout tabBarAnchor={props.tabBarAnchor}>
       <Carousel
         testID={"banner"}
-        loop={true}
+        loop={false}
         width={screenWidth}
         height={200}
         snapEnabled={true}
         pagingEnabled={true}
         autoPlayInterval={1000}
-        autoPlay={false}
-        data={defaultDataWith6Colors}
+        autoPlay
+        data={bannerList || []}
         style={{ width: screenWidth }}
         onConfigurePanGesture={(g: { enabled: (arg0: boolean) => any }) => {
           "worklet";
           g.enabled(false);
         }}
-        renderItem={({index}) => {
-          return <View style={[{backgroundColor: 'red'}, a.h_full]}>
-            <Text>{index}</Text>
-          </View>
+        renderItem={({item, index}) => {
+          return <TouchableWithoutFeedback
+            accessibilityRole={'link'}
+            onPress={() => {
+              if (!item.linkAddress) return
+              const url = /https?:\/\/(.*)/.test(item.linkAddress)
+              ? item.linkAddress
+                : `//${item.linkAddress}`
+              Linking.openURL(url)
+            }}
+          >
+            <OssImage attachId={item.bannerFileId} style={{ height: '100%' }} />
+          </TouchableWithoutFeedback>
         }}
       />
       <TabBar
-        key={items.join(',')}
+        key={'home-tab-bar'}
         onPressSelected={props.onPressSelected}
         selectedPage={props.selectedPage}
         onSelect={onSelect}

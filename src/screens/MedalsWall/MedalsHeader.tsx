@@ -1,39 +1,43 @@
+import { useRef } from "react";
 import { Dimensions, Pressable, StyleSheet, View } from "react-native";
+import { useSharedValue } from "react-native-reanimated";
+import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 import { Image } from "expo-image";
 
-import { atoms as a, useBreakpoints, useTheme } from "#/alf";
-import { Text } from "#/components/Typography";
-import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
-import { useSharedValue } from "react-native-reanimated";
-import { useRef } from "react";
 import { useGoBack } from "#/lib/hooks/useGoBack";
-
-const defaultDataWith6Colors = [
-  require('#/assets/medals/mdal1.png'),
-  require('#/assets/medals/mdal2.png'),
-];
+import { atoms as a, useBreakpoints, useTheme } from "#/alf";
+import OssImage from "#/components/OssImage";
+import { Text } from "#/components/Typography";
 
 // const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCALE_RATIO = 240 / 750
 const SCROLL_OFFSET_RATIO = 465 / 750
 const SCREEN_WIDTH = Math.min(600, Dimensions.get("window").width)
 
-const MedalsHeader = () => {
+const MedalsHeader = (props: {
+  list?: APIDao.WebEndPointsUserMedalUserMedalPageVo[]
+  total?: number
+}) => {
+  const { list = [], total = 0 } = props;
   const t = useTheme()
   const goBack = useGoBack()
-  const {gtMobile} = useBreakpoints()
+  const { gtMobile } = useBreakpoints()
   const ref = useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
 
   const screenWidth = gtMobile ? 600 : Dimensions.get('window').width
 
+  const fullWidth = gtMobile ? 600 : '100%'
+
   return <>
-    <View style={[
-      a.fixed,
-      a.top_0,
-      a.z_10,
-      { width: screenWidth, height: 44, overflow: 'hidden' },
-    ]}>
+    <View
+      style={[
+        a.fixed,
+        a.top_0,
+        a.z_10,
+        { width: fullWidth, height: 44, overflow: 'hidden' },
+      ]}
+    >
       <View
         style={[styles.container, styles.bgColor, a.pl_lg, { paddingTop: 18 }]}
       >
@@ -60,8 +64,9 @@ const MedalsHeader = () => {
         styles.container,
         styles.bgColor,
         a.fixed,
-        { width: screenWidth }
-      ]}>
+        { width: fullWidth }
+      ]}
+    >
       <Image
         accessibilityIgnoresInvertColors
         style={[{ width: 263, height: 253 }, styles.topBg]}
@@ -79,7 +84,7 @@ const MedalsHeader = () => {
           source={require('#/assets/medals/wing.svg')}
         />
         <Text style={[a.text_xl, a.font_bold, t.atoms.text_inverted]}>
-          总成就<Text style={[a.text_xl, a.font_bold, a.mx_sm, { color: '#1083FE' }]}>102</Text>枚
+          总成就<Text style={[a.text_xl, a.font_bold, a.mx_sm, { color: '#1083FE' }]}>{total}</Text>枚
         </Text>
         <Image
           accessibilityIgnoresInvertColors
@@ -88,18 +93,18 @@ const MedalsHeader = () => {
         />
       </View>
       <Text style={[styles.new_get, a.text_xs, a.mt_md, a.mb_sm]}>最新获得</Text>
-      {/*<View style={styles.empty}>*/}
-      {/*  <Image*/}
-      {/*    accessibilityIgnoresInvertColors*/}
-      {/*    style={{ width: 60, aspectRatio: 1 }}*/}
-      {/*    source={require('#/assets/medals/question.svg')}*/}
-      {/*  />*/}
-      {/*  <Text style={styles.emptyText}>待获得</Text>*/}
-      {/*</View>*/}
-
+      {list.length === 0 ?
+        <View style={styles.empty}>
+          <Image
+            accessibilityIgnoresInvertColors
+            style={{ width: 60, aspectRatio: 1 }}
+            source={require('#/assets/medals/question.svg')}
+          />
+          <Text style={styles.emptyText}>待获得</Text>
+        </View> :
         <Carousel
           ref={ref}
-          data={defaultDataWith6Colors}
+          data={list}
           height={165}
           loop={false}
           pagingEnabled={true}
@@ -115,16 +120,17 @@ const MedalsHeader = () => {
           renderItem={({ item, index }) => {
             const currentIndex = ref.current?.getCurrentIndex()
             return <View
-              style={[styles.swiper]}>
-              <Image
-                accessibilityIgnoresInvertColors
+              style={[styles.swiper]}
+            >
+              <OssImage
+                attachId={item.attachId}
                 style={{ width: '100%', aspectRatio: 1 }}
-                source={item}
               />
-              {index === currentIndex && <Text style={styles.swiper_text}>珍爱地球</Text>}
+              {index === currentIndex && <Text style={styles.swiper_text}>{item.name}</Text>}
             </View>
           }}
         />
+      }
     </View>
   </>;
 }
