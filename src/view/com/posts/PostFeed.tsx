@@ -25,7 +25,7 @@ import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
-import {listenPostCreated} from '#/state/events'
+import {listenPostCreated, listenProposalCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useTrendingSettings} from '#/state/preferences/trending'
 import {STALE} from '#/state/queries'
@@ -313,6 +313,21 @@ let PostFeed = ({
   React.useEffect(() => {
     return listenPostCreated(onPostCreated)
   }, [onPostCreated])
+
+  const onProposalCreated = useCallback(() => {
+    // NOTE
+    // only invalidate if there's 1 page
+    // more than 1 page can trigger some UI freakouts on iOS and android
+    // -prf
+    if (feed.startsWith('proposal')) {
+      queryClient.invalidateQueries({
+        queryKey: RQKEY(feed),
+      })
+    }
+  }, [queryClient, feed])
+  React.useEffect(() => {
+    return listenProposalCreated(onProposalCreated)
+  }, [onProposalCreated])
 
   React.useEffect(() => {
     // we store the interval handler in a ref to avoid needless

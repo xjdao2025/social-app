@@ -332,6 +332,7 @@ export default function ProposalDetailScreen({route}: Props) {
           if (flag) {
             Toast.show('投票成功', 'check', 'center')
             reload()
+            emitProposalCreated()
           }
           // Toast.show('报错', 'xmark');
         }}

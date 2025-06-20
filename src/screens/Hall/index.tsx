@@ -49,23 +49,23 @@ export default function HallScreen() {
   const postsSectionRef = useRef<SectionRef>(null)
   const isPageFocused = true
 
-  const onProposalCreated = useCallback(() => {
-    // NOTE
-    // only invalidate if there's 1 page
-    // more than 1 page can trigger some UI freakouts on iOS and android
-    // -prf
-    if (
-      currentTabKey === ProposalStatus.Unknown ||
-      currentTabKey === ProposalStatus.InProgress
-    ) {
-      queryClient.invalidateQueries({
-        queryKey: FEED_RQKEY(`proposal|${currentTabKey}`),
-      })
-    }
-  }, [queryClient, currentTabKey])
-  useEffect(() => {
-    return listenProposalCreated(onProposalCreated)
-  }, [onProposalCreated])
+  // const onProposalCreated = useCallback(() => {
+  //   // NOTE
+  //   // only invalidate if there's 1 page
+  //   // more than 1 page can trigger some UI freakouts on iOS and android
+  //   // -prf
+  //   if (
+  //     currentTabKey === ProposalStatus.Unknown ||
+  //     currentTabKey === ProposalStatus.InProgress
+  //   ) {
+  //     queryClient.invalidateQueries({
+  //       queryKey: FEED_RQKEY(`proposal|${currentTabKey}`),
+  //     })
+  //   }
+  // }, [queryClient, currentTabKey])
+  // useEffect(() => {
+  //   return listenProposalCreated(onProposalCreated)
+  // }, [onProposalCreated])
 
   const onSoftReset = useCallback(() => {
     const isScreenFocused =
