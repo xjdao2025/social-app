@@ -1,17 +1,67 @@
+import {useRef} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
+import {useInfiniteScroll, useRequest} from 'ahooks'
+import {format} from 'date-fns'
+
+import displayNumber from '#/lib/displayNumber'
+import {useGoBack} from '#/lib/hooks/useGoBack'
+import PointsEmpty from '#/screens/PointsRecord/PointsEmpty'
 import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
-import { useGoBack } from "#/lib/hooks/useGoBack";
+import server from '#/server'
+
+type InfiniteScrollType = {
+  list: APIDao.WebEndPointsScoreUserScoreRecordPageVo[]
+  total: number
+  curPage: number
+}
+
+const PAGE_SIZE = 30
 
 const PointsRecordScreen = () => {
   const t = useTheme()
   const goBack = useGoBack()
 
+  const ref = useRef(null)
+
+  const {data: userDetail} = useRequest(() =>
+    server.dao('POST /user/login-user-detail'),
+  )
+
+  const {
+    data: pointsRecord,
+    loading,
+    loadMore,
+    loadingMore,
+  } = useInfiniteScroll<InfiniteScrollType>(
+    async d => {
+      const page = d ? d.curPage + 1 : 1
+      return await getPoints(page, d)
+    },
+    {
+      target: ref,
+      isNoMore: d => d?.list?.length === d?.total,
+    },
+  )
+
+  const getPoints = async (page: number, d?: InfiniteScrollType) => {
+    const result = await server.dao('POST /score/user-sore-record-page', {
+      pageNum: page,
+      pageSize: PAGE_SIZE,
+    })
+
+    return {
+      list: (d?.list || []).concat(result?.items || []),
+      total: result?.total || 0,
+      curPage: (result?.pageIndex || 0) + 1,
+    }
+  }
+
   return (
     <Layout.Screen testID="PointsRecordScreen">
-      <Layout.Center>
+      <Layout.Center style={styles.container}>
         <Pressable
           accessibilityRole="button"
           accessibilityIgnoresInvertColors
@@ -23,15 +73,14 @@ const PointsRecordScreen = () => {
             source={require('#/assets/arrow-left.svg')}
           />
         </Pressable>
+
         <View style={[styles.headContainer, a.pb_lg]}>
-          <View style={styles.linearBg}>
-            <View style={styles.headImage}>
-              <Image
-                accessibilityIgnoresInvertColors
-                style={{width: 224, height: 224}}
-                source={require('#/assets/hall/node-list.bg.png')}
-              />
-            </View>
+          <View style={styles.headImage}>
+            <Image
+              accessibilityIgnoresInvertColors
+              style={{width: '100%', height: 346}}
+              source={require('#/assets/points/bg.png')}
+            />
           </View>
           <View style={[styles.headPlaceholder, a.mb_lg]} />
           <View style={[a.px_lg]}>
@@ -39,62 +88,69 @@ const PointsRecordScreen = () => {
           </View>
           <View style={[a.px_lg, a.mt_md]}>
             <Text
-              style={[t.atoms.text, a.text_4xl, a.text_family_ddin, a.font_bold]}>
-              1,820
+              style={[
+                t.atoms.text,
+                a.text_4xl,
+                a.text_family_ddin,
+                a.font_bold,
+              ]}>
+              {displayNumber(userDetail?.score)}
             </Text>
           </View>
         </View>
         <View style={styles.card}>
-          <Text style={[{fontWeight: 500, color: '#0B0F14'}]}>明细</Text>
-          <View
-            style={[
-              a.flex_row,
-              a.justify_between,
-              a.px_lg,
-              a.align_center,
-              styles.item,
-            ]}>
-            <View style={[a.flex_col, a.justify_between, a.gap_sm]}>
-              <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_high]}>
-                发帖名字
-              </Text>
-              <Text style={[t.atoms.text_contrast_high]}>发帖奖励</Text>
-              <Text style={[t.atoms.text_contrast_low]}>2024-10-18 12:00:00</Text>
-            </View>
-            <Text
-              style={[
-                a.text_md,
-                a.text_family_ddin,
-                a.font_bold,
-                {color: '#F66455'},
-              ]}>
-              +10
-            </Text>
-          </View>
-          <View
-            style={[
-              a.flex_row,
-              a.justify_between,
-              a.px_lg,
-              a.align_center,
-              styles.item,
-            ]}>
-            <View style={[a.flex_col, a.justify_between, a.gap_sm]}>
-              <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_high]}>
-                发帖名字
-              </Text>
-              <Text style={[t.atoms.text_contrast_high]}>发帖奖励</Text>
-              <Text style={[t.atoms.text_contrast_low]}>2024-10-18 12:00:00</Text>
-            </View>
-            <Text
-              style={[
-                a.text_md,
-                a.text_family_ddin,
-                a.font_bold,
-                {color: '#F66455'},
-              ]}>
-              +10
-            </Text>
+          <Text style={[{fontWeight: 500, color: '#0B0F14', marginBottom: 18}]}>
+            明细
+          </Text>
+          <View style={[styles.card_content, a.overflow_auto]} ref={ref}>
+            {pointsRecord?.list.length === 0 ? (
+              <PointsEmpty />
+            ) : (
+              pointsRecord?.list.map((p, index) => (
+                <View
+                  key={p.id}
+                  style={[
+                    a.flex_row,
+                    a.justify_between,
+                    a.px_lg,
+                    a.align_center,
+                    styles.item,
+                  ]}>
+                  <View style={[a.flex_col, a.justify_between, a.gap_sm]}>
+                    <Text
+                      style={[
+                        a.text_md,
+                        a.font_bold,
+                        t.atoms.text_contrast_high,
+                      ]}>
+                      {p.reason}
+                    </Text>
+                    <Text style={[t.atoms.text_contrast_high]}>
+                      {
+                        {
+                          0: '',
+                          1: '打赏',
+                          2: '赠送',
+                          3: '后台发放',
+                        }[p.type]
+                      }
+                    </Text>
+                    <Text style={[t.atoms.text_contrast_low]}>
+                      {format(new Date(p.createdAt), 'yyyy-MM-dd HH:mm:ss')}
+                    </Text>
+                  </View>
+                  <Text
+                    style={[
+                      a.text_md,
+                      a.text_family_ddin,
+                      a.font_bold,
+                      {color: '#F66455'},
+                    ]}>
+                    +{p.score}
+                  </Text>
+                </View>
+              ))
+            )}
           </View>
         </View>
       </Layout.Center>
@@ -105,25 +161,21 @@ const PointsRecordScreen = () => {
 export default PointsRecordScreen
 
 const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100vh',
+    overflow: 'hidden',
+  },
   headContainer: {
     position: 'relative',
+    height: 150,
   },
   headImage: {
     position: 'absolute',
     top: 0,
     right: 0,
-  },
-
-  linearBg: {
-    position: 'absolute',
-    zIndex: 0,
     width: '100%',
-    // height: '100%',
-    paddingBottom: '66.5%',
-
-    opacity: 0.6,
-    backgroundImage:
-      'linear-gradient(71deg, #DEF2FE 10.27%, #B5D3FF 28.82%, #D9D7FA 96.02%)',
   },
 
   headPlaceholder: {
@@ -136,17 +188,19 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderWidth: 1,
     borderStyle: 'solid',
-    borderColor: '#fff',
-    // backgroundImage: "linear-gradient(180deg, #F3F9FE 0%, #FBFDFF 100%)",
-    backgroundColor: '#F3F9FE',
+    borderColor: '#F1F3F5',
+    backgroundImage: 'linear-gradient(180deg, #F3F9FE 0%, #FBFDFF 100%)',
     paddingBlock: 18,
     paddingInline: 16,
+  },
+  card_content: {
+    height: 'calc(100% - 50px)',
   },
   item: {
     width: '100%',
     backgroundColor: '#fff',
     borderRadius: 12,
-    marginTop: 12,
+    marginBottom: 12,
     paddingBlock: 10,
   },
   button: {

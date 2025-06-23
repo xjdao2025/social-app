@@ -8,8 +8,10 @@ import {
 } from 'react-native'
 import {Image} from 'expo-image'
 import {useNavigation} from '@react-navigation/native'
+import {useRequest} from 'ahooks'
 
-import  {type NavigationProp} from '#/lib/routes/types'
+import displayNumber from '#/lib/displayNumber'
+import {type NavigationProp} from '#/lib/routes/types'
 import {ReceivePointsDialog} from '#/screens/Profile/Header/ReceivePointsDialog'
 import {SendPointsDialog} from '#/screens/Profile/Header/SendPointsDialog'
 import {atoms as a, useTheme} from '#/alf'
@@ -17,13 +19,17 @@ import {useDialogControl} from '#/components/Dialog'
 import {ArrowRight_Angle} from '#/components/icons/Arrow'
 import {QrCode_Icon, QrCode_Scan} from '#/components/icons/QrCode'
 import {Text} from '#/components/Typography'
-// const splashImageUri = RNImage.resolveAssetSource(pointsBg).uri
+import server from '#/server'
 
 export function ProfileHeaderRewardPoints() {
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
   const sendPointsControl = useDialogControl()
   const receivePointsControl = useDialogControl()
+
+  const {data: userDetail} = useRequest(() =>
+    server.dao('POST /user/login-user-detail'),
+  )
 
   return (
     <View style={[styles.container, [a.mt_md, a.px_lg, a.py_xl]]}>
@@ -43,7 +49,7 @@ export function ProfileHeaderRewardPoints() {
               a.text_2xl,
               t.atoms.text_inverted,
             ]}>
-            1,800
+            {displayNumber(userDetail?.score)}
           </Text>
           <Pressable accessibilityRole="button" onPress={() => {}}>
             <View style={[a.flex_row, a.align_center, a.ml_md]}>
