@@ -1,13 +1,19 @@
+import {useRef} from 'react'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
+import {useRequest} from 'ahooks'
 
 import {IS_INTERNAL} from '#/lib/app-info'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useModalControls} from '#/state/modals'
+import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
+import ContactModifyDialog, {
+  type ContactModifyDialogRef,
+} from '#/components/ContactModifyDialog'
 import SettingsPhoneSvg from '#/components/DAO/settings.phone'
 import SettingsUpdatePhoneSvg from '#/components/DAO/settings.phone-update'
 import {useDialogControl} from '#/components/Dialog'
@@ -27,6 +33,7 @@ import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/ic
 import {Trash_Stroke2_Corner2_Rounded} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import server from '#/server'
 import {ChangeHandleDialog} from './components/ChangeHandleDialog'
 import {DeactivateAccountDialog} from './components/DeactivateAccountDialog'
 import {ExportCarDialog} from './components/ExportCarDialog'
@@ -42,7 +49,11 @@ export function AccountSettingsScreen({}: Props) {
   const changeHandleControl = useDialogControl()
   const exportCarControl = useDialogControl()
   const deactivateAccountControl = useDialogControl()
-
+  const contactModifyRef = useRef<ContactModifyDialogRef>(null)
+  const {data: profile, run: reloadProfile} = useRequest(async () => {
+    const res = await server.dao('POST /user/login-user-detail')
+    return res
+  })
   return (
     <Layout.Screen>
       <Layout.Header.Outer>
@@ -66,18 +77,18 @@ export function AccountSettingsScreen({}: Props) {
             <SettingsList.ItemText style={[a.flex_0]}>
               <Trans>Email</Trans>
             </SettingsList.ItemText>
-            {currentAccount && (
+            {profile?.email && (
               <>
                 <SettingsList.BadgeText style={[a.flex_1]}>
-                  {currentAccount.email || <Trans>(no email)</Trans>}
+                  {profile.email || <Trans>(no email)</Trans>}
                 </SettingsList.BadgeText>
-                {currentAccount.emailConfirmed && (
+                {/* {currentAccount.emailConfirmed && (
                   <ShieldIcon fill={t.palette.primary_500} size="md" />
-                )}
+                )} */}
               </>
             )}
           </SettingsList.Item>
-          {currentAccount && !currentAccount.emailConfirmed && (
+          {/* {currentAccount && !currentAccount.emailConfirmed && (
             <SettingsList.PressableItem
               label={_(msg`Verify your email`)}
               onPress={() =>
@@ -103,14 +114,18 @@ export function AccountSettingsScreen({}: Props) {
               </SettingsList.ItemText>
               <SettingsList.Chevron color={t.palette.primary_500} />
             </SettingsList.PressableItem>
-          )}
+          )} */}
           <SettingsList.PressableItem
             label={_(msg`Update email`)}
-            onPress={() =>
-              emailDialogControl.open({
-                id: EmailDialogScreenID.Update,
-              })
-            }>
+            onPress={() => {
+              contactModifyRef.current?.open('email')
+            }}
+            // onPress={() =>
+            //   emailDialogControl.open({
+            //     id: EmailDialogScreenID.Update,
+            //   })
+            // }
+          >
             <SettingsList.ItemIcon icon={PencilIcon} />
             <SettingsList.ItemText>
               <Trans>Update email</Trans>
@@ -131,7 +146,7 @@ export function AccountSettingsScreen({}: Props) {
             {currentAccount && (
               <>
                 <SettingsList.BadgeText style={[a.flex_1]}>
-                  {'130 0000 0000' || <Trans>(no email)</Trans>}
+                  {profile?.phone ?? '-'}
                 </SettingsList.BadgeText>
               </>
             )}
@@ -139,11 +154,7 @@ export function AccountSettingsScreen({}: Props) {
 
           <SettingsList.PressableItem
             label="更新手机号"
-            onPress={() =>
-              emailDialogControl.open({
-                id: EmailDialogScreenID.Update,
-              })
-            }>
+            onPress={() => contactModifyRef.current?.open('phone')}>
             <SettingsList.ItemIcon icon={SettingsUpdatePhoneSvg} size="lg" />
             <SettingsList.ItemText>更新手机号</SettingsList.ItemText>
             <SettingsList.Chevron />
@@ -223,6 +234,13 @@ export function AccountSettingsScreen({}: Props) {
       <ChangeHandleDialog control={changeHandleControl} />
       <ExportCarDialog control={exportCarControl} />
       <DeactivateAccountDialog control={deactivateAccountControl} />
+      <ContactModifyDialog
+        ref={contactModifyRef}
+        afterUpdate={() => {
+          reloadProfile()
+        }}
+        // value={currentAccount?.email}
+      />
     </Layout.Screen>
   )
 }

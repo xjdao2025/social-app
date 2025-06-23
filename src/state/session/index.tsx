@@ -135,6 +135,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           password: params.password,
           domainName: accountType === 1 ? identifier : '',
           loginType: accountType,
+          phoneRegion: '86',
         },
         {getWholeBizData: true},
       )

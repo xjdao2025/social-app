@@ -285,6 +285,7 @@ export function StepInfo({
                   }}
                   label="验证码"
                   defaultValue=""
+                  keyboardType="number-pad"
                   // secureTextEntry
                   // autoComplete=""
                   autoCapitalize="none"
