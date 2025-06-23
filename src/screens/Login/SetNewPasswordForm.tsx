@@ -7,7 +7,8 @@ import {useLingui} from '@lingui/react'
 import {logEvent} from '#/lib/statsig/statsig'
 import {isNetworkError} from '#/lib/strings/errors'
 import {cleanError} from '#/lib/strings/errors'
-import {checkAndFormatResetCode} from '#/lib/strings/password'
+import {checkAndFormatResetCode, checkPassword} from '#/lib/strings/password'
+import {isEmail, isPhoneNumber} from '#/lib/validator'
 import {logger} from '#/logger'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -16,6 +17,7 @@ import * as TextField from '#/components/forms/TextField'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
 import {Text} from '#/components/Typography'
+import server from '#/server'
 import {FormContainer} from './FormContainer'
 
 export const SetNewPasswordForm = ({
@@ -24,12 +26,14 @@ export const SetNewPasswordForm = ({
   setError,
   onPressBack,
   onPasswordSet,
+  account,
 }: {
   error: string
   serviceUrl: string
   setError: (v: string) => void
   onPressBack: () => void
   onPasswordSet: () => void
+  account: string
 }) => {
   const {_} = useLingui()
   const t = useTheme()
@@ -53,21 +57,49 @@ export const SetNewPasswordForm = ({
       return
     }
 
-    // TODO Better password strength check
-    if (!password) {
-      setError(_(msg`Please enter a password.`))
+    const passValidation = await checkPassword(password)
+
+    if (passValidation.type !== 'VALID') {
+      setError(passValidation.message)
       return
     }
+
+    // TODO Better password strength check
+    // if (!password) {
+    //   setError(_(msg`Please enter a password.`))
+    //   return
+    // }
+
+    // if (password.length < 8) {
+    //   setError("你输入的密码应至少包含8个字符。")
+    //   return;
+    // }
 
     setError('')
     setIsProcessing(true)
 
     try {
-      const agent = new BskyAgent({service: serviceUrl})
-      await agent.com.atproto.server.resetPassword({
-        token: formattedCode,
-        password,
-      })
+      const res = await server.dao(
+        'POST /user/reset-password',
+        {
+          email: isEmail(account) ? account : '',
+          phone: isPhoneNumber(account) ? account : '',
+          verifyCode: formattedCode,
+          password,
+          resetPasswordType: isPhoneNumber(account) ? 2 : 1,
+          phoneRegion: '86',
+        },
+        {getWholeBizData: true},
+      )
+
+      if (!res.data) {
+        throw new Error(res.message || '请求失败，请稍后再试。(#419)')
+      }
+      // const agent = new BskyAgent({ service: serviceUrl })
+      // await agent.com.atproto.server.resetPassword({
+      //   token: formattedCode,
+      //   password,
+      // })
       onPasswordSet()
       logEvent('signin:passwordResetSuccess', {})
     } catch (e: any) {
@@ -112,7 +144,7 @@ export const SetNewPasswordForm = ({
       </Text>
 
       <View>
-        <TextField.LabelText>Reset code</TextField.LabelText>
+        <TextField.LabelText>验证码</TextField.LabelText>
         <TextField.Root>
           <TextField.Icon icon={Ticket} />
           <TextField.Input
@@ -135,7 +167,7 @@ export const SetNewPasswordForm = ({
       </View>
 
       <View>
-        <TextField.LabelText>New password</TextField.LabelText>
+        <TextField.LabelText>设置新密码</TextField.LabelText>
         <TextField.Root>
           <TextField.Icon icon={Lock} />
           <TextField.Input

@@ -8,6 +8,7 @@ import * as EmailValidator from 'email-validator'
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {cleanError} from '#/lib/strings/errors'
+import {isPhoneNumber, validateAccount} from '#/lib/validator'
 import {logger} from '#/logger'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -16,6 +17,7 @@ import {FormError} from '#/components/forms/FormError'
 import * as TextField from '#/components/forms/TextField'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Text} from '#/components/Typography'
+import server from '#/server'
 import {FormContainer} from './FormContainer'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
@@ -35,7 +37,7 @@ export const ForgotPasswordForm = ({
   setError: (v: string) => void
   setServiceUrl: (v: string) => void
   onPressBack: () => void
-  onEmailSent: () => void
+  onEmailSent: (emailOrPhone: string) => void
 }) => {
   const t = useTheme()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
@@ -47,17 +49,31 @@ export const ForgotPasswordForm = ({
   // }, [])
 
   const onPressNext = async () => {
-    if (!EmailValidator.validate(email)) {
-      return setError(_(msg`Your email appears to be invalid.`))
+    if (!validateAccount(email)) {
+      return setError('你的电子邮箱或手机号码似乎无效。')
     }
 
     setError('')
     setIsProcessing(true)
 
     try {
-      const agent = new BskyAgent({service: serviceUrl})
-      await agent.com.atproto.server.requestPasswordReset({email})
-      onEmailSent()
+      const res = await (isPhoneNumber(email)
+        ? server.dao(
+            'POST /sms/send',
+            {codeType: 2, phoneRegion: '86', phone: email},
+            {getWholeBizData: true},
+          )
+        : server.dao(
+            'POST /email/send',
+            {codeType: 2, email, name: ''},
+            {getWholeBizData: true},
+          ))
+      if (!res.data) {
+        throw new Error(res.message || '请求失败，请稍后再试。(#418)')
+      }
+      // const agent = new BskyAgent({ service: serviceUrl })
+      // await agent.com.atproto.server.requestPasswordReset({ email })
+      onEmailSent(email)
     } catch (e: any) {
       const errMsg = e.toString()
       logger.warn('Failed to request password reset', {error: e})
@@ -90,13 +106,14 @@ export const ForgotPasswordForm = ({
       </View> */}
       <View>
         <TextField.LabelText>
-          <Trans>Email address</Trans>
+          {/* <Trans>Email address</Trans> */}
+          电子邮箱地址/手机号码
         </TextField.LabelText>
         <TextField.Root>
           <TextField.Icon icon={At} />
           <TextField.Input
             testID="forgotPasswordEmail"
-            label={_(msg`Enter your email address`)}
+            label="输入你的电子邮箱地址或手机号码"
             autoCapitalize="none"
             autoFocus
             autoCorrect={false}
@@ -110,10 +127,11 @@ export const ForgotPasswordForm = ({
       </View>
 
       <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
-        <Trans>
+        输入你创建账户时使用的电子邮箱或手机号码。我们将向你发送用于密码重置的验证码。
+        {/* <Trans>
           Enter the email you used to create your account. We'll send you a
           "reset code" so you can set a new password.
-        </Trans>
+        </Trans> */}
       </Text>
 
       <FormError error={error} />
@@ -150,7 +168,7 @@ export const ForgotPasswordForm = ({
           </Text>
         ) : undefined}
       </View>
-      <View
+      {/* <View
         style={[
           t.atoms.border_contrast_medium,
           a.border_t,
@@ -171,7 +189,7 @@ export const ForgotPasswordForm = ({
             <Trans>Already have a code?</Trans>
           </ButtonText>
         </Button>
-      </View>
+      </View> */}
     </FormContainer>
   )
 }

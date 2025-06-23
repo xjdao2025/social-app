@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, {useRef, useState} from 'react'
 import {KeyboardAvoidingView} from 'react-native'
 import {LayoutAnimationConfig} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
@@ -34,6 +34,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
 
   const {accounts} = useSession()
   const {requestedAccountSwitchTo} = useLoggedOutView()
+  const [payload, setPayload] = useState<any>()
   const requestedAccount = accounts.find(
     acc => acc.did === requestedAccountSwitchTo,
   )
@@ -160,7 +161,10 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           setError={setError}
           setServiceUrl={setServiceUrl}
           onPressBack={() => gotoForm(Forms.Login)}
-          onEmailSent={() => gotoForm(Forms.SetNewPassword)}
+          onEmailSent={account => {
+            setPayload(account)
+            gotoForm(Forms.SetNewPassword)
+          }}
         />
       )
       break
@@ -171,6 +175,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
         <SetNewPasswordForm
           error={error}
           serviceUrl={serviceUrl}
+          account={payload as string}
           setError={setError}
           onPressBack={() => gotoForm(Forms.ForgotPassword)}
           onPasswordSet={() => gotoForm(Forms.PasswordUpdated)}
