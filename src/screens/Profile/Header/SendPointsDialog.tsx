@@ -5,7 +5,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useRequest} from 'ahooks'
 
-import scanQR from '#/lib/qr-code-scanner/web'
 import {emailRegExp, phoneNumberRegExp} from '#/lib/tools'
 import {logger} from '#/logger'
 import * as Toast from '#/view/com/util/Toast'
@@ -16,6 +15,7 @@ import * as TextField from '#/components/forms/TextField'
 import {QrCode_Scan} from '#/components/icons/QrCode'
 import {Text} from '#/components/Typography'
 import server from '#/server'
+import QrScanner, { type QrScannerRefProps } from "#/screens/Profile/Header/QrScanner";
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
 
@@ -55,7 +55,7 @@ function DialogInner({
   const t = useTheme()
   const control = Dialog.useDialogContext()
 
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const videoRef = useRef<QrScannerRefProps>(null)
 
   const [giftAccount, setGiftAccount] = useState('')
   const [giftPoints, setGiftPoints] = useState('')
@@ -117,14 +117,14 @@ function DialogInner({
   )
 
   const scan = async () => {
-    const result = await scanQR()
-    console.log('result>>>>', result)
+    const qrResult = await videoRef?.current?.scan()
+    setGiftAccount(qrResult || '')
   }
 
   return (
     <>
-      {/*<QrScanner />*/}
 
+      <QrScanner ref={videoRef} />
       <Dialog.ScrollableInner
         label={_(msg`Edit profile`)}
         style={[a.overflow_hidden, {marginTop: 'calc(50vh - 40px - 170px)'}]}
@@ -148,10 +148,10 @@ function DialogInner({
               />
             </TextField.Root>
             <Pressable
-              accessibilityHint=""
-              accessibilityLabel={_(msg`Display name`)}
+              accessibilityRole={'button'}
               style={styles.scan}
-              onPress={scan}>
+              onPress={scan}
+            >
               <QrCode_Scan fill={'#6F869F'} size={'md'} style={[a.z_10]} />
             </Pressable>
             {displayNameInvalid && (
@@ -175,7 +175,7 @@ function DialogInner({
                 defaultValue={giftPoints}
                 onChangeText={setGiftPoints}
                 label={_(msg`Display name`)}
-                placeholder={_(msg`请输入赠送积分`)}
+                placeholder={'请输入赠送积分'}
                 testID="editProfileDescriptionInput"
                 inputMode={'numeric'}
               />
@@ -225,9 +225,10 @@ const styles = StyleSheet.create({
   },
   scan: {
     position: 'absolute',
-    right: 12,
-    top: 31,
+    right: 0,
+    top: 21,
     zIndex: 10,
+    padding: 10
   },
   cur_pints_label: {
     color: '#6F869F',
