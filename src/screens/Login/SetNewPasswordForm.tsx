@@ -49,9 +49,10 @@ export const SetNewPasswordForm = ({
 
     if (!formattedCode) {
       setError(
-        _(
-          msg`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
-        ),
+        // _(
+        //   msg`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
+        // ),
+        '你输入的验证码无效。',
       )
       logEvent('signin:passwordResetFailure', {})
       return
