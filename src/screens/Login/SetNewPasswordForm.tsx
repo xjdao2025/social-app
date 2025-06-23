@@ -137,10 +137,15 @@ export const SetNewPasswordForm = ({
       testID="setNewPasswordForm"
       titleText={<Trans>Set new password</Trans>}>
       <Text style={[a.leading_snug, a.mb_sm]}>
-        <Trans>
+        {/* <Trans>
           You will receive an email with a "reset code." Enter that code here,
           then enter your new password.
-        </Trans>
+        </Trans> */}
+        你将收到
+        {isPhoneNumber(account)
+          ? '一条带有验证码的短信'
+          : '一封带有验证码的电子邮件'}
+        。请在这里输入验证码，然后输入你的新密码来完成重置。
       </Text>
 
       <View>
@@ -149,7 +154,8 @@ export const SetNewPasswordForm = ({
           <TextField.Icon icon={Ticket} />
           <TextField.Input
             testID="resetCodeInput"
-            label={_(msg`Looks like XXXXX-XXXXX`)}
+            // label={_(msg`Looks like XXXXX-XXXXX`)}
+            label="请输入验证码"
             autoCapitalize="none"
             autoFocus={true}
             autoCorrect={false}
