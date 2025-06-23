@@ -2,7 +2,11 @@ import {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import Animated, {useAnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
-import {type NavigationProp, useNavigation} from '@react-navigation/native'
+import {
+  type NavigationProp,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import {useRequest} from 'ahooks'
 
@@ -13,6 +17,7 @@ import {type AllNavigatorParams} from '#/lib/routes/types'
 import {listenProposalCreated, listenSoftReset} from '#/state/events'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {HomeHeaderLayoutMobile} from '#/view/com/home/HomeHeaderLayoutMobile'
 import {type ListRef} from '#/view/com/util/List'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -48,6 +53,13 @@ export default function HallScreen() {
   const scrollElRef = useAnimatedRef()
   const postsSectionRef = useRef<SectionRef>(null)
   const isPageFocused = true
+
+  const setMinimalShellMode = useSetMinimalShellMode()
+  useFocusEffect(
+    useCallback(() => {
+      setMinimalShellMode(false)
+    }, [setMinimalShellMode]),
+  )
 
   // const onProposalCreated = useCallback(() => {
   //   // NOTE
