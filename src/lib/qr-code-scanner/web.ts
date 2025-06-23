@@ -1,16 +1,20 @@
 import 'webrtc-adapter'
 
+import {Dimensions} from 'react-native'
 import jsQR from 'jsqr'
 
 import promiseWithResolver from '#/lib/promiseWithResolver'
+
+const screenWidth = Dimensions.get('window').width
 
 function createVideoEl() {
   const video = document.createElement('video')
   video.autoplay = true
   video.muted = true
-  video.style.width = '0'
-  video.style.height = '0'
-  video.style.visibility = 'hidden'
+  video.style.width = '100vw'
+  video.style.height = '100%'
+  video.style.position = 'fixed'
+  video.style.top = '0'
   return video
 }
 
@@ -29,6 +33,8 @@ export default async function scanQR(
     video: {facingMode: 'environment'},
   })
   video.srcObject = mediaStream
+  video.setAttribute('playsinline', true) // for iOS
+  video.play()
   document.body.appendChild(video)
 
   const {promise, resolve, reject} = promiseWithResolver<string>()

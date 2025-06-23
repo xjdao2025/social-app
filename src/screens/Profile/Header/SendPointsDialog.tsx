@@ -1,33 +1,32 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Dimensions, Pressable, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
-import { type AppBskyActorDefs } from '@atproto/api'
-import { msg } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {Dimensions, Pressable, StyleSheet, View} from 'react-native'
+import {Image} from 'expo-image'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useRequest} from 'ahooks'
 
-import { emailRegExp, phoneNumberRegExp } from "#/lib/tools";
-import { logger } from '#/logger'
-import { isWeb } from '#/platform/detection'
+import scanQR from '#/lib/qr-code-scanner/web'
+import {emailRegExp, phoneNumberRegExp} from '#/lib/tools'
+import {logger} from '#/logger'
 import * as Toast from '#/view/com/util/Toast'
-import { atoms as a, useTheme } from '#/alf'
-import { Button, ButtonText } from '#/components/Button'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
-import { QrCode_Scan } from "#/components/icons/QrCode";
-import * as Prompt from '#/components/Prompt'
-import { Text } from '#/components/Typography'
-import { Image } from "expo-image";
+import {QrCode_Scan} from '#/components/icons/QrCode'
+import {Text} from '#/components/Typography'
+import server from '#/server'
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
 
 export function SendPointsDialog({
-     profile,
-     control,
-     onUpdate,
-   }: {
+  control,
+  onUpdate,
+}: {
   control: Dialog.DialogControlProps
   onUpdate?: () => void
 }) {
-  const { _ } = useLingui()
+  const {_} = useLingui()
 
   const onPressCancel = useCallback(() => {
     control.close()
@@ -39,63 +38,50 @@ export function SendPointsDialog({
       nativeOptions={{
         minHeight: SCREEN_HEIGHT,
       }}
-      testID="sendPointsModal"
-    >
-      <DialogInner
-        profile={profile}
-        onUpdate={onUpdate}
-        onPressCancel={onPressCancel}
-      />
+      testID="sendPointsModal">
+      <DialogInner onUpdate={onUpdate} onPressCancel={onPressCancel} />
     </Dialog.Outer>
   )
 }
 
 function DialogInner({
-   profile = {},
-   onUpdate,
-   onPressCancel,
- }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  onUpdate,
+  onPressCancel,
+}: {
   onUpdate?: () => void
   onPressCancel: () => void
 }) {
-  const { _ } = useLingui()
+  const {_} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogContext()
+
+  const videoRef = useRef<HTMLVideoElement>(null)
+
   const [giftAccount, setGiftAccount] = useState('')
   const [giftPoints, setGiftPoints] = useState('')
 
+  const {data: userDetail} = useRequest(() =>
+    server.dao('POST /user/login-user-detail'),
+  )
+
   const onPressSave = useCallback(async () => {
     try {
-      // await updateProfileMutation({
-      //   profile,
-      //   updates: {
-      //     displayName: displayName.trimEnd(),
-      //     description: description.trimEnd(),
-      //   },
-      // })
+      await server.dao('POST /score/send', {
+        userPhoneOrEmail: giftAccount,
+        score: Number(giftPoints),
+      })
       onUpdate?.()
       control.close()
-      Toast.show(_(msg({ message: 'Profile updated', context: 'toast' })))
+      Toast.show('发送成功', 'check', 'center')
     } catch (e: any) {
-      logger.error('Failed to update user profile', { message: String(e) })
+      logger.error('Failed to update user profile', {message: String(e)})
     }
-  }, [
-    profile,
-    onUpdate,
-    control,
-    giftAccount,
-    giftPoints,
-    _,
-  ])
+  }, [onUpdate, control, giftAccount, giftPoints])
 
   const displayNameInvalid = useMemo(() => {
     if (!giftAccount) return false
 
-    const regs = [
-      emailRegExp,
-      phoneNumberRegExp,
-    ];
+    const regs = [emailRegExp, phoneNumberRegExp]
     for (const reg of regs) {
       if (reg.test(giftAccount)) return false
     }
@@ -105,162 +91,153 @@ function DialogInner({
 
   const giftPointsInvalid = useMemo(() => {
     if (!giftPoints) return false
+    const issNumber = /^[1-9]\d*$/.test(giftPoints)
+    if (issNumber) {
+      return Number(giftPoints) > (userDetail?.score || 0)
+    }
 
-    return !/^[1-9]\d*$/.test(giftPoints);
-
-  }, [giftPoints])
+    return !issNumber
+  }, [giftPoints, userDetail])
 
   const cancelButton = useCallback(
     () => (
       <Pressable
         accessibilityRole={'button'}
-        style={[{ marginRight: 15 }]}
-        onPress={onPressCancel}
-      >
+        style={[{marginRight: 15}]}
+        onPress={onPressCancel}>
         <Image
           accessibilityIgnoresInvertColors
           source={require('#/assets/close.svg')}
           alt="close"
-          style={[{ width: 16, height: 16 }]}
+          style={[{width: 16, height: 16}]}
         />
       </Pressable>
     ),
-    [onPressCancel, _],
+    [onPressCancel],
   )
 
-  return (
-    <Dialog.ScrollableInner
-      label={_(msg`Edit profile`)}
-      style={[a.overflow_hidden, { marginTop: 'calc(50vh - 40px - 170px)' }]}
-      header={
-        <Dialog.Header
-          renderRight={cancelButton}
-          style={[a.border_transparent]}
-        >
-          <Dialog.HeaderText>
-            发送积分
-          </Dialog.HeaderText>
-        </Dialog.Header>
-      }
-    >
-      <View style={[a.gap_xl]}>
-        <View style={styles.account}>
-          <TextField.LabelText>
-            手机号/邮箱
-          </TextField.LabelText>
-          <TextField.Root isInvalid={displayNameInvalid}>
-            <Dialog.Input
-              defaultValue={giftAccount}
-              onChangeText={setGiftAccount}
-              label={_(msg`Display name`)}
-              placeholder={'请输入手机号/邮箱'}
-              testID="editProfileDisplayNameInput"
-            />
-          </TextField.Root>
-          <Pressable
-            accessibilityHint=""
-            accessibilityLabel={_(msg`Display name`)}
-            style={styles.scan}
-            onPress={() => {
-              console.log('scan>>>>>')
-            }}
-          >
-            <QrCode_Scan
-              fill={'#6F869F'}
-              size={'md'}
-              style={[a.z_10]}
-            />
-          </Pressable>
-          {displayNameInvalid && (
-            <TextField.SuffixText
-              style={[
-                a.text_sm,
-                a.mt_xs,
-                a.font_bold,
-                { color: t.palette.negative_400 },
-              ]}
-              label={_(msg`Display name is too long`)}
-            >
-              请输入正确格式
-            </TextField.SuffixText>
-          )}
-        </View>
+  const scan = async () => {
+    const result = await scanQR()
+    console.log('result>>>>', result)
+  }
 
-        <View>
-          <TextField.LabelText>
-            积分
-          </TextField.LabelText>
-          <TextField.Root isInvalid={giftPointsInvalid}>
-            <Dialog.Input
-              defaultValue={giftPoints}
-              onChangeText={setGiftPoints}
-              label={_(msg`Display name`)}
-              placeholder={_(msg`请输入赠送积分`)}
-              testID="editProfileDescriptionInput"
-              inputMode={'numeric'}
-            />
-          </TextField.Root>
-          {giftPointsInvalid && (
-            <TextField.SuffixText
-              style={[
-                a.text_sm,
-                a.mt_xs,
-                a.font_bold,
-                { color: t.palette.negative_400 },
-              ]}
-              label={_(msg`Description is too long`)}
-            >
-              请输入正确格式
-            </TextField.SuffixText>
-          )}
+  return (
+    <>
+      {/*<QrScanner />*/}
+
+      <Dialog.ScrollableInner
+        label={_(msg`Edit profile`)}
+        style={[a.overflow_hidden, {marginTop: 'calc(50vh - 40px - 170px)'}]}
+        header={
+          <Dialog.Header
+            renderRight={cancelButton}
+            style={[a.border_transparent]}>
+            <Dialog.HeaderText>发送积分</Dialog.HeaderText>
+          </Dialog.Header>
+        }>
+        <View style={[a.gap_xl]}>
+          <View style={styles.account}>
+            <TextField.LabelText>手机号/邮箱</TextField.LabelText>
+            <TextField.Root isInvalid={displayNameInvalid}>
+              <Dialog.Input
+                defaultValue={giftAccount}
+                onChangeText={setGiftAccount}
+                label={_(msg`Display name`)}
+                placeholder={'请输入手机号/邮箱'}
+                testID="editProfileDisplayNameInput"
+              />
+            </TextField.Root>
+            <Pressable
+              accessibilityHint=""
+              accessibilityLabel={_(msg`Display name`)}
+              style={styles.scan}
+              onPress={scan}>
+              <QrCode_Scan fill={'#6F869F'} size={'md'} style={[a.z_10]} />
+            </Pressable>
+            {displayNameInvalid && (
+              <TextField.SuffixText
+                style={[
+                  a.text_sm,
+                  a.mt_xs,
+                  a.font_bold,
+                  {color: t.palette.negative_400},
+                ]}
+                label={'格式'}>
+                请输入正确格式
+              </TextField.SuffixText>
+            )}
+          </View>
+
+          <View>
+            <TextField.LabelText>积分</TextField.LabelText>
+            <TextField.Root isInvalid={giftPointsInvalid}>
+              <Dialog.Input
+                defaultValue={giftPoints}
+                onChangeText={setGiftPoints}
+                label={_(msg`Display name`)}
+                placeholder={_(msg`请输入赠送积分`)}
+                testID="editProfileDescriptionInput"
+                inputMode={'numeric'}
+              />
+            </TextField.Root>
+            {giftPointsInvalid && (
+              <TextField.SuffixText
+                style={[
+                  a.text_sm,
+                  a.mt_xs,
+                  a.font_bold,
+                  {color: t.palette.negative_400},
+                ]}
+                label={'格式'}>
+                请输入正确格式
+              </TextField.SuffixText>
+            )}
+          </View>
+          <View style={[a.flex_row]}>
+            <Text style={styles.cur_pints_label}>当前积分：</Text>
+            <Text style={styles.cur_pints_value}>{userDetail?.score}</Text>
+          </View>
+          <Button
+            label={_(msg`Save`)}
+            onPress={onPressSave}
+            disabled={
+              !giftAccount ||
+              !giftPoints ||
+              displayNameInvalid ||
+              giftPointsInvalid
+            }
+            size="small"
+            color="primary"
+            variant="solid"
+            style={[styles.confirm, a.rounded_sm]}
+            testID="editProfileSaveBtn">
+            <ButtonText style={[a.text_md]}>确认</ButtonText>
+          </Button>
         </View>
-        <View style={[a.flex_row]}>
-          <Text style={styles.cur_pints_label}>当前积分：</Text>
-          <Text style={styles.cur_pints_value}>1000</Text>
-        </View>
-        <Button
-          label={_(msg`Save`)}
-          onPress={onPressSave}
-          disabled={
-            !giftAccount ||
-            !giftPoints ||
-            displayNameInvalid ||
-            giftPointsInvalid
-          }
-          size="small"
-          color="primary"
-          variant="solid"
-          style={[styles.confirm, a.rounded_sm]}
-          testID="editProfileSaveBtn"
-        >
-          <ButtonText style={[a.text_md]}>
-            确认
-          </ButtonText>
-        </Button>
-      </View>
-    </Dialog.ScrollableInner>
+      </Dialog.ScrollableInner>
+    </>
   )
 }
 
 const styles = StyleSheet.create({
   account: {
-    position: 'relative'
+    position: 'relative',
   },
   scan: {
     position: 'absolute',
     right: 12,
     top: 31,
-    zIndex: 10
+    zIndex: 10,
   },
   cur_pints_label: {
-    color: '#6F869F'
+    color: '#6F869F',
   },
   cur_pints_value: {
     color: '#42576C',
-    fontWeight: 500
+    fontWeight: 500,
   },
   confirm: {
     width: 76,
-    margin: 'auto'
-  }
+    margin: 'auto',
+  },
 })
