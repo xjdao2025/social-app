@@ -46,7 +46,7 @@ import {
   AppBskyFeedDefs,
   type AppBskyFeedGetPostThread,
   type BskyAgent,
-  type RichText,
+  RichText,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, plural, Trans} from '@lingui/macro'
@@ -125,6 +125,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
+import HashTag from './HashTag'
 import {
   type ComposerAction,
   composerReducer,
@@ -181,6 +182,7 @@ export const ComposePost = ({
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishingStage, setPublishingStage] = useState('')
   const [error, setError] = useState('')
+  const [postHashTag, setPostHashTag] = useState('')
 
   const [composerState, composerDispatch] = useReducer(
     composerReducer,
@@ -388,6 +390,14 @@ export const ComposePost = ({
     setError('')
     setIsPublishing(true)
 
+    thread.posts.forEach(post => {
+      if (!post.hashTag) return
+      const richText = post.richtext.text.toString()
+      const newTxt = new RichText({text: richText + '\n' + post.hashTag})
+      newTxt.detectFacetsWithoutResolution()
+      post.richtext = newTxt
+    })
+
     let postUri
     try {
       postUri = (
@@ -580,12 +590,25 @@ export const ComposePost = ({
   const footer = (
     <>
       <SuggestedLanguage text={activePost.richtext.text} />
-      <ComposerPills
-        isReply={!!replyTo}
-        post={activePost}
-        thread={composerState.thread}
-        dispatch={composerDispatch}
-        bottomBarAnimatedStyle={bottomBarAnimatedStyle}
+      {/*<ComposerPills*/}
+      {/*  isReply={!!replyTo}*/}
+      {/*  post={activePost}*/}
+      {/*  thread={composerState.thread}*/}
+      {/*  dispatch={composerDispatch}*/}
+      {/*  bottomBarAnimatedStyle={bottomBarAnimatedStyle}*/}
+      {/*/>*/}
+      <HashTag
+        active={activePost.hashTag}
+        setHashTag={tag => {
+          composerDispatch({
+            type: 'update_post',
+            postId: activePost.id,
+            postAction: {
+              type: 'add_hashtag',
+              tag,
+            },
+          })
+        }}
       />
       <ComposerFooter
         post={activePost}
@@ -1255,16 +1278,16 @@ function ComposerFooter({
                 disabled={media?.type === 'images' ? isMaxImages : !!media}
                 onAdd={onImageAdd}
               />
-              <SelectVideoBtn
-                onSelectVideo={asset => onSelectVideo(post.id, asset)}
-                disabled={!!media}
-                setError={onError}
-              />
+              {/*<SelectVideoBtn*/}
+              {/*  onSelectVideo={asset => onSelectVideo(post.id, asset)}*/}
+              {/*  disabled={!!media}*/}
+              {/*  setError={onError}*/}
+              {/*/>*/}
               <OpenCameraBtn
                 disabled={media?.type === 'images' ? isMaxImages : !!media}
                 onAdd={onImageAdd}
               />
-              <SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
+              {/*<SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />*/}
               {!isMobile ? (
                 <Button
                   onPress={onEmojiButtonPress}
