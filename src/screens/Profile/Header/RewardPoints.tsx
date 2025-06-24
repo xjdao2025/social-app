@@ -27,7 +27,7 @@ export function ProfileHeaderRewardPoints() {
   const sendPointsControl = useDialogControl()
   const receivePointsControl = useDialogControl()
 
-  const {data: userDetail} = useRequest(() =>
+  const {data: userDetail, refresh} = useRequest(() =>
     server.dao('POST /user/login-user-detail'),
   )
 
@@ -86,7 +86,7 @@ export function ProfileHeaderRewardPoints() {
             </Text>
           </View>
         </TouchableWithoutFeedback>
-        <SendPointsDialog control={sendPointsControl} />
+        <SendPointsDialog control={sendPointsControl} onUpdate={refresh} />
         <TouchableWithoutFeedback
           accessibilityRole="button"
           onPress={() => receivePointsControl.open()}>

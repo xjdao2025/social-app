@@ -106,50 +106,53 @@ const PointsRecordScreen = () => {
             {pointsRecord?.list.length === 0 ? (
               <PointsEmpty />
             ) : (
-              pointsRecord?.list.map((p, index) => (
-                <View
-                  key={p.id}
-                  style={[
-                    a.flex_row,
-                    a.justify_between,
-                    a.px_lg,
-                    a.align_center,
-                    styles.item,
-                  ]}>
-                  <View style={[a.flex_col, a.justify_between, a.gap_sm]}>
+              pointsRecord?.list.map((p, index) => {
+                const isPositive = p.score > 0
+                return (
+                  <View
+                    key={p.id}
+                    style={[
+                      a.flex_row,
+                      a.justify_between,
+                      a.px_lg,
+                      a.align_center,
+                      styles.item,
+                    ]}>
+                    <View style={[a.flex_col, a.justify_between, a.gap_sm]}>
+                      <Text
+                        style={[
+                          a.text_md,
+                          a.font_bold,
+                          t.atoms.text_contrast_high,
+                        ]}>
+                        {p.reason}
+                      </Text>
+                      <Text style={[t.atoms.text_contrast_high]}>
+                        {
+                          {
+                            0: '',
+                            1: '打赏',
+                            2: '赠送',
+                            3: '后台发放',
+                          }[p.type]
+                        }
+                      </Text>
+                      <Text style={[t.atoms.text_contrast_low]}>
+                        {format(new Date(p.createdAt), 'yyyy-MM-dd HH:mm:ss')}
+                      </Text>
+                    </View>
                     <Text
                       style={[
                         a.text_md,
+                        a.text_family_ddin,
                         a.font_bold,
-                        t.atoms.text_contrast_high,
+                        isPositive ? {color: '#F66455'} : {color: '#37D28C'},
                       ]}>
-                      {p.reason}
-                    </Text>
-                    <Text style={[t.atoms.text_contrast_high]}>
-                      {
-                        {
-                          0: '',
-                          1: '打赏',
-                          2: '赠送',
-                          3: '后台发放',
-                        }[p.type]
-                      }
-                    </Text>
-                    <Text style={[t.atoms.text_contrast_low]}>
-                      {format(new Date(p.createdAt), 'yyyy-MM-dd HH:mm:ss')}
+                      {isPositive ? `+${p.score}` : p.score}
                     </Text>
                   </View>
-                  <Text
-                    style={[
-                      a.text_md,
-                      a.text_family_ddin,
-                      a.font_bold,
-                      {color: '#F66455'},
-                    ]}>
-                    +{p.score}
-                  </Text>
-                </View>
-              ))
+                )
+              })
             )}
           </View>
         </View>
