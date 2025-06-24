@@ -24,6 +24,7 @@ import {CheckThick_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Ch
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {ShieldCheck_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
+import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import useSMS from '#/hooks/useSMS'
 import server from '#/server'
 import {Admonition} from '../Admonition'
@@ -33,14 +34,14 @@ import {Divider} from '../Divider'
 import {Loader} from '../Loader'
 import {Text} from '../Typography'
 
-export type PasswordUpdateDialogProps = {
+export type DeleteAccountDialogProps = {
   afterUpdate?: () => void
   control: Dialog.DialogControlProps
   contact: string | undefined
   contactType: 'phone' | 'email'
 }
 
-export default function PasswordUpdateDialog(props: PasswordUpdateDialogProps) {
+export default function DeleteAccountDialog(props: DeleteAccountDialogProps) {
   const {afterUpdate, control, contact, contactType} = props
   const t = useTheme()
   const {_} = useLingui()
@@ -50,7 +51,6 @@ export default function PasswordUpdateDialog(props: PasswordUpdateDialogProps) {
     mutationStatus: 'default',
     error: '',
     smsCode: '',
-    password: '',
   })
 
   const isPhone = contactType === 'phone'
@@ -71,51 +71,31 @@ export default function PasswordUpdateDialog(props: PasswordUpdateDialogProps) {
       type: 'setMutationStatus',
       status: 'pending',
     })
-    const passValidate = checkPassword(state.password)
-    if (passValidate.type !== 'VALID') {
-      dispatch({
-        type: 'setError',
-        error: passValidate.message,
-      })
-      return
-    }
-
+    // const passValidate = checkPassword(state.password);
+    // if (passValidate.type !== 'VALID') {
+    //   dispatch({
+    //     type: 'setError',
+    //     error: passValidate.message,
+    //   })
+    //   return
+    // }
     try {
-      const updateRes = await server.dao(
-        'POST /user/reset-password',
+      const deleteRes = await server.dao(
+        'POST /user/delete',
         {
           email: !isPhone ? contact! : '',
           phone: isPhone ? contact! : '',
           phoneRegion: '86',
           verifyCode: state.smsCode,
-          password: state.password,
-          resetPasswordType: isPhone ? 2 : 1,
+          // password: state.password,
+          userDeleteType: isPhone ? 2 : 1,
         },
         {getWholeBizData: true},
       )
-      // const modifyRes = await wait(
-      //   1000,
-      //   state.field === 'email'
-      //     ? server.dao(
-      //         'POST /user/modify-email-address',
-      //         {email: state.contactValue, codeType: 4, code: state.smsCode},
-      //         {getWholeBizData: true},
-      //       )
-      //     : server.dao(
-      //         'POST /user/modify-phone',
-      //         {
-      //           phone: state.contactValue,
-      //           phoneRegion: '86',
-      //           codeType: 5,
-      //           code: state.smsCode,
-      //         },
-      //         {getWholeBizData: true},
-      //       ),
-      // )
-      if (!updateRes.data) {
-        throw new Error(updateRes.message)
+      if (!deleteRes.data) {
+        throw new Error(deleteRes.message)
       }
-      Toast.show('密码更新成功，请重新登录', 'check', 'center')
+      Toast.show('你的账户已删除', undefined, 'center')
       dispatch({
         type: 'setMutationStatus',
         status: 'success',
@@ -145,12 +125,12 @@ export default function PasswordUpdateDialog(props: PasswordUpdateDialogProps) {
       <Dialog.Handle />
 
       <Dialog.ScrollableInner
-        label="更新密码"
+        label="删除账户"
         style={web({maxWidth: 400, marginTop: '25vh'})}>
         {/* <Inner control={emailDialogControl} /> */}
         <Dialog.Close />
         <View style={[a.gap_lg]}>
-          <Text style={[a.text_xl, a.font_heavy]}>更新密码</Text>
+          <Text style={[a.text_xl, a.font_heavy]}>删除账户</Text>
 
           <View style={[a.gap_md]}>
             <View>
@@ -186,7 +166,7 @@ export default function PasswordUpdateDialog(props: PasswordUpdateDialogProps) {
                   ]}
                   onPress={() => {
                     if (captchaAPI.ticking) return
-                    captchaAPI.send(contact, 2).catch(e => {
+                    captchaAPI.send(contact, 9).catch(e => {
                       dispatch({
                         type: 'setError',
                         error: e.message,
@@ -199,8 +179,21 @@ export default function PasswordUpdateDialog(props: PasswordUpdateDialogProps) {
                   </ButtonText>
                 </Button>
               </TextField.Root>
-              <View style={{height: 8}} />
-              <TextField.Root>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginTop: 8,
+                  gap: 4,
+                }}>
+                <Warning style={{color: 'red'}} />
+                <Text style={{color: 'red'}}>
+                  账号删除后无法恢复，请谨慎操作。
+                </Text>
+              </View>
+              {/* <View style={{ height: 8 }} /> */}
+
+              {/* <TextField.Root>
                 <TextField.Icon icon={Lock} />
                 <TextField.Input
                   testID="passwordInput"
@@ -214,7 +207,7 @@ export default function PasswordUpdateDialog(props: PasswordUpdateDialogProps) {
                   onChangeText={
                     state.mutationStatus === 'success'
                       ? undefined
-                      : value => dispatch({type: 'setPassword', value})
+                      : value => dispatch({ type: 'setPassword', value })
                   }
                   label={_(msg`Choose your password`)}
                   // defaultValue={state.password}
@@ -226,12 +219,12 @@ export default function PasswordUpdateDialog(props: PasswordUpdateDialogProps) {
                   onSubmitEditing={onSubmitUpdate}
                   passwordRules="minlength: 8;"
                 />
-              </TextField.Root>
+              </TextField.Root> */}
             </View>
 
             {state.error && <Admonition type="error">{state.error}</Admonition>}
           </View>
-          {state.mutationStatus === 'success' ? (
+          {/* {state.mutationStatus === 'success' ? (
             <>
               <Divider />
               <View style={[a.gap_sm]}>
@@ -241,33 +234,24 @@ export default function PasswordUpdateDialog(props: PasswordUpdateDialogProps) {
                     <Trans>Success!</Trans>
                   </Text>
                 </View>
-                {/* <Text style={[a.leading_snug]}>
-                  <Trans>
-                    Please click on the link in the email we just sent you to verify
-                    your new email address. This is an important step to allow you
-                    to continue enjoying all the features of Bluesky.
-                  </Trans>
-                </Text> */}
               </View>
             </>
-          ) : (
-            <Button
-              label={_(msg`Update email`)}
-              size="large"
-              variant="solid"
-              color="primary"
-              onPress={onSubmitUpdate}
-              disabled={
-                !state.password ||
-                !state.smsCode ||
-                state.mutationStatus === 'pending'
-              }>
-              <ButtonText>更新密码</ButtonText>
-              {state.mutationStatus === 'pending' && (
-                <ButtonIcon icon={Loader} />
-              )}
-            </Button>
-          )}
+          ) : (<></>)} */}
+          <Button
+            label={_(msg`Update email`)}
+            size="large"
+            variant="solid"
+            color="negative"
+            onPress={onSubmitUpdate}
+            disabled={
+              // !state.password ||
+              !state.smsCode ||
+              state.mutationStatus === 'pending' ||
+              state.mutationStatus === 'success'
+            }>
+            <ButtonText>删除账户</ButtonText>
+            {state.mutationStatus === 'pending' && <ButtonIcon icon={Loader} />}
+          </Button>
         </View>
       </Dialog.ScrollableInner>
     </Dialog.Outer>
@@ -278,7 +262,6 @@ type State = {
   mutationStatus: 'pending' | 'success' | 'error' | 'default'
   error: string
   smsCode: string
-  password: string
   // email: string
   // token: string
 }
@@ -291,10 +274,6 @@ type Action =
   | {
       type: 'setMutationStatus'
       status: State['mutationStatus']
-    }
-  | {
-      type: 'setPassword'
-      value: string
     }
   | {
       type: 'setSmsCode'
@@ -321,12 +300,6 @@ function reducer(state: State, action: Action): State {
         ...state,
         error: '',
         mutationStatus: action.status,
-      }
-    }
-    case 'setPassword': {
-      return {
-        ...state,
-        password: action.value,
       }
     }
   }
