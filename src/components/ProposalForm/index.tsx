@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import {StyleSheet, View} from 'react-native'
+import {useRequest} from 'ahooks'
 import {DismissableLayer, FocusGuards, FocusScope} from 'radix-ui/internal'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
@@ -13,6 +14,7 @@ import {
   type EmojiPickerState,
 } from '#/view/com/composer/text-input/web/EmojiPicker'
 import {atoms as a, flatten, useBreakpoints, useTheme} from '#/alf'
+import server from '#/server'
 import {Portal} from '../Portal'
 import ProposalAffixTrigger from './AffixTrigger'
 import ProposalForm, {useProposalFormRef} from './ProposalForm'
@@ -22,7 +24,13 @@ const BOTTOM_BAR_HEIGHT = 61
 export default function ProposalFormModal() {
   const {currentAccount} = useSession()
   const [active, setActive] = useState(false)
-  if (!currentAccount) {
+  const {data: currentUserProfile} = useRequest(
+    async () => {
+      return server.dao('POST /user/login-user-detail')
+    },
+    {ready: !!currentAccount?.did},
+  )
+  if (!currentUserProfile?.nodeUser) {
     return null
   }
   return (
