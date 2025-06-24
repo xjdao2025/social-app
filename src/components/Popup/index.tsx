@@ -1,4 +1,11 @@
-import {cloneElement, useEffect, useLayoutEffect, useState} from 'react'
+import {
+  cloneElement,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useLayoutEffect,
+  useState,
+} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import {Image} from 'expo-image'
 import {msg} from '@lingui/macro'
@@ -20,7 +27,12 @@ type PopupProps = {
   maskClosable?: boolean
 }
 
-export default function Popup(props: PopupProps) {
+export type PopupRef = {
+  open: () => void
+  close: () => void
+}
+
+const Popup = forwardRef<PopupRef, PopupProps>(function Popup(props, ref) {
   const {height, zIndex = 1000, maskClosable = true} = props
   const [popupVisible, setPopupVisible] = useState(false)
   const {_} = useLingui()
@@ -40,12 +52,21 @@ export default function Popup(props: PopupProps) {
     }
   }, [popupVisible, showPopupDelayedExit])
 
+  useImperativeHandle(ref, () => {
+    return {
+      open: () => setPopupVisible(true),
+      close: () => setPopupVisible(false),
+    }
+  })
+
   useComposerKeyboardShortcut()
   useIntentHandler()
 
   return (
     <>
-      <TouchableWithoutFeedback accessibilityRole="button" onPress={() => setPopupVisible(true)}>
+      <TouchableWithoutFeedback
+        accessibilityRole="button"
+        onPress={() => setPopupVisible(true)}>
         {props.trigger}
       </TouchableWithoutFeedback>
       {showPopupDelayedExit && (
@@ -82,7 +103,8 @@ export default function Popup(props: PopupProps) {
                   popupVisible ? a.slide_in_bottom : a.slide_out_bottom,
                   {height},
                 ]}>
-                <TouchableWithoutFeedback accessibilityRole="button"
+                <TouchableWithoutFeedback
+                  accessibilityRole="button"
                   onPress={() => setPopupVisible(false)}>
                   <Image
                     style={[styles.closeIcon]}
@@ -97,7 +119,9 @@ export default function Popup(props: PopupProps) {
       )}
     </>
   )
-}
+})
+
+export default Popup
 
 const styles = StyleSheet.create({
   bgLight: {

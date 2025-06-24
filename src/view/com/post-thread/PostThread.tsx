@@ -586,7 +586,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
         />
       </ScrollProvider>
       {isMobile && canReply && hasSession && (
-        <MobileComposePrompt onPressReply={onPressReply} />
+        <MobileComposePrompt onPressReply={onPressReply} thread={thread} />
       )}
     </>
   )
@@ -708,7 +708,13 @@ let ThreadMenu = ({
 }
 ThreadMenu = memo(ThreadMenu)
 
-function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
+function MobileComposePrompt({
+  onPressReply,
+  thread,
+}: {
+  onPressReply: () => unknown
+  thread: ThreadNode
+}) {
   const safeAreaInsets = useSafeAreaInsets()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
   return (
@@ -720,7 +726,7 @@ function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
           bottom: clamp(safeAreaInsets.bottom, 13, 60),
         },
       ]}>
-      <PostThreadComposePrompt onPressCompose={onPressReply} />
+      <PostThreadComposePrompt onPressCompose={onPressReply} thread={thread} />
     </Animated.View>
   )
 }
