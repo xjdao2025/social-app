@@ -41,15 +41,13 @@ import {ExportCarDialog} from './components/ExportCarDialog'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AccountSettings'>
 export function AccountSettingsScreen({}: Props) {
-  const t = useTheme()
-  const {_} = useLingui()
+  // const t = useTheme()
+  // const { _ } = useLingui()
   const {currentAccount} = useSession()
   const {openModal} = useModalControls()
-  const emailDialogControl = useEmailDialogControl()
+  // const emailDialogControl = useEmailDialogControl()
   const birthdayControl = useDialogControl()
-  const changeHandleControl = useDialogControl()
-  const exportCarControl = useDialogControl()
-  const deactivateAccountControl = useDialogControl()
+
   const contactModifyRef = useRef<ContactModifyDialogRef>(null)
   const {data: profile, run: reloadProfile} = useRequest(async () => {
     const res = await server.dao('POST /user/login-user-detail')
@@ -76,7 +74,8 @@ export function AccountSettingsScreen({}: Props) {
                 it wouldn't push the BadgeText/Chevron/whatever to the right.
                 TODO: find a general solution for this. workaround in this case is to set the ItemText to flex: 1 and BadgeText to flex: 0 -sfn */}
             <SettingsList.ItemText style={[a.flex_0]}>
-              <Trans>Email</Trans>
+              {/* <Trans>Email</Trans> */}
+              电子邮箱
             </SettingsList.ItemText>
             {profile?.email && (
               <>
@@ -117,7 +116,8 @@ export function AccountSettingsScreen({}: Props) {
             </SettingsList.PressableItem>
           )} */}
           <SettingsList.PressableItem
-            label={_(msg`Update email`)}
+            label="更新电子邮箱"
+            // label={_(msg`Update email`)}
             onPress={() => {
               contactModifyRef.current?.open('email')
             }}
@@ -168,15 +168,18 @@ export function AccountSettingsScreen({}: Props) {
           <SettingsList.Item>
             <SettingsList.ItemIcon icon={BirthdayCakeIcon} />
             <SettingsList.ItemText>
-              <Trans>Birthday</Trans>
+              {/* <Trans>Birthday</Trans> */}
+              生日
             </SettingsList.ItemText>
             <SettingsList.BadgeButton
-              label={_(msg`Edit`)}
+              label="编辑"
+              // label={_(msg`Edit`)}
               onPress={() => birthdayControl.open()}
             />
           </SettingsList.Item>
           <SettingsList.PressableItem
-            label={_(msg`Password`)}
+            label="密码"
+            // label={_(msg`Password`)}
             onPress={() => openModal({name: 'change-password'})}>
             <SettingsList.ItemIcon icon={LockIcon} />
             <SettingsList.ItemText>
@@ -188,56 +191,28 @@ export function AccountSettingsScreen({}: Props) {
           <SettingsList.Divider />
 
           <SettingsList.PressableItem
-            label={_(msg`Delete account`)}
+            label="删除账户"
+            // label={_(msg`Delete account`)}
             onPress={() => openModal({name: 'delete-account'})}
             destructive>
             <SettingsList.ItemIcon icon={Trash_Stroke2_Corner2_Rounded} />
             <SettingsList.ItemText>
-              <Trans>Delete account</Trans>
+              {/* <Trans>Delete account</Trans> */}
+              删除账户
             </SettingsList.ItemText>
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
           {IS_INTERNAL && (
             <>
               <SettingsList.Divider />
-              <SettingsList.PressableItem
-                label={_(msg`Handle`)}
-                accessibilityHint={_(msg`Opens change handle dialog`)}
-                onPress={() => changeHandleControl.open()}>
-                <SettingsList.ItemIcon icon={AtIcon} />
-                <SettingsList.ItemText>
-                  <Trans>Handle</Trans>
-                </SettingsList.ItemText>
-                <SettingsList.Chevron />
-              </SettingsList.PressableItem>
-              <SettingsList.PressableItem
-                label={_(msg`Export my data`)}
-                onPress={() => exportCarControl.open()}>
-                <SettingsList.ItemIcon icon={CarIcon} />
-                <SettingsList.ItemText>
-                  <Trans>Export my data</Trans>
-                </SettingsList.ItemText>
-                <SettingsList.Chevron />
-              </SettingsList.PressableItem>
-              <SettingsList.PressableItem
-                label={_(msg`Deactivate account`)}
-                onPress={() => deactivateAccountControl.open()}
-                destructive>
-                <SettingsList.ItemIcon icon={FreezeIcon} />
-                <SettingsList.ItemText>
-                  <Trans>Deactivate account</Trans>
-                </SettingsList.ItemText>
-                <SettingsList.Chevron />
-              </SettingsList.PressableItem>
+              <DEPRECATED_FUNC />
             </>
           )}
         </SettingsList.Container>
       </Layout.Content>
 
       <BirthDateSettingsDialog control={birthdayControl} />
-      <ChangeHandleDialog control={changeHandleControl} />
-      <ExportCarDialog control={exportCarControl} />
-      <DeactivateAccountDialog control={deactivateAccountControl} />
+
       <ContactModifyDialog
         ref={contactModifyRef}
         afterUpdate={() => {
@@ -246,5 +221,48 @@ export function AccountSettingsScreen({}: Props) {
         // value={currentAccount?.email}
       />
     </Layout.Screen>
+  )
+}
+
+function DEPRECATED_FUNC() {
+  const {_} = useLingui()
+  const changeHandleControl = useDialogControl()
+  const exportCarControl = useDialogControl()
+  const deactivateAccountControl = useDialogControl()
+  return (
+    <>
+      <SettingsList.PressableItem
+        label={_(msg`Handle`)}
+        accessibilityHint={_(msg`Opens change handle dialog`)}
+        onPress={() => changeHandleControl.open()}>
+        <SettingsList.ItemIcon icon={AtIcon} />
+        <SettingsList.ItemText>
+          <Trans>Handle</Trans>
+        </SettingsList.ItemText>
+        <SettingsList.Chevron />
+      </SettingsList.PressableItem>
+      <SettingsList.PressableItem
+        label={_(msg`Export my data`)}
+        onPress={() => exportCarControl.open()}>
+        <SettingsList.ItemIcon icon={CarIcon} />
+        <SettingsList.ItemText>
+          <Trans>Export my data</Trans>
+        </SettingsList.ItemText>
+        <SettingsList.Chevron />
+      </SettingsList.PressableItem>
+      <SettingsList.PressableItem
+        label={_(msg`Deactivate account`)}
+        onPress={() => deactivateAccountControl.open()}
+        destructive>
+        <SettingsList.ItemIcon icon={FreezeIcon} />
+        <SettingsList.ItemText>
+          <Trans>Deactivate account</Trans>
+        </SettingsList.ItemText>
+        <SettingsList.Chevron />
+      </SettingsList.PressableItem>
+      <ChangeHandleDialog control={changeHandleControl} />
+      <ExportCarDialog control={exportCarControl} />
+      <DeactivateAccountDialog control={deactivateAccountControl} />
+    </>
   )
 }
