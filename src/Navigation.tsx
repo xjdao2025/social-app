@@ -68,6 +68,7 @@ import {MessagesScreen} from '#/screens/Messages/ChatList'
 import {MessagesConversationScreen} from '#/screens/Messages/Conversation'
 import {MessagesInboxScreen} from '#/screens/Messages/Inbox'
 import {MessagesSettingsScreen} from '#/screens/Messages/Settings'
+import MiddlePage from '#/screens/Middle'
 import {ModerationScreen} from '#/screens/Moderation'
 import {Screen as ModerationVerificationSettings} from '#/screens/Moderation/VerificationSettings'
 import {Screen as ModerationInteractionSettings} from '#/screens/ModerationInteractionSettings'
@@ -525,6 +526,13 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => ApplicationsScreen}
         options={({route}) => ({
           title: '提案详情', // title(msg`Post by @${route.params.name}`),
+        })}
+      />
+      <Stack.Screen
+        name="MiddlePage"
+        getComponent={() => MiddlePage}
+        options={({route}) => ({
+          title: '',
         })}
       />
     </>

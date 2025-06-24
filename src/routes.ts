@@ -26,6 +26,7 @@ export const router = new Router({
   ModerationVerificationSettings: '/moderation/verification-settings',
   // profiles, threads, lists
   Profile: ['/profile/:name', '/profile/:name/rss'],
+  MiddlePage: '/middle-page',
   ProfileFollowers: '/profile/:name/followers',
   ProfileFollows: '/profile/:name/follows',
   ProfileKnownFollowers: '/profile/:name/known-followers',

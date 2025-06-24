@@ -8,6 +8,9 @@ import {useRequest} from 'ahooks'
 import {emailRegExp, phoneNumberRegExp} from '#/lib/tools'
 import {logger} from '#/logger'
 import * as Toast from '#/view/com/util/Toast'
+import QrScanner, {
+  type QrScannerRefProps,
+} from '#/screens/Profile/Header/QrScanner'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -15,21 +18,37 @@ import * as TextField from '#/components/forms/TextField'
 import {QrCode_Scan} from '#/components/icons/QrCode'
 import {Text} from '#/components/Typography'
 import server from '#/server'
-import QrScanner, { type QrScannerRefProps } from "#/screens/Profile/Header/QrScanner";
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
 
 export function SendPointsDialog({
+  defaultReceive,
   control,
   onUpdate,
 }: {
+  defaultReceive?: string
   control: Dialog.DialogControlProps
   onUpdate?: () => void
 }) {
   const {_} = useLingui()
 
+  const searchParams = new URLSearchParams(window.location.search)
+  const [receiveUser, setReceiveUser] = useState(
+    searchParams.get('receiveUser') || '',
+  )
+
+  useEffect(() => {
+    if (receiveUser && control) {
+      control.open()
+      const url = new URL(window.location.href)
+      url.search = ''
+      window.history.replaceState(null, '', url)
+    }
+  }, [receiveUser, control])
+
   const onPressCancel = useCallback(() => {
     control.close()
+    setReceiveUser('')
   }, [control])
 
   return (
@@ -39,15 +58,21 @@ export function SendPointsDialog({
         minHeight: SCREEN_HEIGHT,
       }}
       testID="sendPointsModal">
-      <DialogInner onUpdate={onUpdate} onPressCancel={onPressCancel} />
+      <DialogInner
+        onUpdate={onUpdate}
+        defaultReceive={receiveUser}
+        onPressCancel={onPressCancel}
+      />
     </Dialog.Outer>
   )
 }
 
 function DialogInner({
+  defaultReceive = '',
   onUpdate,
   onPressCancel,
 }: {
+  defaultReceive?: string
   onUpdate?: () => void
   onPressCancel: () => void
 }) {
@@ -57,7 +82,7 @@ function DialogInner({
 
   const videoRef = useRef<QrScannerRefProps>(null)
 
-  const [giftAccount, setGiftAccount] = useState('')
+  const [giftAccount, setGiftAccount] = useState(defaultReceive)
   const [giftPoints, setGiftPoints] = useState('')
 
   const {data: userDetail} = useRequest(() =>
@@ -123,7 +148,6 @@ function DialogInner({
 
   return (
     <>
-
       <QrScanner ref={videoRef} />
       <Dialog.ScrollableInner
         label={_(msg`Edit profile`)}
@@ -150,8 +174,7 @@ function DialogInner({
             <Pressable
               accessibilityRole={'button'}
               style={styles.scan}
-              onPress={scan}
-            >
+              onPress={scan}>
               <QrCode_Scan fill={'#6F869F'} size={'md'} style={[a.z_10]} />
             </Pressable>
             {displayNameInvalid && (
@@ -228,7 +251,7 @@ const styles = StyleSheet.create({
     right: 0,
     top: 21,
     zIndex: 10,
-    padding: 10
+    padding: 10,
   },
   cur_pints_label: {
     color: '#6F869F',
