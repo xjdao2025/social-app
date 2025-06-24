@@ -143,7 +143,9 @@ function DialogInner({
 
   const scan = async () => {
     const qrResult = await videoRef?.current?.scan()
-    setGiftAccount(qrResult || '')
+    if (!qrResult) return
+    const url = new URL(qrResult)
+    setGiftAccount(url.searchParams.get('receiveUser') || '')
   }
 
   return (

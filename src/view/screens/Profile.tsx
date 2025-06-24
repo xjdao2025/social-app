@@ -310,7 +310,6 @@ function ProfileScreenLoaded({
               },
               {key: `author|${profile.did}|posts_with_replies`, label: '回复'},
               {key: `author|${profile.did}|posts_with_media`, label: '媒体'},
-              {key: `author|${profile.did}|posts_with_video`, label: '视频'},
               {key: `likes|${profile.did}`, label: '喜欢'},
             ]}>
             <ProfileFeedSection

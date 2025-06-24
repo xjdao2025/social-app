@@ -597,19 +597,22 @@ export const ComposePost = ({
       {/*  dispatch={composerDispatch}*/}
       {/*  bottomBarAnimatedStyle={bottomBarAnimatedStyle}*/}
       {/*/>*/}
-      <HashTag
-        active={activePost.hashTag}
-        setHashTag={tag => {
-          composerDispatch({
-            type: 'update_post',
-            postId: activePost.id,
-            postAction: {
-              type: 'add_hashtag',
-              tag,
-            },
-          })
-        }}
-      />
+      {!replyTo && (
+        <HashTag
+          active={activePost.hashTag}
+          setHashTag={tag => {
+            composerDispatch({
+              type: 'update_post',
+              postId: activePost.id,
+              postAction: {
+                type: 'add_hashtag',
+                tag,
+              },
+            })
+          }}
+        />
+      )}
+
       <ComposerFooter
         post={activePost}
         dispatch={dispatch}
