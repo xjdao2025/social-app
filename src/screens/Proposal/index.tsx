@@ -111,17 +111,17 @@ export default function ProposalDetailScreen({route}: Props) {
   //   images: [
   //     {
   //       thumb:
-  //         'https://xiangjiandao.rivtower.cc/img/feed_thumbnail/plain/did:plc:pc5gxd5my6uooild5drcixdm/bafkreigzzzfwbraggh4zfxws6qladwrpwvpihscaqigkgb5zusvi6zfixu@jpeg',
+  //         'https://xiangjiandao.rivtower.cc/bsky/img/feed_thumbnail/plain/did:plc:pc5gxd5my6uooild5drcixdm/bafkreigzzzfwbraggh4zfxws6qladwrpwvpihscaqigkgb5zusvi6zfixu@jpeg',
   //       fullsize:
-  //         'https://xiangjiandao.rivtower.cc/img/feed_fullsize/plain/did:plc:pc5gxd5my6uooild5drcixdm/bafkreigzzzfwbraggh4zfxws6qladwrpwvpihscaqigkgb5zusvi6zfixu@jpeg',
+  //         'https://xiangjiandao.rivtower.cc/bsky/img/feed_fullsize/plain/did:plc:pc5gxd5my6uooild5drcixdm/bafkreigzzzfwbraggh4zfxws6qladwrpwvpihscaqigkgb5zusvi6zfixu@jpeg',
   //       alt: '',
   //       aspectRatio: {width: 474, height: 474},
   //     },
   //     {
   //       thumb:
-  //         'https://xiangjiandao.rivtower.cc/img/feed_thumbnail/plain/did:plc:pc5gxd5my6uooild5drcixdm/bafkreigzzzfwbraggh4zfxws6qladwrpwvpihscaqigkgb5zusvi6zfixu@jpeg',
+  //         'https://xiangjiandao.rivtower.cc/bsky/img/feed_thumbnail/plain/did:plc:pc5gxd5my6uooild5drcixdm/bafkreigzzzfwbraggh4zfxws6qladwrpwvpihscaqigkgb5zusvi6zfixu@jpeg',
   //       fullsize:
-  //         'https://xiangjiandao.rivtower.cc/img/feed_fullsize/plain/did:plc:pc5gxd5my6uooild5drcixdm/bafkreigzzzfwbraggh4zfxws6qladwrpwvpihscaqigkgb5zusvi6zfixu@jpeg',
+  //         'https://xiangjiandao.rivtower.cc/bsky/img/feed_fullsize/plain/did:plc:pc5gxd5my6uooild5drcixdm/bafkreigzzzfwbraggh4zfxws6qladwrpwvpihscaqigkgb5zusvi6zfixu@jpeg',
   //       alt: '',
   //       aspectRatio: {width: 474, height: 474},
   //     },

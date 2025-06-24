@@ -9,7 +9,7 @@ export function useServiceConfigQuery() {
     queryKey: ['service-config'],
     queryFn: async () => {
       const res = await fetch(
-        'https://xiangjiandao.rivtower.cc/xrpc/app.bsky.unspecced.getConfig',
+        'https://xiangjiandao.rivtower.cc/bsky/xrpc/app.bsky.unspecced.getConfig',
       )
       if (!res.ok) {
         return {
