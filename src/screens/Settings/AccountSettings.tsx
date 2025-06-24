@@ -5,6 +5,7 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useRequest} from 'ahooks'
 
 import {IS_INTERNAL} from '#/lib/app-info'
+import displayNumber from '#/lib/displayNumber'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useModalControls} from '#/state/modals'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -146,7 +147,10 @@ export function AccountSettingsScreen({}: Props) {
             {currentAccount && (
               <>
                 <SettingsList.BadgeText style={[a.flex_1]}>
-                  {profile?.phone ?? '-'}
+                  {displayNumber(profile?.phone, {
+                    separator: ' ',
+                    stepLen: 4,
+                  }) ?? '-'}
                 </SettingsList.BadgeText>
               </>
             )}
