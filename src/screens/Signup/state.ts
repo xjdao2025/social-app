@@ -328,7 +328,7 @@ export function useSubmitSignup() {
         const registerRes = await server.dao(
           'POST /user/register',
           {
-            userId: state.registerId,
+            preRegisterGuid: state.registerId,
             password: state.password,
             birthday: state.dateOfBirth.toISOString(),
             domainName: createFullHandle(state.handle, state.userDomain),
