@@ -9,7 +9,7 @@ import displayNumber from '#/lib/displayNumber'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useModalControls} from '#/state/modals'
 import {useProfileQuery} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
+import {useSession, useSessionApi} from '#/state/session'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import ContactModifyDialog, {
@@ -17,6 +17,7 @@ import ContactModifyDialog, {
 } from '#/components/ContactModifyDialog'
 import SettingsPhoneSvg from '#/components/DAO/settings.phone'
 import SettingsUpdatePhoneSvg from '#/components/DAO/settings.phone-update'
+import DeleteAccountDialog from '#/components/DeleteAccountDialog'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {
@@ -33,7 +34,9 @@ import {PencilLine_Stroke2_Corner2_Rounded as PencilIcon} from '#/components/ico
 import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
 import {Trash_Stroke2_Corner2_Rounded} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
+import PasswordUpdateDialog from '#/components/PasswordUpdateDialog'
 import {Text} from '#/components/Typography'
+import {resetToTab} from '#/Navigation'
 import server from '#/server'
 import {ChangeHandleDialog} from './components/ChangeHandleDialog'
 import {DeactivateAccountDialog} from './components/DeactivateAccountDialog'
@@ -44,7 +47,11 @@ export function AccountSettingsScreen({}: Props) {
   // const t = useTheme()
   // const { _ } = useLingui()
   const {currentAccount} = useSession()
+  const {logoutCurrentAccount, removeAccount} = useSessionApi()
   const {openModal} = useModalControls()
+
+  const passwordUpdateDialogControl = useDialogControl()
+  const delAccountDialogControl = useDialogControl()
   // const emailDialogControl = useEmailDialogControl()
   const birthdayControl = useDialogControl()
 
@@ -180,7 +187,9 @@ export function AccountSettingsScreen({}: Props) {
           <SettingsList.PressableItem
             label="密码"
             // label={_(msg`Password`)}
-            onPress={() => openModal({name: 'change-password'})}>
+            onPress={() => passwordUpdateDialogControl.open()}
+            // onPress={() => openModal({name: 'change-password'})}
+          >
             <SettingsList.ItemIcon icon={LockIcon} />
             <SettingsList.ItemText>
               <Trans>Password</Trans>
@@ -193,7 +202,8 @@ export function AccountSettingsScreen({}: Props) {
           <SettingsList.PressableItem
             label="删除账户"
             // label={_(msg`Delete account`)}
-            onPress={() => openModal({name: 'delete-account'})}
+            // onPress={() => openModal({ name: 'delete-account' })}
+            onPress={() => delAccountDialogControl.open()}
             destructive>
             <SettingsList.ItemIcon icon={Trash_Stroke2_Corner2_Rounded} />
             <SettingsList.ItemText>
@@ -212,6 +222,26 @@ export function AccountSettingsScreen({}: Props) {
       </Layout.Content>
 
       <BirthDateSettingsDialog control={birthdayControl} />
+
+      <PasswordUpdateDialog
+        control={passwordUpdateDialogControl}
+        contact={profile?.phone || profile?.email}
+        contactType={profile?.phone ? 'phone' : 'email'}
+        afterUpdate={() => {
+          // logoutCurrentAccount("Settings");
+          resetToTab('HomeTab')
+          removeAccount(currentAccount!)
+        }}
+      />
+
+      <DeleteAccountDialog
+        control={delAccountDialogControl}
+        contact={profile?.phone || profile?.email}
+        contactType={profile?.phone ? 'phone' : 'email'}
+        afterUpdate={() => {
+          logoutCurrentAccount('Settings')
+        }}
+      />
 
       <ContactModifyDialog
         ref={contactModifyRef}

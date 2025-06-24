@@ -176,7 +176,7 @@ const ContactModifyDialog = forwardRef<
                   keyboardType="email-address"
                   autoComplete="email"
                   autoCapitalize="none"
-                  onSubmitEditing={handleUpdateEmail}
+                  // onSubmitEditing={handleUpdateEmail}
                 />
               </TextField.Root>
               <View style={{height: 8}} />
