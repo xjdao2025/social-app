@@ -6,6 +6,7 @@ import {
   type NavigationProp,
   useFocusEffect,
   useNavigation,
+  useRoute,
 } from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import {useRequest} from 'ahooks'
@@ -43,16 +44,23 @@ export default function HallScreen() {
   const [currentTabKey, setTabKey] = useState(proposalStageOptions[0].key)
   const queryClient = useQueryClient()
   const navigation = useNavigation<NavigationProp<AllNavigatorParams>>()
-  const {data: nodeList} = useRequest(async () => {
+  const {data: nodeList, run: reloadNodeList} = useRequest(async () => {
     const res = await server.dao('POST /node/list')
     return res
   })
-  const {data: foundInfo} = useRequest(async () => {
+  const {data: foundInfo, run: reloadFoundInfo} = useRequest(async () => {
     return server.dao('POST /global-config/foundation-info')
   })
   const scrollElRef = useAnimatedRef()
   const postsSectionRef = useRef<SectionRef>(null)
   const isPageFocused = true
+  const route = useRoute()
+
+  useEffect(() => {
+    if (!route) return
+    reloadNodeList()
+    reloadFoundInfo()
+  }, [route, reloadNodeList, reloadFoundInfo])
 
   const setMinimalShellMode = useSetMinimalShellMode()
   useFocusEffect(
