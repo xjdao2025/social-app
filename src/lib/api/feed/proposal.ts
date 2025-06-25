@@ -53,7 +53,7 @@ export class ProposalFeedAPI implements FeedAPI {
   async fetch({cursor, limit}: {cursor: string | undefined; limit: number}) {
     const {state, did} = this.params
     const page = cursor ? +cursor : 1
-    console.log('proposal request params:', {state, did, page})
+    // console.log('proposal request params:', {state, did, page})
 
     if (did) {
       const items = await fetchMyProposal(+state)

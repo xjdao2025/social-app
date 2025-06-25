@@ -183,16 +183,16 @@ export function usePostFeedQuery(
     queryKey: RQKEY(feedDesc, params),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       logger.debug('usePostFeedQuery', {feedDesc, cursor: pageParam?.cursor})
-      console.log('usePostFeedQuery', {
-        feedDesc,
-        feedParams: params || {},
-        feedTuners,
-        agent,
-        // Not in the query key because they don't change:
-        userInterests,
-        // Not in the query key. Reacting to it switching isn't important:
-        enableFollowingToDiscoverFallback,
-      })
+      // console.log('usePostFeedQuery', {
+      //   feedDesc,
+      //   feedParams: params || {},
+      //   feedTuners,
+      //   agent,
+      //   // Not in the query key because they don't change:
+      //   userInterests,
+      //   // Not in the query key. Reacting to it switching isn't important:
+      //   enableFollowingToDiscoverFallback,
+      // })
       const {api, cursor} = pageParam
         ? pageParam
         : {

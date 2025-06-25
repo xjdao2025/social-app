@@ -286,7 +286,7 @@ function ProfileScreenLoaded({
       </ExpoScrollForwarderView>
     )
   }
-  console.log('currentPage', currentPage)
+
   return (
     <ScreenHider
       testID="profileView"
