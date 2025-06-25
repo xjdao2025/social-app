@@ -62,7 +62,7 @@ export class ProposalFeedAPI implements FeedAPI {
       }
     }
 
-    const res = await fetchProposal(state, 1, limit)
+    const res = await fetchProposal(state, page, limit)
     if (res?.items) {
       return {
         cursor: `${
