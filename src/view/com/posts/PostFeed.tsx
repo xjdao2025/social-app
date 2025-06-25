@@ -260,6 +260,9 @@ let PostFeed = ({
   if (lastFetchedAt) {
     lastFetchRef.current = lastFetchedAt
   }
+
+  console.log('data>>>>>', data)
+
   const isEmpty = React.useMemo(
     () => !isFetching && !data?.pages?.some(page => page.slices.length),
     [isFetching, data],
@@ -687,7 +690,7 @@ let PostFeed = ({
 
   const renderItem = React.useCallback(
     ({item: row, index: rowIndex}: ListRenderItemInfo<FeedRow>) => {
-      // console.log('row:', row)
+      console.log('row:', row)
       if (row.type === 'empty') {
         return renderEmptyState()
       } else if (row.type === 'error') {

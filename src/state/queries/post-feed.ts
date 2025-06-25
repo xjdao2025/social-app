@@ -24,6 +24,7 @@ import {HomeFeedAPI} from '#/lib/api/feed/home'
 import {LikesFeedAPI} from '#/lib/api/feed/likes'
 import {ListFeedAPI} from '#/lib/api/feed/list'
 import {MergeFeedAPI} from '#/lib/api/feed/merge'
+import {PostsFeedAPI} from '#/lib/api/feed/posts'
 import {ProposalFeedAPI} from '#/lib/api/feed/proposal'
 import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
@@ -127,7 +128,7 @@ export interface FeedPage {
  * filter out unwanted content, we may fetch more than this number to ensure
  * that we get _at least_ this number.
  */
-const MIN_POSTS = 30
+const MIN_POSTS = 20
 
 export function usePostFeedQuery(
   feedDesc: FeedDescriptor,
@@ -474,6 +475,12 @@ function createApi({
   enableFollowingToDiscoverFallback: boolean
 }) {
   if (feedDesc === 'following') {
+    console.log(
+      'enableFollowingToDiscoverFallback',
+      enableFollowingToDiscoverFallback,
+      feedParams,
+    )
+    debugger
     if (feedParams.mergeFeedEnabled) {
       return new MergeFeedAPI({
         agent,
@@ -482,11 +489,13 @@ function createApi({
         userInterests,
       })
     } else {
-      if (enableFollowingToDiscoverFallback) {
-        return new HomeFeedAPI({agent, userInterests})
-      } else {
-        return new FollowingFeedAPI({agent})
-      }
+      // if (enableFollowingToDiscoverFallback) {
+      //   return new HomeFeedAPI({agent, userInterests})
+      // } else {
+      //   // return new FollowingFeedAPI({agent})
+      //   return new PostsFeedAPI({agent})
+      // }
+      return new PostsFeedAPI({agent})
     }
   } else if (feedDesc.startsWith('author')) {
     const [_, actor, filter] = feedDesc.split('|')
@@ -496,11 +505,13 @@ function createApi({
     return new LikesFeedAPI({agent, feedParams: {actor}})
   } else if (feedDesc.startsWith('feedgen')) {
     const [_, feed] = feedDesc.split('|')
-    return new CustomFeedAPI({
-      agent,
-      feedParams: {feed},
-      userInterests,
-    })
+
+    // return new CustomFeedAPI({
+    //   agent,
+    //   feedParams: {feed},
+    //   userInterests,
+    // })
+    return new PostsFeedAPI({agent})
   } else if (feedDesc.startsWith('list')) {
     const [_, list] = feedDesc.split('|')
     return new ListFeedAPI({agent, feedParams: {list}})

@@ -5,4 +5,7 @@ import defineAPIHOC from '../utils'
 import interceptors from './interceptors'
 // defineAPIHOC 第一个参数为请求方法的公共前缀
 const defineAPI = defineAPIHOC('/api/v1', interceptors)
+
+export const defineProxyAPI = defineAPIHOC('', interceptors)
+
 export default defineAPI
