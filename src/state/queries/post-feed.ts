@@ -46,6 +46,7 @@ import {
   embedViewRecordToPostView,
   getEmbeddedPost,
 } from './util'
+import { PostsHashTagTypeMap } from "#/view/com/composer/HashTag";
 
 type ActorDid = string
 export type AuthorFilter =
@@ -480,7 +481,6 @@ function createApi({
       enableFollowingToDiscoverFallback,
       feedParams,
     )
-    debugger
     if (feedParams.mergeFeedEnabled) {
       return new MergeFeedAPI({
         agent,
@@ -489,13 +489,11 @@ function createApi({
         userInterests,
       })
     } else {
-      // if (enableFollowingToDiscoverFallback) {
-      //   return new HomeFeedAPI({agent, userInterests})
-      // } else {
-      //   // return new FollowingFeedAPI({agent})
-      //   return new PostsFeedAPI({agent})
-      // }
-      return new PostsFeedAPI({agent})
+      if (enableFollowingToDiscoverFallback) {
+        return new HomeFeedAPI({agent, userInterests})
+      } else {
+        return new FollowingFeedAPI({agent})
+      }
     }
   } else if (feedDesc.startsWith('author')) {
     const [_, actor, filter] = feedDesc.split('|')
@@ -506,12 +504,11 @@ function createApi({
   } else if (feedDesc.startsWith('feedgen')) {
     const [_, feed] = feedDesc.split('|')
 
-    // return new CustomFeedAPI({
-    //   agent,
-    //   feedParams: {feed},
-    //   userInterests,
-    // })
-    return new PostsFeedAPI({agent})
+    return new CustomFeedAPI({
+      agent,
+      feedParams: {feed},
+      userInterests,
+    })
   } else if (feedDesc.startsWith('list')) {
     const [_, list] = feedDesc.split('|')
     return new ListFeedAPI({agent, feedParams: {list}})
@@ -524,6 +521,10 @@ function createApi({
       agent,
       params: {state: proposalState as ProposalStatus, did: userDid},
     })
+  } else if (feedDesc.startsWith('square-posts')) {
+    const [_, tag] = feedDesc.split('|')
+
+    return new PostsFeedAPI({agent, params: { tag: PostsHashTagTypeMap[tag] }})
   } else {
     // shouldnt happen
     return new FollowingFeedAPI({agent})

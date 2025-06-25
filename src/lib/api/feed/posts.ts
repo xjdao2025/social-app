@@ -7,14 +7,14 @@ import {type ProposalStatus} from '#/server/dao/enums'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
 type RequestParams = {
-  state: ProposalStatus
-  did?: string
+  tag?: string
 }
 
-async function fetchPosts(pageNum: number, pageSize: number) {
+async function fetchPosts(pageNum: number, pageSize: number, params?: any) {
   const result = await proxyRequest('/post/api/posts', 'POST', {
     page: pageNum,
     per_page: pageSize,
+    ...(params || {})
   })
   return {
     ...result,
@@ -24,27 +24,25 @@ async function fetchPosts(pageNum: number, pageSize: number) {
 
 export class PostsFeedAPI implements FeedAPI {
   agent: BskyAgent
-  params: RequestParams = {state: 0}
-  constructor({agent}: {agent: BskyAgent}) {
+  params: RequestParams
+  constructor({agent, params}: {agent: BskyAgent, params: RequestParams}) {
     this.agent = agent
-    // this.params = params
+    this.params = params
   }
 
   async peekLatest() {
-    const {state, did} = this.params
     // if (did) {
     //   const items = await fetchMyProposal(+state)
     //   return items?.[0] ?? null
     // }
-    const res = await fetchPosts(1, 1)
+    const res = await fetchPosts(1, 1, this.params)
     return res?.items?.[0] || null
   }
 
   async fetch({cursor, limit}: {cursor: string | undefined; limit: number}) {
-    const {state, did} = this.params
     const page = cursor ? +cursor : 1
 
-    const res = await fetchPosts(page, limit)
+    const res = await fetchPosts(page, limit, this.params)
     if (res?.items) {
       return {
         cursor: `${res.page * res.per_page > res.total ? '' : res.page + 1}`,

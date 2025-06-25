@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useRef} from 'react'
+import React, { memo, useCallback, useEffect, useRef } from 'react'
 import {
   ActivityIndicator,
   AppState,
@@ -261,8 +261,6 @@ let PostFeed = ({
     lastFetchRef.current = lastFetchedAt
   }
 
-  console.log('data>>>>>', data)
-
   const isEmpty = React.useMemo(
     () => !isFetching && !data?.pages?.some(page => page.slices.length),
     [isFetching, data],
@@ -308,7 +306,7 @@ let PostFeed = ({
     if (
       data?.pages.length === 1 &&
       (feed === 'following' ||
-        feed === `author|${myDid}|posts_and_author_threads`)
+        feed === `author|${myDid}|posts_and_author_threads`) || feed.startsWith('square-posts')
     ) {
       queryClient.invalidateQueries({queryKey: RQKEY(feed)})
     }
@@ -398,6 +396,7 @@ let PostFeed = ({
       | 'profile'
       | 'thevids'
       | 'proposal'
+      | 'square-posts'
       | undefined
     if (feedType === 'following') {
       feedKind = 'following'
@@ -411,6 +410,8 @@ let PostFeed = ({
       feedKind = 'profile'
     } else if (feedType === 'proposal') {
       feedKind = 'proposal'
+    } else if (feedType === 'square-posts') {
+      feedKind = 'square-posts'
     }
 
     let arr: FeedRow[] = []
@@ -690,7 +691,6 @@ let PostFeed = ({
 
   const renderItem = React.useCallback(
     ({item: row, index: rowIndex}: ListRenderItemInfo<FeedRow>) => {
-      console.log('row:', row)
       if (row.type === 'empty') {
         return renderEmptyState()
       } else if (row.type === 'error') {

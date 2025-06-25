@@ -2,6 +2,22 @@ import {Pressable,StyleSheet, View} from 'react-native'
 
 import {Text} from '#/components/Typography'
 
+export const PostsHashTagType = [{
+  tag: '#任务',
+  feedDes: 'tasks'
+},{
+  tag: '#商品',
+  feedDes: 'products'
+},{
+  tag: '#活动',
+  feedDes: 'activity'
+}]
+
+export const PostsHashTagTypeMap = PostsHashTagType.reduce((cur, item) => {
+  cur[item.feedDes] = item.tag;
+  return cur
+}, {})
+
 const HashTag = (props: {
   active?: string
   setHashTag: (hashTag: string) => void
@@ -12,7 +28,7 @@ const HashTag = (props: {
     <View style={styles.wrap}>
       <Text style={styles.header}>请选择类型:</Text>
       <View style={styles.container}>
-        {['#任务', '#商品', '#活动'].map(tag => {
+        {PostsHashTagType.map(({ tag }) => {
           const isActive = tag === active
 
           return (

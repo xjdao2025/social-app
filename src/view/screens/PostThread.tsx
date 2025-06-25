@@ -13,7 +13,6 @@ export function PostThreadScreen({route}: Props) {
 
   const {name, rkey} = route.params
   const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
-  debugger
 
   useFocusEffect(
     React.useCallback(() => {

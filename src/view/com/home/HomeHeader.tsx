@@ -1,16 +1,14 @@
 import React from 'react'
-import {useNavigation} from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
-import {FeedSourceInfo} from '#/state/queries/feed'
-import {useSession} from '#/state/session'
-import {RenderTabBarFnProps} from '#/view/com/pager/Pager'
-import {TabBar} from '../pager/TabBar'
-import {HomeHeaderLayout} from './HomeHeaderLayout'
-import { Text } from "#/components/Typography";
-import { Dimensions, Linking, TouchableWithoutFeedback, View } from "react-native";
+import { NavigationProp } from '#/lib/routes/types'
+import { useSession } from '#/state/session'
+import { RenderTabBarFnProps } from '#/view/com/pager/Pager'
+import { TabBar } from '../pager/TabBar'
+import { HomeHeaderLayout } from './HomeHeaderLayout'
+import { Dimensions, Linking, TouchableWithoutFeedback } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
-import { atoms as a, useBreakpoints, useTheme } from '#/alf'
+import { useBreakpoints } from '#/alf'
 import { useRequest } from "ahooks";
 import server from "#/server";
 import OssImage from "#/components/OssImage";
@@ -23,7 +21,7 @@ export function HomeHeader(
   props: RenderTabBarFnProps & {
     testID?: string
     onPressSelected: () => void
-    feeds: FeedSourceInfo[]
+    feeds: {displayName: string; feedDescriptor: string}[]
   },
 ) {
   const {feeds} = props
@@ -42,12 +40,8 @@ export function HomeHeader(
   }, [feeds, hasSession])
 
   const items = React.useMemo(() => {
-    const pinnedNames = feeds.map(f => f.displayName)
-    if (!hasPinnedCustom) {
-      return pinnedNames.concat('Feeds ✨')
-    }
-    return pinnedNames
-  }, [hasPinnedCustom, feeds])
+    return feeds.map(f => f.displayName)
+  }, [feeds])
 
   const onPressFeedsLink = React.useCallback(() => {
     navigation.navigate('Feeds')
@@ -105,7 +99,7 @@ export function HomeHeader(
         selectedPage={props.selectedPage}
         onSelect={onSelect}
         testID={props.testID}
-        items={['全部', '任务', '商品', '活动']}
+        items={items}
         dragProgress={props.dragProgress}
         dragState={props.dragState}
       />
