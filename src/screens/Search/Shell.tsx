@@ -307,14 +307,15 @@ export function SearchScreenShell({
                     {isExplore ? <Trans>Explore</Trans> : <Trans>Search</Trans>}
                   </Layout.Header.TitleText>
                 </Layout.Header.Content>
-                {showFilters ? (
+                {/* {showFilters? (
                   <SearchLanguageDropdown
                     value={params.lang}
                     onChange={params.setLang}
                   />
                 ) : (
                   <Layout.Header.Slot />
-                )}
+                )} */}
+                <Layout.Header.Slot />
               </Layout.Header.Outer>
             </View>
           )}
