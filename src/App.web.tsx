@@ -138,7 +138,7 @@ function InnerApp() {
                                                 <ServiceConfigProvider>
                                                   <IntentDialogProvider>
                                                     <Shell />
-                                                    <NuxDialogs />
+                                                    {/*<NuxDialogs />*/}
                                                   </IntentDialogProvider>
                                                 </ServiceConfigProvider>
                                               </ProgressGuideProvider>

@@ -153,7 +153,7 @@ function InnerApp() {
                                                   <IntentDialogProvider>
                                                     <TestCtrls />
                                                     <Shell />
-                                                    <NuxDialogs />
+                                                    {/*<NuxDialogs />*/}
                                                   </IntentDialogProvider>
                                                 </GestureHandlerRootView>
                                               </ServiceAccountManager>
