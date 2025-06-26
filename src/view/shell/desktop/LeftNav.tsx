@@ -35,6 +35,9 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {atoms as a, tokens, useLayoutBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import MenuHallSvg from '#/components/DAO/menu.hall'
+import MenuSquareSvg from '#/components/DAO/menu.square'
+import MenuUserCenterSvg from '#/components/DAO/menu.usercenter'
 import {type DialogControlProps} from '#/components/Dialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
 import {
@@ -598,25 +601,6 @@ export function DesktopLeftNav() {
       {hasSession && (
         <>
           <NavItem
-            href="/"
-            hasNew={hasHomeBadge && gate('remove_show_latest_button')}
-            icon={
-              <Home
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={pal.text}
-              />
-            }
-            iconFilled={
-              <HomeFilled
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={pal.text}
-              />
-            }
-            label={_(msg`Home`)}
-          />
-          <NavItem
             href="/search"
             icon={
               <MagnifyingGlass
@@ -633,6 +617,26 @@ export function DesktopLeftNav() {
               />
             }
             label={_(msg`Explore`)}
+          />
+          <NavItem
+            href="/"
+            hasNew={hasHomeBadge && gate('remove_show_latest_button')}
+            icon={
+              <MenuSquareSvg
+                size={NAV_ICON_WIDTH}
+                activeColor="#0B0F14"
+                inactiveColor="#0B0F14"
+              />
+            }
+            iconFilled={
+              <MenuSquareSvg
+                size={NAV_ICON_WIDTH}
+                active
+                activeColor="#0B0F14"
+                inactiveColor="#0B0F14"
+              />
+            }
+            label="主页"
           />
           <NavItem
             href="/notifications"
@@ -653,8 +657,28 @@ export function DesktopLeftNav() {
             }
             label={_(msg`Notifications`)}
           />
-          <ChatNavItem />
           <NavItem
+            href="/hall"
+            // count={numUnreadNotifications}
+            icon={
+              <MenuHallSvg
+                size={NAV_ICON_WIDTH}
+                activeColor="#0B0F14"
+                inactiveColor="#0B0F14"
+              />
+            }
+            iconFilled={
+              <MenuHallSvg
+                size={NAV_ICON_WIDTH}
+                active
+                activeColor="#0B0F14"
+                inactiveColor="#0B0F14"
+              />
+            }
+            label="乡建厅"
+          />
+          {/* <ChatNavItem /> */}
+          {/* <NavItem
             href="/feeds"
             icon={
               <Hashtag
@@ -671,8 +695,8 @@ export function DesktopLeftNav() {
               />
             }
             label={_(msg`Feeds`)}
-          />
-          <NavItem
+          /> */}
+          {/* <NavItem
             href="/lists"
             icon={
               <List
@@ -689,24 +713,37 @@ export function DesktopLeftNav() {
               />
             }
             label={_(msg`Lists`)}
-          />
+          /> */}
           <NavItem
             href={currentAccount ? makeProfileLink(currentAccount) : '/'}
             icon={
-              <UserCircle
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={pal.text}
+              // <UserCircle
+              //   aria-hidden={true}
+              //   width={NAV_ICON_WIDTH}
+              //   style={pal.text}
+              // />
+              <MenuUserCenterSvg
+                size={NAV_ICON_WIDTH}
+                // active={isActive}
+                activeColor="#0B0F14"
+                inactiveColor="#0B0F14"
               />
             }
             iconFilled={
-              <UserCircleFilled
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={pal.text}
+              // <UserCircleFilled
+              //   aria-hidden={true}
+              //   width={NAV_ICON_WIDTH}
+              //   style={pal.text}
+              // />
+              <MenuUserCenterSvg
+                size={NAV_ICON_WIDTH}
+                active
+                // active={isActive}
+                activeColor="#0B0F14"
+                inactiveColor="#0B0F14"
               />
             }
-            label={_(msg`Profile`)}
+            label="个人中心"
           />
           <NavItem
             href="/settings"
