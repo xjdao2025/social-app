@@ -1,4 +1,4 @@
-import {type AppBskyFeedDefs, type BskyAgent} from '@atproto/api'
+import {type AppBskyFeedDefs, BlobRef, type BskyAgent} from '@atproto/api'
 
 import proxyRequest from '#/lib/proxyRequest'
 import server from '#/server'
@@ -11,18 +11,28 @@ type RequestParams = {
 }
 
 type FetchPostsParams = {
-  pageNum: number,
+  pageNum: number
   pageSize: number
   params?: any
   useAuth?: boolean
 }
 
-async function fetchPosts({ pageNum, pageSize, params, useAuth }: FetchPostsParams) {
-  const result = await proxyRequest('/post/api/posts', 'POST', {
-    page: pageNum,
-    per_page: pageSize,
-    ...(params || {})
-  }, useAuth)
+async function fetchPosts({
+  pageNum,
+  pageSize,
+  params,
+  useAuth,
+}: FetchPostsParams) {
+  const result = await proxyRequest(
+    '/post/api/posts',
+    'POST',
+    {
+      page: pageNum,
+      per_page: pageSize,
+      ...(params || {}),
+    },
+    useAuth,
+  )
   return {
     ...result,
     items: (result?.posts || []).map(restructFeedItem),
@@ -32,7 +42,7 @@ async function fetchPosts({ pageNum, pageSize, params, useAuth }: FetchPostsPara
 export class PostsFeedAPI implements FeedAPI {
   agent: BskyAgent
   params: RequestParams
-  constructor({agent, params}: {agent: BskyAgent, params: RequestParams}) {
+  constructor({agent, params}: {agent: BskyAgent; params: RequestParams}) {
     this.agent = agent
     this.params = params
   }
@@ -53,7 +63,6 @@ export class PostsFeedAPI implements FeedAPI {
 
   async fetch({cursor, limit}: {cursor: string | undefined; limit: number}) {
     const page = cursor ? +cursor : 1
-
     const res = await fetchPosts({
       pageNum: page,
       pageSize: limit,
@@ -79,8 +88,8 @@ function restructFeedItem(
   const post = {...newItem.post}
   const reply = newItem.reply
   if (reply) {
-    reply.parent.$type = "app.bsky.feed.defs#postView"
-    reply.root.$type = "app.bsky.feed.defs#postView"
+    reply.parent.$type = 'app.bsky.feed.defs#postView'
+    reply.root.$type = 'app.bsky.feed.defs#postView'
     post.record.reply = {
       parent: {
         cid: reply.parent.cid,
@@ -89,11 +98,23 @@ function restructFeedItem(
       root: {
         cid: reply.root.cid,
         uri: reply.root.uri,
-      }
+      },
     }
 
     newItem.reply = reply
   }
+
+  if (post.record.embed?.images) {
+    post.record.embed?.images.forEach(item => {
+      item.image = new BlobRef(
+        item.image.ref,
+        item.image.mimeType,
+        item.image.size,
+        item.image,
+      )
+    })
+  }
+
   newItem.post = post
   return newItem
 }
