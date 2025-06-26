@@ -512,8 +512,8 @@ declare namespace APIDao {
   /** 登录类型 {"x-enumNames":["Unknown","DomainName","Email","Phone"]} */
   type WebEndPointsUserLoginType = 0 | 1 | 2 | 3
 
-  /** 验证码类型 0-未知 1-登录 2-重置密码 3-注册 4-修改邮箱 5-更换手机号 6-后台用户登录 7-后台用户重置密码 8-后台积分发放 {"x-enumNames":["Unknown","Login","ResetPassword","Register","ChangeEmail","ChangePhone","AdminUserLogin","AdminUserResetPassword","AdminUserScoreDistribution"]} */
-  type WebUtilsCodeType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+  /** 验证码类型 0-未知 1-登录 2-重置密码 3-注册 4-修改邮箱 5-更换手机号 6-后台用户登录 7-后台用户重置密码 8-后台积分发放 9-注销账户 {"x-enumNames":["Unknown","Login","ResetPassword","Register","ChangeEmail","ChangePhone","AdminUserLogin","AdminUserResetPassword","AdminUserScoreDistribution","DeleteAccount"]} */
+  type WebUtilsCodeType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
   /** {"x-enumNames":["Unknown","Email","Phone"]} */
   type WebEndPointsUserRegisterType = 0 | 1 | 2

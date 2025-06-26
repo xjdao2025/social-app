@@ -481,7 +481,7 @@ let PostContent = ({
           <Text style={[a.mt_xs, a.text_sm, t.atoms.text_contrast_high]}>
             {post.name}
           </Text>
-          <ProposalStatusTag status={ProposalStatus.Fail} style={[a.mt_sm]} />
+          <ProposalStatusTag status={post.status} style={[a.mt_sm]} />
           <VoltState agree={post.agreeVotes} disagree={post.opposeVotes} />
           {/* <RichText
             enableTags
