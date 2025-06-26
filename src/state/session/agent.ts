@@ -1,4 +1,8 @@
-import {type AtpSessionData, type AtpSessionEvent, BskyAgent} from '@atproto/api'
+import {
+  type AtpSessionData,
+  type AtpSessionEvent,
+  BskyAgent,
+} from '@atproto/api'
 import {TID} from '@atproto/common-web'
 
 import {networkRetry} from '#/lib/async/retry'
@@ -243,12 +247,26 @@ class BskyAppAgent extends BskyAgent {
     undefined
 
   constructor({service}: {service: string}) {
+    const theUrl = new URL(service)
+    const fixUrlPath =
+      theUrl.origin !== service
+        ? (url: string) => url.replace(theUrl.origin, service)
+        : (url: string) => url
     super({
       service,
-      async fetch(...args) {
+      async fetch(req, ...args) {
         let success = false
+        let hackedReq = req
+        if (
+          hackedReq instanceof Request &&
+          hackedReq.url.indexOf(service) === -1
+        ) {
+          const fixedUrl = fixUrlPath((req as Request).url)
+          hackedReq = new Request(fixedUrl)
+          Object.setPrototypeOf(hackedReq, req as Request)
+        }
         try {
-          const result = await realFetch(...args)
+          const result = await realFetch(hackedReq, ...args)
           success = true
           return result
         } catch (e) {
