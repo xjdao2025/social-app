@@ -11,6 +11,7 @@ export default function proxyRequest(
   url: string,
   method: HTTPMethod,
   params: Record<string, any> = {},
+  useAuth: boolean = true
 ) {
   return defineProxyAPI(url, method)(
     {
@@ -19,7 +20,7 @@ export default function proxyRequest(
     },
     {
       headers: {
-        // Authorization: `Bearer ${getToken()}`
+        Authorization: useAuth ? `Bearer ${getToken()}` : ''
       },
       getWholeBizData: true,
     },

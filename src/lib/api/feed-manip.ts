@@ -45,6 +45,7 @@ export class FeedViewPostsSlice {
   feedPostUri: string
 
   constructor(feedPost: FeedViewPost) {
+    console.log('FeedViewPostsSlice>feedPost>>>>>', feedPost)
     const {post, reply, reason} = feedPost
     this.items = []
     this.isIncompleteThread = false
@@ -70,6 +71,7 @@ export class FeedViewPostsSlice {
       !AppBskyFeedPost.isRecord(post.record) ||
       !bsky.validate(post.record, AppBskyFeedPost.validateRecord)
     ) {
+      console.log('>>>>>>', !bsky.validate(post.record, AppBskyFeedPost.validateRecord))
       return
     }
     const parent = reply?.parent
@@ -246,6 +248,8 @@ export class FeedTuner {
     let slices: FeedViewPostsSlice[] = feed
       .map(item => new FeedViewPostsSlice(item))
       .filter(s => s.items.length > 0 || s.isFallbackMarker)
+
+    debugger
 
     // run the custom tuners
     for (const tunerFn of this.tunerFns) {

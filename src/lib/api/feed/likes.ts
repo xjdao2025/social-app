@@ -5,6 +5,19 @@ import {
 } from '@atproto/api'
 
 import {FeedAPI, FeedAPIResponse} from './types'
+import proxyRequest from "#/lib/proxyRequest";
+
+async function fetchLikes({ pageNum, pageSize, params }: any) {
+  const result = await proxyRequest('/post/api/posts', 'POST', {
+    page: pageNum,
+    per_page: pageSize,
+    ...(params || {})
+  })
+  return {
+    ...result,
+    items: result?.posts,
+  }
+}
 
 export class LikesFeedAPI implements FeedAPI {
   agent: BskyAgent

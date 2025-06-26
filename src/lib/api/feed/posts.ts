@@ -10,15 +10,22 @@ type RequestParams = {
   tag?: string
 }
 
-async function fetchPosts(pageNum: number, pageSize: number, params?: any) {
+type FetchPostsParams = {
+  pageNum: number,
+  pageSize: number
+  params?: any
+  useAuth?: boolean
+}
+
+async function fetchPosts({ pageNum, pageSize, params, useAuth }: FetchPostsParams) {
   const result = await proxyRequest('/post/api/posts', 'POST', {
     page: pageNum,
     per_page: pageSize,
     ...(params || {})
-  })
+  }, useAuth)
   return {
     ...result,
-    items: result?.posts?.map(restructFeedItem),
+    items: (result?.posts || []).map(restructFeedItem),
   }
 }
 
@@ -35,14 +42,24 @@ export class PostsFeedAPI implements FeedAPI {
     //   const items = await fetchMyProposal(+state)
     //   return items?.[0] ?? null
     // }
-    const res = await fetchPosts(1, 1, this.params)
+    const res = await fetchPosts({
+      pageNum: 1,
+      pageSize: 1,
+      params: this.params,
+      useAuth: false,
+    })
     return res?.items?.[0] || null
   }
 
   async fetch({cursor, limit}: {cursor: string | undefined; limit: number}) {
     const page = cursor ? +cursor : 1
 
-    const res = await fetchPosts(page, limit, this.params)
+    const res = await fetchPosts({
+      pageNum: page,
+      pageSize: limit,
+      params: this.params,
+      useAuth: false,
+    })
     if (res?.items) {
       return {
         cursor: `${res.page * res.per_page > res.total ? '' : res.page + 1}`,
@@ -56,11 +73,27 @@ export class PostsFeedAPI implements FeedAPI {
 }
 
 function restructFeedItem(
-  item: AppBskyFeedDefs.PostView,
+  item: AppBskyFeedDefs.FeedViewPost,
 ): AppBskyFeedDefs.FeedViewPost {
-  return {
-    post: {
-      ...item,
-    },
+  const newItem = {...item}
+  const post = {...newItem.post}
+  const reply = newItem.reply
+  if (reply) {
+    reply.parent.$type = "app.bsky.feed.defs#postView"
+    reply.root.$type = "app.bsky.feed.defs#postView"
+    post.record.reply = {
+      parent: {
+        cid: reply.parent.cid,
+        uri: reply.parent.uri,
+      },
+      root: {
+        cid: reply.root.cid,
+        uri: reply.root.uri,
+      }
+    }
+
+    newItem.reply = reply
   }
+  newItem.post = post
+  return newItem
 }
