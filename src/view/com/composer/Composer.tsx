@@ -1323,7 +1323,7 @@ function ComposerFooter({
             />
           </Button>
         )}
-        <SelectLangBtn />
+        {/* <SelectLangBtn /> */}
         <CharProgress
           count={post.shortenedGraphemeLength}
           style={{width: 65}}
