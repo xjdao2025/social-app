@@ -340,7 +340,7 @@ export function useSubmitSignup() {
         }
         const daoToken = registerRes.data?.token
         const bskyToken = registerRes.data?.blueSkyToken
-        debugger
+
         const userInfoRes = await server.dao(
           'POST /user/login-user-detail',
           undefined,

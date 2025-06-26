@@ -11,11 +11,7 @@ type SubBarProps = {
 
 const SubBar = (props: PropsWithChildren<SubBarProps>) => {
   const { items } = props;
-  const [activeTab, setActiveTab] = useState('');
-
-  useEffect(() => {
-    setActiveTab(items[0].key)
-  }, [items]);
+  const [activeTab, setActiveTab] = useState(items[0].key);
 
   return <Layout.Center>
     <View style={styles.wrap}>

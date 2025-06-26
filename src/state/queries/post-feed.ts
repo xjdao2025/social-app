@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useRef} from 'react'
-import {AppState} from 'react-native'
+import React, { useCallback, useEffect, useRef } from 'react'
+import { AppState } from 'react-native'
 import {
   type AppBskyActorDefs,
   AppBskyFeedDefs,
@@ -16,32 +16,32 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {AuthorFeedAPI} from '#/lib/api/feed/author'
-import {CustomFeedAPI} from '#/lib/api/feed/custom'
-import {DemoFeedAPI} from '#/lib/api/feed/demo'
-import {FollowingFeedAPI} from '#/lib/api/feed/following'
-import {HomeFeedAPI} from '#/lib/api/feed/home'
-import {LikesFeedAPI} from '#/lib/api/feed/likes'
-import {ListFeedAPI} from '#/lib/api/feed/list'
-import {MergeFeedAPI} from '#/lib/api/feed/merge'
-import {PostsFeedAPI} from '#/lib/api/feed/posts'
-import {ProposalFeedAPI} from '#/lib/api/feed/proposal'
-import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
-import {aggregateUserInterests} from '#/lib/api/feed/utils'
-import {FeedTuner, type FeedTunerFn} from '#/lib/api/feed-manip'
-import {DISCOVER_FEED_URI} from '#/lib/constants'
-import {BSKY_FEED_OWNER_DIDS} from '#/lib/constants'
-import {logger} from '#/logger'
-import {STALE} from '#/state/queries'
-import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
-import {useAgent} from '#/state/session'
+import { AuthorFeedAPI } from '#/lib/api/feed/author'
+import { CustomFeedAPI } from '#/lib/api/feed/custom'
+import { DemoFeedAPI } from '#/lib/api/feed/demo'
+import { FollowingFeedAPI } from '#/lib/api/feed/following'
+import { HomeFeedAPI } from '#/lib/api/feed/home'
+import { LikesFeedAPI } from '#/lib/api/feed/likes'
+import { ListFeedAPI } from '#/lib/api/feed/list'
+import { MergeFeedAPI } from '#/lib/api/feed/merge'
+import { PostsFeedAPI } from '#/lib/api/feed/posts'
+import { ProposalFeedAPI } from '#/lib/api/feed/proposal'
+import { type FeedAPI, type ReasonFeedSource } from '#/lib/api/feed/types'
+import { aggregateUserInterests } from '#/lib/api/feed/utils'
+import { FeedTuner, type FeedTunerFn } from '#/lib/api/feed-manip'
+import { DISCOVER_FEED_URI } from '#/lib/constants'
+import { BSKY_FEED_OWNER_DIDS } from '#/lib/constants'
+import { logger } from '#/logger'
+import { STALE } from '#/state/queries'
+import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences/const'
+import { useAgent } from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
-import {PostsHashTagTypeMap} from '#/view/com/composer/HashTag'
-import {KnownError} from '#/view/com/posts/PostFeedErrorMessage'
-import {type ProposalStatus} from '#/server/dao/enums'
-import {useFeedTuners} from '../preferences/feed-tuners'
-import {useModerationOpts} from '../preferences/moderation-opts'
-import {usePreferencesQuery} from './preferences'
+import { PostsHashTagTypeMap } from '#/view/com/composer/HashTag'
+import { KnownError } from '#/view/com/posts/PostFeedErrorMessage'
+import { type ProposalStatus } from '#/server/dao/enums'
+import { useFeedTuners } from '../preferences/feed-tuners'
+import { useModerationOpts } from '../preferences/moderation-opts'
+import { usePreferencesQuery } from './preferences'
 import {
   didOrHandleUriMatches,
   embedViewRecordToPostView,
@@ -55,6 +55,8 @@ export type AuthorFilter =
   | 'posts_and_author_threads'
   | 'posts_with_media'
   | 'posts_with_video'
+  | 'reply'
+  | 'media'
 type FeedUri = string
 type ListUri = string
 
@@ -63,21 +65,30 @@ type ListUri = string
 export type FeedDescriptor =
   | 'following'
   | `author|${ActorDid}|${AuthorFilter}`
+  | `author|${ActorDid}`
+  | `author-tasks|${ActorDid}|${AuthorFilter}`
+  | `author-tasks|${ActorDid}`
+  | `author-products|${ActorDid}|${AuthorFilter}`
+  | `author-products|${ActorDid}`
+  | `author-activity|${ActorDid}|${AuthorFilter}`
+  | `author-activity|${ActorDid}`
   | `feedgen|${FeedUri}`
-  | `likes|${ActorDid}`
+  | `likes|${ActorDid}|${'products' | 'activity' | 'tasks'}`
   | `list|${ListUri}`
   | `proposal|${ProposalStatus}`
   | `proposal|${ProposalStatus}|${ActorDid}`
   | 'demo'
+
 export interface FeedParams {
   mergeFeedEnabled?: boolean
   mergeFeedSources?: string[]
   feedCacheKey?: 'discover' | 'explore' | undefined
 }
 
-type RQPageParam = {cursor: string | undefined; api: FeedAPI} | undefined
+type RQPageParam = { cursor: string | undefined; api: FeedAPI } | undefined
 
 export const RQKEY_ROOT = 'post-feed'
+
 export function RQKEY(feedDesc: FeedDescriptor, params?: FeedParams) {
   return [RQKEY_ROOT, feedDesc, params || {}]
 }
@@ -106,7 +117,7 @@ export interface FeedPostSlice {
     | AppBskyFeedDefs.ReasonRepost
     | AppBskyFeedDefs.ReasonPin
     | ReasonFeedSource
-    | {[k: string]: unknown; $type: string}
+    | { [k: string]: unknown; $type: string }
 }
 
 export interface FeedPageUnselected {
@@ -134,11 +145,11 @@ const MIN_POSTS = 20
 export function usePostFeedQuery(
   feedDesc: FeedDescriptor,
   params?: FeedParams,
-  opts?: {enabled?: boolean; ignoreFilterFor?: string},
+  opts?: { enabled?: boolean; ignoreFilterFor?: string },
 ) {
   const feedTuners = useFeedTuners(feedDesc)
   const moderationOpts = useModerationOpts()
-  const {data: preferences} = usePreferencesQuery()
+  const { data: preferences } = usePreferencesQuery()
   const enabled =
     opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences)
   const userInterests = aggregateUserInterests(preferences)
@@ -183,8 +194,8 @@ export function usePostFeedQuery(
     enabled,
     staleTime: STALE.INFINITY,
     queryKey: RQKEY(feedDesc, params),
-    async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      logger.debug('usePostFeedQuery', {feedDesc, cursor: pageParam?.cursor})
+    async queryFn({ pageParam }: { pageParam: RQPageParam }) {
+      logger.debug('usePostFeedQuery', { feedDesc, cursor: pageParam?.cursor })
       // console.log('usePostFeedQuery', {
       //   feedDesc,
       //   feedParams: params || {},
@@ -195,24 +206,24 @@ export function usePostFeedQuery(
       //   // Not in the query key. Reacting to it switching isn't important:
       //   enableFollowingToDiscoverFallback,
       // })
-      const {api, cursor} = pageParam
+      const { api, cursor } = pageParam
         ? pageParam
         : {
-            api: createApi({
-              feedDesc,
-              feedParams: params || {},
-              feedTuners,
-              agent,
-              // Not in the query key because they don't change:
-              userInterests,
-              // Not in the query key. Reacting to it switching isn't important:
-              enableFollowingToDiscoverFallback,
-            }),
-            cursor: undefined,
-          }
+          api: createApi({
+            feedDesc,
+            feedParams: params || {},
+            feedTuners,
+            agent,
+            // Not in the query key because they don't change:
+            userInterests,
+            // Not in the query key. Reacting to it switching isn't important:
+            enableFollowingToDiscoverFallback,
+          }),
+          cursor: undefined,
+        }
 
       try {
-        const res = await api.fetch({cursor, limit: fetchLimit})
+        const res = await api.fetch({ cursor, limit: fetchLimit })
 
         /*
          * If this is a public view, we need to check if posts fail moderation.
@@ -251,15 +262,15 @@ export function usePostFeedQuery(
     getNextPageParam: lastPage =>
       lastPage.cursor
         ? {
-            api: lastPage.api,
-            cursor: lastPage.cursor,
-          }
+          api: lastPage.api,
+          cursor: lastPage.cursor,
+        }
         : undefined,
     select: useCallback(
       (data: InfiniteData<FeedPageUnselected, RQPageParam>) => {
         // If the selection depends on some data, that data should
         // be included in the selectArgs object and read here.
-        const {feedTuners, moderationOpts, ignoreFilterFor, isDiscover} =
+        const { feedTuners, moderationOpts, ignoreFilterFor, isDiscover } =
           selectArgs
 
         const tuner = new FeedTuner(feedTuners)
@@ -377,7 +388,7 @@ export function usePostFeedQuery(
           ],
         }
         // Save for memoization.
-        lastRun.current = {data, result, args: selectArgs}
+        lastRun.current = { data, result, args: selectArgs }
         return result
       },
       [selectArgs /* Don't change. Everything needs to go into selectArgs. */],
@@ -392,7 +403,7 @@ export function usePostFeedQuery(
   const wantedItemCount = useRef(0)
   const autoPaginationAttemptCount = useRef(0)
   useEffect(() => {
-    const {data, isLoading, isRefetching, isFetchingNextPage, hasNextPage} =
+    const { data, isLoading, isRefetching, isFetchingNextPage, hasNextPage } =
       query
     // Count the items that we already have.
     let itemCount = 0
@@ -461,13 +472,13 @@ export async function pollLatest(page: FeedPage | undefined) {
 }
 
 function createApi({
-  feedDesc,
-  feedParams,
-  feedTuners,
-  userInterests,
-  agent,
-  enableFollowingToDiscoverFallback,
-}: {
+                     feedDesc,
+                     feedParams,
+                     feedTuners,
+                     userInterests,
+                     agent,
+                     enableFollowingToDiscoverFallback,
+                   }: {
   feedDesc: FeedDescriptor
   feedParams: FeedParams
   feedTuners: FeedTunerFn[]
@@ -490,44 +501,51 @@ function createApi({
       })
     } else {
       if (enableFollowingToDiscoverFallback) {
-        return new HomeFeedAPI({agent, userInterests})
+        return new HomeFeedAPI({ agent, userInterests })
       } else {
-        return new FollowingFeedAPI({agent})
+        return new FollowingFeedAPI({ agent })
       }
     }
   } else if (feedDesc.startsWith('author')) {
-    const [_, actor, filter] = feedDesc.split('|')
-    return new AuthorFeedAPI({agent, feedParams: {actor, filter}})
+
+    if (feedDesc.startsWith('author-tasks') || feedDesc.startsWith('author-products') || feedDesc.startsWith('author-activity')) {
+      const [_, did, filter] = feedDesc.split('|')
+      const [t, tag] = _.split('-')
+      return new PostsFeedAPI({ agent, params: { tag: PostsHashTagTypeMap[tag], repo: did, filter, useAuth: true } })
+    }
+
+    const [_, did, filter] = feedDesc.split('|')
+    return new PostsFeedAPI({ agent, params: { repo: did, filter, useAuth: true } })
   } else if (feedDesc.startsWith('likes')) {
-    const [_, actor] = feedDesc.split('|')
-    return new LikesFeedAPI({agent, feedParams: {actor}})
+    const [_, actor, tag] = feedDesc.split('|')
+    return new LikesFeedAPI({ agent, params: { repo: actor, tag: PostsHashTagTypeMap[tag], useAuth: true } })
   } else if (feedDesc.startsWith('feedgen')) {
     const [_, feed] = feedDesc.split('|')
 
     return new CustomFeedAPI({
       agent,
-      feedParams: {feed},
+      feedParams: { feed },
       userInterests,
     })
   } else if (feedDesc.startsWith('list')) {
     const [_, list] = feedDesc.split('|')
-    return new ListFeedAPI({agent, feedParams: {list}})
+    return new ListFeedAPI({ agent, feedParams: { list } })
   } else if (feedDesc === 'demo') {
-    return new DemoFeedAPI({agent})
+    return new DemoFeedAPI({ agent })
   } else if (feedDesc.startsWith('proposal')) {
     // 提案接口
     const [_, proposalState, userDid] = feedDesc.split('|')
     return new ProposalFeedAPI({
       agent,
-      params: {state: proposalState as ProposalStatus, did: userDid},
+      params: { state: proposalState as ProposalStatus, did: userDid },
     })
   } else if (feedDesc.startsWith('square-posts')) {
     const [_, tag] = feedDesc.split('|')
 
-    return new PostsFeedAPI({agent, params: {tag: PostsHashTagTypeMap[tag]}})
+    return new PostsFeedAPI({ agent, params: { tag: PostsHashTagTypeMap[tag] } })
   } else {
     // shouldnt happen
-    return new FollowingFeedAPI({agent})
+    return new FollowingFeedAPI({ agent })
   }
 }
 

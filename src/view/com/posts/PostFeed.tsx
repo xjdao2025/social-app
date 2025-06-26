@@ -261,6 +261,10 @@ let PostFeed = ({
     lastFetchRef.current = lastFetchedAt
   }
 
+  useEffect(() => {
+    refetch()
+  }, [feed, refetch]);
+
   const isEmpty = React.useMemo(
     () => !isFetching && !data?.pages?.some(page => page.slices.length),
     [isFetching, data],

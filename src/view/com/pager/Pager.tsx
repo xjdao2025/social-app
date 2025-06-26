@@ -77,7 +77,7 @@ export const Pager = React.forwardRef(function PagerImpl(
       })}
       {React.Children.map(children, (child, i) => (
         <View style={selectedPage === i ? s.flex1 : s.hidden} key={`page-${i}`}>
-          {child}
+          {selectedPage === i && child}
         </View>
       ))}
     </View>

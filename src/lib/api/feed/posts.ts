@@ -7,7 +7,10 @@ import {type ProposalStatus} from '#/server/dao/enums'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
 type RequestParams = {
-  tag?: string
+  tag?: string // 类别，正文中的 `#任务`
+  repo?: string // 用户did
+  filter?: 'reply' | 'media' | string // 回复或媒体类型[reply, media]
+  useAuth?: boolean
 }
 
 type FetchPostsParams = {
@@ -35,16 +38,20 @@ async function fetchPosts({
   )
   return {
     ...result,
-    items: (result?.posts || []).map(restructFeedItem),
+    items: result?.posts?.map(restructFeedItem),
   }
 }
 
 export class PostsFeedAPI implements FeedAPI {
   agent: BskyAgent
-  params: RequestParams
+  params: Omit<RequestParams, 'useAuth'>
+  useAuth: boolean
+
   constructor({agent, params}: {agent: BskyAgent; params: RequestParams}) {
     this.agent = agent
-    this.params = params
+    const {useAuth = false, ...obj} = params;
+    this.params = obj
+    this.useAuth = useAuth
   }
 
   async peekLatest() {
@@ -56,7 +63,7 @@ export class PostsFeedAPI implements FeedAPI {
       pageNum: 1,
       pageSize: 1,
       params: this.params,
-      useAuth: false,
+      useAuth: this.useAuth,
     })
     return res?.items?.[0] || null
   }
@@ -67,7 +74,7 @@ export class PostsFeedAPI implements FeedAPI {
       pageNum: page,
       pageSize: limit,
       params: this.params,
-      useAuth: false,
+      useAuth: this.useAuth,
     })
     if (res?.items) {
       return {

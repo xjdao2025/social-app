@@ -101,7 +101,10 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
                 style={{
                   display: isReady ? undefined : 'none',
                 }}>
-                <PagerItem isFocused={i === currentPage} renderTab={child} />
+                {i === currentPage && <PagerItem
+                  isFocused={i === currentPage}
+                  renderTab={child}
+                />}
               </View>
             )
           })}

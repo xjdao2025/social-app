@@ -305,16 +305,16 @@ function ProfileScreenLoaded({
           <SubBar
             items={[
               {
-                key: `author|${profile.did}|posts_and_author_threads`,
+                key: `author|${profile.did}|`,
                 label: '贴文',
               },
-              {key: `author|${profile.did}|posts_with_replies`, label: '回复'},
-              {key: `author|${profile.did}|posts_with_media`, label: '媒体'},
+              {key: `author|${profile.did}|reply`, label: '回复'},
+              {key: `author|${profile.did}|media`, label: '媒体'},
               {key: `likes|${profile.did}`, label: '喜欢'},
             ]}>
             <ProfileFeedSection
               ref={postsSectionRef}
-              feed={`author|${profile.did}|posts_and_author_threads`}
+              feed={`author|${profile.did}`}
               headerHeight={headerHeight}
               isFocused={isFocused}
               scrollElRef={scrollElRef as ListRef}
@@ -323,9 +323,72 @@ function ProfileScreenLoaded({
             />
           </SubBar>
         )}
-        {() => <></>}
-        {() => <></>}
-        {() => <></>}
+        {({headerHeight, isFocused, scrollElRef}) => (
+          <SubBar
+            items={[
+              {
+                key: `author-tasks|${profile.did}|`,
+                label: '贴文',
+              },
+              {key: `author-tasks|${profile.did}|reply`, label: '回复'},
+              {key: `author-tasks|${profile.did}|media`, label: '媒体'},
+              {key: `likes|${profile.did}|tasks`, label: '喜欢'},
+            ]}>
+            <ProfileFeedSection
+              ref={postsSectionRef}
+              feed={`author-tasks|${profile.did}`}
+              headerHeight={headerHeight}
+              isFocused={isFocused}
+              scrollElRef={scrollElRef as ListRef}
+              ignoreFilterFor={profile.did}
+              setScrollViewTag={setScrollViewTag}
+            />
+          </SubBar>
+        )}
+        {({headerHeight, isFocused, scrollElRef}) => (
+          <SubBar
+            items={[
+              {
+                key: `author-products|${profile.did}|`,
+                label: '贴文',
+              },
+              {key: `author-products|${profile.did}|reply`, label: '回复'},
+              {key: `author-products|${profile.did}|media`, label: '媒体'},
+              {key: `likes|${profile.did}|tasks`, label: '喜欢'},
+            ]}>
+            <ProfileFeedSection
+              ref={postsSectionRef}
+              feed={`author-products|${profile.did}`}
+              headerHeight={headerHeight}
+              isFocused={isFocused}
+              scrollElRef={scrollElRef as ListRef}
+              ignoreFilterFor={profile.did}
+              setScrollViewTag={setScrollViewTag}
+            />
+          </SubBar>
+        )}
+        {({headerHeight, isFocused, scrollElRef}) => (
+          <SubBar
+            items={[
+              {
+                key: `author-activity|${profile.did}|`,
+                label: '贴文',
+              },
+              {key: `author-activity|${profile.did}|reply`, label: '回复'},
+              {key: `author-activity|${profile.did}|media`, label: '媒体'},
+              {key: `likes|${profile.did}|tasks`, label: '喜欢'},
+            ]}>
+            <ProfileFeedSection
+              ref={postsSectionRef}
+              feed={`author-activity|${profile.did}`}
+              headerHeight={headerHeight}
+              isFocused={isFocused}
+              scrollElRef={scrollElRef as ListRef}
+              ignoreFilterFor={profile.did}
+              setScrollViewTag={setScrollViewTag}
+            />
+          </SubBar>
+        )}
         {({headerHeight, isFocused, scrollElRef}) => (
           <SubBar
             items={[
