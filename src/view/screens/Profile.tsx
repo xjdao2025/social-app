@@ -354,7 +354,7 @@ function ProfileScreenLoaded({
               },
               {key: `author-products|${profile.did}|reply`, label: '回复'},
               {key: `author-products|${profile.did}|media`, label: '媒体'},
-              {key: `likes|${profile.did}|tasks`, label: '喜欢'},
+              {key: `likes|${profile.did}|products`, label: '喜欢'},
             ]}>
             <ProfileFeedSection
               ref={postsSectionRef}
@@ -376,7 +376,7 @@ function ProfileScreenLoaded({
               },
               {key: `author-activity|${profile.did}|reply`, label: '回复'},
               {key: `author-activity|${profile.did}|media`, label: '媒体'},
-              {key: `likes|${profile.did}|tasks`, label: '喜欢'},
+              {key: `likes|${profile.did}|activity`, label: '喜欢'},
             ]}>
             <ProfileFeedSection
               ref={postsSectionRef}
