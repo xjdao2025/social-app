@@ -8,6 +8,7 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {useSession} from '#/state/session'
 import {type RenderTabBarFnProps} from '#/view/com/pager/Pager'
 import {useBreakpoints} from '#/alf'
+import * as Layout from '#/components/Layout'
 import OssImage from '#/components/OssImage'
 import server from '#/server'
 import {TabBar} from '../pager/TabBar'
@@ -63,49 +64,56 @@ export function HomeHeader(
   return (
     <>
       <HomeHeaderLayout tabBarAnchor={props.tabBarAnchor} />
-      <View style={{height: 52}} />
-      <Carousel
-        testID={'banner'}
-        loop={false}
-        width={screenWidth}
-        height={200}
-        snapEnabled={true}
-        pagingEnabled={true}
-        autoPlayInterval={1000}
-        autoPlay
-        data={bannerList || []}
-        style={{width: screenWidth}}
-        onConfigurePanGesture={(g: {enabled: (arg0: boolean) => any}) => {
-          'worklet'
-          g.enabled(false)
-        }}
-        renderItem={({item, index}) => {
-          return (
-            <TouchableWithoutFeedback
-              accessibilityRole={'link'}
-              onPress={() => {
-                if (!item.linkAddress) return
-                const url = /https?:\/\/(.*)/.test(item.linkAddress)
-                  ? item.linkAddress
-                  : `//${item.linkAddress}`
-                Linking.openURL(url)
-              }}>
-              <OssImage attachId={item.bannerFileId} style={{height: '100%'}} />
-            </TouchableWithoutFeedback>
-          )
-        }}
-      />
-      <TabBar
-        key={'home-tab-bar'}
-        onPressSelected={props.onPressSelected}
-        selectedPage={props.selectedPage}
-        onSelect={onSelect}
-        testID={props.testID}
-        items={items}
-        style={{position: 'sticky', top: 52, zIndex: 10}}
-        dragProgress={props.dragProgress}
-        dragState={props.dragState}
-      />
+      <Layout.Center>
+        <View style={{height: 52}} />
+        <Carousel
+          testID={'banner'}
+          loop={false}
+          width={screenWidth}
+          height={200}
+          snapEnabled={true}
+          pagingEnabled={true}
+          autoPlayInterval={1000}
+          autoPlay
+          data={bannerList || []}
+          style={{width: screenWidth}}
+          onConfigurePanGesture={(g: {enabled: (arg0: boolean) => any}) => {
+            'worklet'
+            g.enabled(false)
+          }}
+          renderItem={({item, index}) => {
+            return (
+              <TouchableWithoutFeedback
+                accessibilityRole={'link'}
+                onPress={() => {
+                  if (!item.linkAddress) return
+                  const url = /https?:\/\/(.*)/.test(item.linkAddress)
+                    ? item.linkAddress
+                    : `//${item.linkAddress}`
+                  Linking.openURL(url)
+                }}>
+                <OssImage
+                  attachId={item.bannerFileId}
+                  style={{height: '100%'}}
+                />
+              </TouchableWithoutFeedback>
+            )
+          }}
+        />
+      </Layout.Center>
+      <Layout.Center
+        style={{position: 'sticky', top: gtMobile ? 0 : 52, zIndex: 10}}>
+        <TabBar
+          key={'home-tab-bar'}
+          onPressSelected={props.onPressSelected}
+          selectedPage={props.selectedPage}
+          onSelect={onSelect}
+          testID={props.testID}
+          items={items}
+          dragProgress={props.dragProgress}
+          dragState={props.dragState}
+        />
+      </Layout.Center>
     </>
   )
 }
