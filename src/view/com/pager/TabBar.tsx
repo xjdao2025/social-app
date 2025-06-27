@@ -1,5 +1,11 @@
 import {useCallback, useEffect, useRef} from 'react'
-import {type ScrollView, StyleSheet, View} from 'react-native'
+import {
+  type ScrollView,
+  type StyleProp,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native'
 
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -12,6 +18,7 @@ export interface TabBarProps {
   items: string[]
   indicatorColor?: string
   backgroundColor?: string
+  style?: StyleProp<ViewStyle>
 
   onSelect?: (index: number) => void
   onPressSelected?: (index: number) => void
@@ -27,6 +34,7 @@ export function TabBar({
   items,
   onSelect,
   onPressSelected,
+  style: propsStyle,
 }: TabBarProps) {
   const t = useTheme()
   const scrollElRef = useRef<ScrollView>(null)
@@ -92,7 +100,7 @@ export function TabBar({
   return (
     <View
       testID={testID}
-      style={[t.atoms.bg, styles.outer]}
+      style={[t.atoms.bg, styles.outer, propsStyle]}
       accessibilityRole="tablist">
       <DraggableScrollView
         testID={`${testID}-selector`}
@@ -117,14 +125,9 @@ export function TabBar({
                   testID={testID ? `${testID}-${item}` : undefined}
                   style={[
                     styles.itemText,
-                    selected ? [
-                      t.atoms.text,
-                      a.text_xl,
-                      a.font_bold
-                    ] : [
-                      a.text_md,
-                      { color: '#6F869F' }
-                    ],
+                    selected
+                      ? [t.atoms.text, a.text_xl, a.font_bold]
+                      : [a.text_md, {color: '#6F869F'}],
                     {lineHeight: 28},
                   ]}>
                   {item}
@@ -187,7 +190,7 @@ const desktopStyles = StyleSheet.create({
     right: 0,
     top: '100%',
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: '#D4DBE2'
+    borderColor: '#D4DBE2',
   },
 })
 
@@ -229,6 +232,6 @@ const mobileStyles = StyleSheet.create({
     right: 0,
     top: '100%',
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: '#D4DBE2'
+    borderColor: '#D4DBE2',
   },
 })

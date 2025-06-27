@@ -1,5 +1,5 @@
 import React from 'react'
-import { ActivityIndicator, StyleSheet, View } from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
@@ -25,6 +25,7 @@ import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
+import {PostsHashTagType} from '#/view/com/composer/HashTag'
 import {FeedPage} from '#/view/com/feeds/FeedPage'
 import {HomeHeader} from '#/view/com/home/HomeHeader'
 import {
@@ -37,25 +38,29 @@ import {FollowingEmptyState} from '#/view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from '#/view/com/posts/FollowingEndOfFeed'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
 import * as Layout from '#/components/Layout'
-import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {Text} from '#/components/Typography'
-import { PostsHashTagType } from "#/view/com/composer/HashTag";
+import {useDemoMode} from '#/storage/hooks/demo-mode'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
 
-const tabBarItems = [{
-  displayName: '全部',
-  feedDescriptor: 'square-posts'
-},{
-  displayName: '任务',
-  feedDescriptor: `square-posts|${PostsHashTagType[0].feedDes}`
-},{
-  displayName: '商品',
-  feedDescriptor: `square-posts|${PostsHashTagType[1].feedDes}`
-},{
-  displayName: '活动',
-  feedDescriptor: `square-posts|${PostsHashTagType[2].feedDes}`
-}]
+const tabBarItems = [
+  {
+    displayName: '全部',
+    feedDescriptor: 'square-posts',
+  },
+  {
+    displayName: '任务',
+    feedDescriptor: `square-posts|${PostsHashTagType[0].feedDes}`,
+  },
+  {
+    displayName: '商品',
+    feedDescriptor: `square-posts|${PostsHashTagType[1].feedDes}`,
+  },
+  {
+    displayName: '活动',
+    feedDescriptor: `square-posts|${PostsHashTagType[2].feedDes}`,
+  },
+]
 
 export function HomeScreen(props: Props) {
   const {setShowLoggedOut} = useLoggedOutViewControls()
@@ -334,31 +339,33 @@ function HomeScreenReady({
   //   </Pager>
   // )
 
-  return <Pager
-    key={allFeeds.join(',')}
-    ref={pagerRef}
-    testID="homeScreen"
-    initialPage={selectedIndex}
-    onPageSelected={onPageSelected}
-    onPageScrollStateChanged={onPageScrollStateChanged}
-    renderTabBar={renderTabBar}>
-    {
-      tabBarItems.map((feedInfo, index) => {
+  return (
+    <Pager
+      key={allFeeds.join(',')}
+      ref={pagerRef}
+      testID="homeScreen"
+      initialPage={selectedIndex}
+      onPageSelected={onPageSelected}
+      onPageScrollStateChanged={onPageScrollStateChanged}
+      renderTabBar={renderTabBar}>
+      {tabBarItems.map((feedInfo, index) => {
         const feed = feedInfo.feedDescriptor
-        return <FeedPage
-          key={feed}
-          testID="allPosts"
-          isPageFocused={maybeSelectedFeed === feed}
-          isPageAdjacent={Math.abs(selectedIndex - index) === 1}
-          feed={feed}
-          feedParams={homeFeedParams}
-          renderEmptyState={renderFollowingEmptyState}
-          renderEndOfFeed={FollowingEndOfFeed}
-          feedInfo={feedInfo}
-        />
-      })
-    }
-  </Pager>
+        return (
+          <FeedPage
+            key={feed}
+            testID="allPosts"
+            isPageFocused={maybeSelectedFeed === feed}
+            isPageAdjacent={Math.abs(selectedIndex - index) === 1}
+            feed={feed}
+            feedParams={homeFeedParams}
+            renderEmptyState={renderFollowingEmptyState}
+            renderEndOfFeed={FollowingEndOfFeed}
+            feedInfo={feedInfo}
+          />
+        )
+      })}
+    </Pager>
+  )
 }
 
 const styles = StyleSheet.create({

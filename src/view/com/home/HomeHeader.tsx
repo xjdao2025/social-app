@@ -1,20 +1,20 @@
 import React from 'react'
-import { useNavigation } from '@react-navigation/native'
+import {Dimensions, Linking, TouchableWithoutFeedback, View} from 'react-native'
+import Carousel from 'react-native-reanimated-carousel'
+import {useNavigation} from '@react-navigation/native'
+import {useRequest} from 'ahooks'
 
-import { NavigationProp } from '#/lib/routes/types'
-import { useSession } from '#/state/session'
-import { RenderTabBarFnProps } from '#/view/com/pager/Pager'
-import { TabBar } from '../pager/TabBar'
-import { HomeHeaderLayout } from './HomeHeaderLayout'
-import { Dimensions, Linking, TouchableWithoutFeedback } from "react-native";
-import Carousel from "react-native-reanimated-carousel";
-import { useBreakpoints } from '#/alf'
-import { useRequest } from "ahooks";
-import server from "#/server";
-import OssImage from "#/components/OssImage";
+import {type NavigationProp} from '#/lib/routes/types'
+import {useSession} from '#/state/session'
+import {type RenderTabBarFnProps} from '#/view/com/pager/Pager'
+import {useBreakpoints} from '#/alf'
+import OssImage from '#/components/OssImage'
+import server from '#/server'
+import {TabBar} from '../pager/TabBar'
+import {HomeHeaderLayout} from './HomeHeaderLayout'
 
 const validateLink = (url: string) => {
-  const link = url.match(/https?:\/\/(.*)/);
+  const link = url.match(/https?:\/\/(.*)/)
 }
 
 export function HomeHeader(
@@ -29,7 +29,7 @@ export function HomeHeader(
   const navigation = useNavigation<NavigationProp>()
   const {gtMobile} = useBreakpoints()
 
-  const { data: bannerList } = useRequest(() => server.dao('POST /banner/list'))
+  const {data: bannerList} = useRequest(() => server.dao('POST /banner/list'))
 
   const hasPinnedCustom = React.useMemo<boolean>(() => {
     if (!hasSession) return false
@@ -56,15 +56,16 @@ export function HomeHeader(
       // }
       props.onSelect?.(index)
     },
-    [items.length, props, hasPinnedCustom],
+    [props], // items.length, , hasPinnedCustom
   )
 
   const screenWidth = gtMobile ? 600 : Dimensions.get('window').width
-
   return (
-    <HomeHeaderLayout tabBarAnchor={props.tabBarAnchor}>
+    <>
+      <HomeHeaderLayout tabBarAnchor={props.tabBarAnchor} />
+      <View style={{height: 52}} />
       <Carousel
-        testID={"banner"}
+        testID={'banner'}
         loop={false}
         width={screenWidth}
         height={200}
@@ -73,24 +74,25 @@ export function HomeHeader(
         autoPlayInterval={1000}
         autoPlay
         data={bannerList || []}
-        style={{ width: screenWidth }}
-        onConfigurePanGesture={(g: { enabled: (arg0: boolean) => any }) => {
-          "worklet";
-          g.enabled(false);
+        style={{width: screenWidth}}
+        onConfigurePanGesture={(g: {enabled: (arg0: boolean) => any}) => {
+          'worklet'
+          g.enabled(false)
         }}
         renderItem={({item, index}) => {
-          return <TouchableWithoutFeedback
-            accessibilityRole={'link'}
-            onPress={() => {
-              if (!item.linkAddress) return
-              const url = /https?:\/\/(.*)/.test(item.linkAddress)
-              ? item.linkAddress
-                : `//${item.linkAddress}`
-              Linking.openURL(url)
-            }}
-          >
-            <OssImage attachId={item.bannerFileId} style={{ height: '100%' }} />
-          </TouchableWithoutFeedback>
+          return (
+            <TouchableWithoutFeedback
+              accessibilityRole={'link'}
+              onPress={() => {
+                if (!item.linkAddress) return
+                const url = /https?:\/\/(.*)/.test(item.linkAddress)
+                  ? item.linkAddress
+                  : `//${item.linkAddress}`
+                Linking.openURL(url)
+              }}>
+              <OssImage attachId={item.bannerFileId} style={{height: '100%'}} />
+            </TouchableWithoutFeedback>
+          )
         }}
       />
       <TabBar
@@ -100,9 +102,10 @@ export function HomeHeader(
         onSelect={onSelect}
         testID={props.testID}
         items={items}
+        style={{position: 'sticky', top: 52, zIndex: 10}}
         dragProgress={props.dragProgress}
         dragState={props.dragState}
       />
-    </HomeHeaderLayout>
+    </>
   )
 }

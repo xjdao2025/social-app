@@ -1,5 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
+import {Image} from 'expo-image'
 import {type AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -29,7 +30,6 @@ import {FAB} from '../util/fab/FAB'
 import {type ListMethods} from '../util/List'
 import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '../util/MainScrollProvider'
-import { Image } from "expo-image";
 
 const POLL_FREQ = 60e3 // 60sec
 
@@ -62,8 +62,7 @@ export function FeedPage({
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
   const setMinimalShellMode = useSetMinimalShellMode()
   const hookHeaderOffset = useHeaderOffset()
-  const headerOffset = hookHeaderOffset !== 0 ? 300 : hookHeaderOffset
-
+  const headerOffset = 0 // hookHeaderOffset !== 0 ? 300 : hookHeaderOffset
   const feedFeedback = useFeedFeedback(feed, hasSession)
   const scrollElRef = React.useRef<ListMethods>(null)
   const [hasNew, setHasNew] = React.useState(false)
@@ -132,26 +131,26 @@ export function FeedPage({
   const shouldPrefetch = isNative && isPageAdjacent
   return (
     <View testID={testID}>
-      <MainScrollProvider>
-        <FeedFeedbackProvider value={feedFeedback}>
-          <PostFeed
-            testID={testID ? `${testID}-feed` : undefined}
-            enabled={isPageFocused || shouldPrefetch}
-            feed={feed}
-            feedParams={feedParams}
-            pollInterval={POLL_FREQ}
-            disablePoll={hasNew || !isPageFocused}
-            scrollElRef={scrollElRef}
-            onScrolledDownChange={setIsScrolledDown}
-            onHasNew={setHasNew}
-            renderEmptyState={renderEmptyState}
-            renderEndOfFeed={renderEndOfFeed}
-            headerOffset={headerOffset}
-            savedFeedConfig={savedFeedConfig}
-            isVideoFeed={isVideoFeed}
-          />
-        </FeedFeedbackProvider>
-      </MainScrollProvider>
+      {/* <MainScrollProvider> */}
+      <FeedFeedbackProvider value={feedFeedback}>
+        <PostFeed
+          testID={testID ? `${testID}-feed` : undefined}
+          enabled={isPageFocused || shouldPrefetch}
+          feed={feed}
+          feedParams={feedParams}
+          pollInterval={POLL_FREQ}
+          disablePoll={hasNew || !isPageFocused}
+          scrollElRef={scrollElRef}
+          onScrolledDownChange={setIsScrolledDown}
+          onHasNew={setHasNew}
+          renderEmptyState={renderEmptyState}
+          renderEndOfFeed={renderEndOfFeed}
+          headerOffset={headerOffset}
+          savedFeedConfig={savedFeedConfig}
+          isVideoFeed={isVideoFeed}
+        />
+      </FeedFeedbackProvider>
+      {/* </MainScrollProvider> */}
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
           onPress={onPressLoadLatest}
@@ -164,11 +163,13 @@ export function FeedPage({
         <FAB
           testID="composeFAB"
           onPress={onPressCompose}
-          icon={<Image
-            source={require('#/assets/plus.svg')}
-            accessibilityIgnoresInvertColors
-            style={{ width: 60, aspectRatio: 1 }}
-          />}
+          icon={
+            <Image
+              source={require('#/assets/plus.svg')}
+              accessibilityIgnoresInvertColors
+              style={{width: 60, aspectRatio: 1}}
+            />
+          }
           accessibilityRole="button"
           accessibilityLabel={_(msg({message: `New post`, context: 'action'}))}
           accessibilityHint=""
