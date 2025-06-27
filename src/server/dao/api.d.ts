@@ -5,6 +5,9 @@
 declare namespace APIDao {
   /** POST /user-medal/page */
   interface WebEndPointsUserMedalUserMedalPageReq {
+    /** 用户域名 */
+    domainName: string
+
     /** 页码 */
     pageNum: number
 

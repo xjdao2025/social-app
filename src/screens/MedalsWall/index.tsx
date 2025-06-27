@@ -1,33 +1,38 @@
-import { useEffect, useRef, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { useRequest } from "ahooks";
-import { format } from "date-fns";
+import {useEffect, useRef, useState} from 'react'
+import {StyleSheet, View} from 'react-native'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
+import {useRequest} from 'ahooks'
+import {format} from 'date-fns'
 
-import MedalEmpty from "#/screens/MedalsWall/MedalEmpty";
-import MedalsHeader from "#/screens/MedalsWall/MedalsHeader";
-import { atoms as a, useBreakpoints, useTheme } from '#/alf'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
+import MedalEmpty from '#/screens/MedalsWall/MedalEmpty'
+import MedalsHeader from '#/screens/MedalsWall/MedalsHeader'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
-import OssImage from "#/components/OssImage";
-import { Text } from "#/components/Typography";
-import server from "#/server";
-import BottomView from "./BottomView";
+import OssImage from '#/components/OssImage'
+import {Text} from '#/components/Typography'
+import server from '#/server'
+import BottomView from './BottomView'
 
-const MedalsWallScreen = () => {
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'MedalsWall'>
+
+const MedalsWallScreen = ({route}: Props) => {
+  const {name} = route.params
   const t = useTheme()
-  const { gtMobile } = useBreakpoints()
-  const contentRef = useRef<HTMLDivElement | undefined>(undefined);
+  const {gtMobile} = useBreakpoints()
+  const contentRef = useRef<HTMLDivElement | undefined>(undefined)
   const [headerOpacity, setHeaderOpacity] = useState(0)
-
-  const { data: userMedals } = useRequest(async () => {
+  const {data: userMedals} = useRequest(async () => {
     const result = await server.dao('POST /user-medal/page', {
       pageNum: 1,
       pageSize: 500,
+      domainName: name,
     })
     const received = result?.items.filter(m => !!m.getTime)
     return {
       received,
       receivedTotal: received?.length,
-      medals: result?.items
+      medals: result?.items,
     }
   })
 
@@ -40,69 +45,90 @@ const MedalsWallScreen = () => {
     return () => {
       window.removeEventListener('scroll', f)
     }
-
-  }, []);
+  }, [])
 
   const isEmpty = userMedals?.medals?.length === 0
 
-  return <Layout.Screen testID="MedalsWallScreen">
-    <View
-      style={[
-        a.w_full,
-        a.mx_auto,
-        gtMobile && {
-          maxWidth: 600,
-        },
-      ]}
-    >
-      <View style={{ height: 285 + 48 }} />
-      <MedalsHeader
-        list={userMedals?.received}
-        total={userMedals?.receivedTotal}
-      />
-      <View style={styles.content}>
-        <View
-          style={[
-            styles.content_top_wrap,
-            a.sticky,
-            { backgroundColor: `rgba(53,53,68, ${headerOpacity})` },
-          ]}
-          ref={contentRef}
-        >
-          <View style={[styles.content_top]}>
-            <Text style={[styles.content_title, t.atoms.text_contrast_high]}>勋章</Text>
+  return (
+    <Layout.Screen testID="MedalsWallScreen">
+      <View
+        style={[
+          a.w_full,
+          a.mx_auto,
+          gtMobile && {
+            maxWidth: 600,
+          },
+        ]}>
+        <View style={{height: 285 + 48}} />
+        <MedalsHeader
+          list={userMedals?.received}
+          total={userMedals?.receivedTotal}
+        />
+        <View style={styles.content}>
+          <View
+            style={[
+              styles.content_top_wrap,
+              a.sticky,
+              {backgroundColor: `rgba(53,53,68, ${headerOpacity})`},
+            ]}
+            ref={contentRef}>
+            <View style={[styles.content_top]}>
+              <Text style={[styles.content_title, t.atoms.text_contrast_high]}>
+                勋章
+              </Text>
+            </View>
           </View>
-        </View>
-        <View style={styles.content_inner}>
-          <View style={styles.inner}>
-            {isEmpty ? <MedalEmpty />
-            : <>
-                {userMedals?.medals?.map((md) => {
-                  return <View
-                    style={styles.medal_item}
-                    key={md.medalId}
-                  >
-                    <OssImage
-                      attachId={md.attachId}
-                      style={{ width: 80, aspectRatio: 1, filter: !md.getTime ? 'grayscale(100%)' : ''}}
-                    />
-                    <Text style={[styles.medal_item_title, t.atoms.text_contrast_high]}>{md.name}</Text>
-                    <Text style={[styles.medal_item_time, t.atoms.text_contrast_low]}>
-                      {md.getTime ? `${format(new Date(md.getTime), 'yyyy.MM.dd')} 获得` : '未获得'}
-                    </Text>
-                  </View>
-                })}
-              </>
-            }
+          <View style={styles.content_inner}>
+            <View style={styles.inner}>
+              {isEmpty ? (
+                <MedalEmpty />
+              ) : (
+                <>
+                  {userMedals?.medals?.map(md => {
+                    return (
+                      <View style={styles.medal_item} key={md.medalId}>
+                        <OssImage
+                          attachId={md.attachId}
+                          style={{
+                            width: 80,
+                            aspectRatio: 1,
+                            filter: !md.getTime ? 'grayscale(100%)' : '',
+                          }}
+                        />
+                        <Text
+                          style={[
+                            styles.medal_item_title,
+                            t.atoms.text_contrast_high,
+                          ]}>
+                          {md.name}
+                        </Text>
+                        <Text
+                          style={[
+                            styles.medal_item_time,
+                            t.atoms.text_contrast_low,
+                          ]}>
+                          {md.getTime
+                            ? `${format(
+                                new Date(md.getTime),
+                                'yyyy.MM.dd',
+                              )} 获得`
+                            : '未获得'}
+                        </Text>
+                      </View>
+                    )
+                  })}
+                </>
+              )}
+            </View>
+            {!isEmpty && <BottomView />}
           </View>
-          {!isEmpty && <BottomView />}
         </View>
       </View>
-    </View>
-  </Layout.Screen>
+    </Layout.Screen>
+  )
 }
 
-export default MedalsWallScreen;
+export default MedalsWallScreen
 
 const styles = StyleSheet.create({
   content: {
@@ -139,7 +165,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 20,
-    minHeight: 'calc(100% - 50px)'
+    minHeight: 'calc(100% - 50px)',
   },
   medal_item: {
     width: 90,
@@ -157,5 +183,5 @@ const styles = StyleSheet.create({
   medal_item_time: {
     fontSize: 10,
     lineHeight: 14,
-  }
+  },
 })
