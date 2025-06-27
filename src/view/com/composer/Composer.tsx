@@ -48,6 +48,7 @@ import {
   type BskyAgent,
   RichText,
 } from '@atproto/api'
+import {type Facet} from '@atproto/api/src/rich-text/rich-text'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -125,7 +126,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
-import HashTag from './HashTag'
+import HashTag, {PostsHashTagList} from './HashTag'
 import {
   type ComposerAction,
   composerReducer,
@@ -144,6 +145,19 @@ import {
 } from './state/video'
 import {getVideoMetadata} from './videos/pickVideo'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
+
+function valiRepeatCustomPostTag(facets?: Facet[]): boolean {
+  if (!facets) return false
+  const allFeatures = facets.reduce((acc, cur) => {
+    const features = cur.features.filter(
+      f => f.$type === 'app.bsky.richtext.facet#tag',
+    )
+
+    return acc.concat(features)
+  }, [] as Facet['features'])
+
+  return allFeatures.some(f => PostsHashTagList.includes(f.tag))
+}
 
 type CancelRef = {
   onPressCancel: () => void
@@ -182,7 +196,6 @@ export const ComposePost = ({
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishingStage, setPublishingStage] = useState('')
   const [error, setError] = useState('')
-  const [postHashTag, setPostHashTag] = useState('')
 
   const [composerState, composerDispatch] = useReducer(
     composerReducer,
@@ -384,6 +397,19 @@ export const ComposePost = ({
       )
     ) {
       setPublishOnUpload(true)
+      return
+    }
+
+    const hasConflicts = thread.posts.some(p => {
+      const facets = p.richtext.facets
+      return valiRepeatCustomPostTag(facets)
+    })
+    debugger
+    if (hasConflicts) {
+      setError(
+        '您当前输入的内容中，字段标签与 “# 任务、# 商品、# 活动” 类型存在冲突哦～\n' +
+          '请调整后发布。',
+      )
       return
     }
 

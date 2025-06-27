@@ -17,6 +17,8 @@ export const PostsHashTagType = [
   },
 ]
 
+export const PostsHashTagList = ['任务', '商品', '活动']
+
 export const PostsHashTagTypeMap = PostsHashTagType.reduce((cur, item) => {
   cur[item.feedDes] = item.tag
   return cur
