@@ -404,7 +404,6 @@ export const ComposePost = ({
       const facets = p.richtext.facets
       return valiRepeatCustomPostTag(facets)
     })
-    debugger
     if (hasConflicts) {
       setError(
         '您当前输入的内容中，字段标签与 “# 任务、# 商品、# 活动” 类型存在冲突哦～\n' +
