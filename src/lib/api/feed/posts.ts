@@ -49,7 +49,7 @@ export class PostsFeedAPI implements FeedAPI {
 
   constructor({agent, params}: {agent: BskyAgent; params: RequestParams}) {
     this.agent = agent
-    const {useAuth = false, ...obj} = params;
+    const {useAuth = false, ...obj} = params
     this.params = obj
     this.useAuth = useAuth
   }
@@ -94,6 +94,10 @@ function restructFeedItem(
   const newItem = {...item}
   const post = {...newItem.post}
   const reply = newItem.reply
+  if (post.record.text.length > 300) {
+    post.record.realText = post.record.text
+    post.record.text = post.record.text.substring(0, 300)
+  }
   if (reply) {
     reply.parent.$type = 'app.bsky.feed.defs#postView'
     reply.root.$type = 'app.bsky.feed.defs#postView'

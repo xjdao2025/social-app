@@ -368,10 +368,14 @@ export function usePostFeedQuery(
                     reason: slice.reason,
                     feedPostUri: slice.feedPostUri,
                     items: slice.items.map((item, i) => {
+                      const newPost = {...item.post}
+                      if (newPost.record.realText) {
+                        newPost.record.text = newPost.record.realText
+                      }
                       const feedPostSliceItem: FeedPostSliceItem = {
                         _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
                         uri: item.post.uri,
-                        post: item.post,
+                        post: newPost,
                         record: item.record,
                         moderation: moderations[i],
                         parentAuthor: item.parentAuthor,
