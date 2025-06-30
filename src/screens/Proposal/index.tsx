@@ -310,8 +310,8 @@ export default function ProposalDetailScreen({route}: Props) {
       </View>
       <Prompt.Basic
         control={delControl}
-        title="要删除这则贴文吗？"
-        description="如果你删除这则贴文，则以后将无法恢复。"
+        title="要删除这则提案吗？"
+        description="如果你删除这则提案，则以后将无法恢复。"
         confirmButtonCta="删除"
         onConfirm={async () => {
           const flag = await server.dao('POST /proposal/delete-my-proposal', {
