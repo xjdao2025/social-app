@@ -13,6 +13,8 @@ export default function proxyRequest(
   params: Record<string, any> = {},
   useAuth: boolean = true
 ) {
+  const token = getToken()
+
   return defineProxyAPI(url, method)(
     {
       ban_labels: ['blacklist'],
@@ -20,7 +22,7 @@ export default function proxyRequest(
     },
     {
       headers: {
-        Authorization: useAuth ? `Bearer ${getToken()}` : ''
+        Authorization: useAuth && token ? `Bearer ${token}` : ''
       },
       getWholeBizData: true,
     },
