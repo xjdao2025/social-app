@@ -217,7 +217,9 @@ function ProfileScreenLoaded({
   const listCount = (profile.associated?.lists || 0) - starterPackCount
   const showListsTab = hasSession && (isMe || listCount > 0)
 
-  const sectionTitles = ['全部', '任务', '商品', '活动', '提案']
+  const commonSections = ['全部', '任务', '商品', '活动']
+
+  const sectionTitles = isMe ? commonSections.concat(['提案']) : commonSections
 
   const scrollSectionToTop = useCallback((index: number) => {
     // if (index === filtersIndex) {
