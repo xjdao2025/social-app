@@ -100,6 +100,7 @@ export async function requestAPI(url: string, config: RequestConfig) {
   if (response?.data?.code === 401) {
     console.log('trigger 401')
     // window.alert(`401: ${url}`);
+    debugger
     throttleLogout()
   }
 
