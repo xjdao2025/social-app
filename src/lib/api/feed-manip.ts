@@ -244,9 +244,14 @@ export class FeedTuner {
     },
   ): FeedViewPostsSlice[] {
     let slices: FeedViewPostsSlice[] = feed
-      .map(item => new FeedViewPostsSlice(item))
+      .map(item => {
+        const sliceItem = new FeedViewPostsSlice(item)
+        if (!(sliceItem.items.length > 0 || sliceItem.isFallbackMarker)) {
+          console.log('maybe invalid item: ', item)
+        }
+        return sliceItem
+      })
       .filter(s => s.items.length > 0 || s.isFallbackMarker)
-
     // run the custom tuners
     for (const tunerFn of this.tunerFns) {
       slices = tunerFn(this, slices.slice(), dryRun)
