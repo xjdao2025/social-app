@@ -48,10 +48,15 @@ export default function ProposalDetailScreen({route}: Props) {
   const {gtMobile} = useBreakpoints()
   const delControl = Prompt.usePromptControl()
   const voteConfirmRef = useRef<VoteConfirmRef>(null)
-  const {data: currentUserInfo} = useRequest(async () => {
-    const res = await server.dao('POST /user/login-user-detail')
-    return res
-  })
+  const {data: currentUserInfo} = useRequest(
+    async () => {
+      const res = await server.dao('POST /user/login-user-detail')
+      return res
+    },
+    {
+      ready: !!currentAccount?.did,
+    },
+  )
 
   const {data: votedInfo, run: reloadVoteInfo} = useRequest(
     async () => {
