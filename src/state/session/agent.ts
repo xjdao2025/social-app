@@ -1,7 +1,7 @@
 import {
   type AtpSessionData,
   type AtpSessionEvent,
-  BskyAgent,
+  type BskyAgent,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
 
@@ -16,6 +16,7 @@ import {
 import {tryFetchGates} from '#/lib/statsig/statsig'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
+import {AtpAgent} from '#/state/session/atp-agent'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
 import {emitNetworkConfirmed, emitNetworkLost} from '../events'
 import {addSessionErrorLog} from './logging'
@@ -242,7 +243,7 @@ export function sessionAccountToSession(
 
 // Not exported. Use factories above to create it.
 let realFetch = globalThis.fetch
-class BskyAppAgent extends BskyAgent {
+class BskyAppAgent extends AtpAgent {
   persistSessionHandler: ((event: AtpSessionEvent) => void) | undefined =
     undefined
 

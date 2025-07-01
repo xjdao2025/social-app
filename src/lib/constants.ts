@@ -4,8 +4,8 @@ import {type AppBskyActorDefs} from '@atproto/api'
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
 export const STAGING_SERVICE = 'https://staging.bsky.dev'
-// export const BSKY_SERVICE = 'https://xiangjiandao.rivtower.cc/pds'
-export const BSKY_SERVICE = 'https://web5.rivtower.cc'
+export const BSKY_SERVICE = 'https://xiangjiandao.rivtower.cc/pds'
+// export const BSKY_SERVICE = 'https://web5.rivtower.cc'
 export const DAO_SERVICE = 'https://xiangjiandao.rivtower.cc'
 export const PUBLIC_BSKY_SERVICE = 'https://xiangjiandao.rivtower.cc/bsky'
 export const DEFAULT_SERVICE = BSKY_SERVICE
