@@ -27,8 +27,9 @@ export function ReceivePointsDialog({
 
   const onPressCancel = useCallback(() => {
     // Toast.show('接收成功', 'check', 'center')
+    onUpdate?.()
     control.close()
-  }, [control])
+  }, [control, onUpdate])
 
   return (
     <Dialog.Outer

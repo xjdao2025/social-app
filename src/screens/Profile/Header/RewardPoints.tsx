@@ -99,7 +99,10 @@ export function ProfileHeaderRewardPoints() {
             </Text>
           </View>
         </TouchableWithoutFeedback>
-        <ReceivePointsDialog control={receivePointsControl} />
+        <ReceivePointsDialog
+          control={receivePointsControl}
+          onUpdate={refresh}
+        />
       </View>
     </View>
   )
