@@ -487,7 +487,7 @@ export const ComposePost = ({
         })
       }
     }
-    if (postUri && !replyTo) {
+    if (postUri) {
       emitPostCreated()
     }
     setLangPrefs.savePostLanguageToHistory()
