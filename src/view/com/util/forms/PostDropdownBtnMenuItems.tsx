@@ -465,13 +465,13 @@ let PostDropdownMenuItems = ({
         <Menu.Group>
           {(!hideInPWI || hasSession) && (
             <>
-              <Menu.Item
+              {/* <Menu.Item
                 testID="postDropdownTranslateBtn"
                 label={_(msg`Translate`)}
                 onPress={onPressTranslate}>
                 <Menu.ItemText>{_(msg`Translate`)}</Menu.ItemText>
                 <Menu.ItemIcon icon={Translate} position="right" />
-              </Menu.Item>
+              </Menu.Item> */}
 
               <Menu.Item
                 testID="postDropdownCopyTextBtn"
@@ -483,7 +483,7 @@ let PostDropdownMenuItems = ({
             </>
           )}
 
-          {hasSession && (
+          {/* {hasSession && (
             <Menu.Item
               testID="postDropdownSendViaDMBtn"
               label={_(msg`Send via direct message`)}
@@ -493,7 +493,7 @@ let PostDropdownMenuItems = ({
               </Menu.ItemText>
               <Menu.ItemIcon icon={Send} position="right" />
             </Menu.Item>
-          )}
+          )} */}
 
           <Menu.Item
             testID="postDropdownShareBtn"
