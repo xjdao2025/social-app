@@ -230,11 +230,13 @@ class CredentialSession implements SessionManager {
     const initialRes = await (0, this.fetch)(initialReq)
 
     const cloneRes = initialRes.clone()
-    const res = await cloneRes.json()
-    if (res.code === 400001) {
-      throttleLogout()
-      return initialRes
-    }
+    try {
+      const res = await cloneRes.json()
+      if (res.code === 400001) {
+        throttleLogout()
+        return initialRes
+      }
+    } catch (e) {}
 
     if (!this.session?.refreshJwt) {
       return initialRes
