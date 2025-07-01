@@ -51,11 +51,19 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
       <>
         {activeToast && (
           <View style={centerStyles.container}>
-            <Image
-              source={require('#/assets/checked.svg')}
-              accessibilityIgnoresInvertColors
-              style={{width: 48, height: 48}}
-            />
+            {activeToast.icon === 'check' ? (
+              <Image
+                source={require('#/assets/checked.svg')}
+                accessibilityIgnoresInvertColors
+                style={{width: 48, height: 48}}
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={activeToast.icon}
+                size={48}
+                style={styles.icon as FontAwesomeIconStyle}
+              />
+            )}
             <Text style={centerStyles.text}>{activeToast.text}</Text>
           </View>
         )}

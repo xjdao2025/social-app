@@ -91,13 +91,21 @@ function DialogInner({
 
   const onPressSave = useCallback(async () => {
     try {
-      await server.dao('POST /score/send', {
-        userPhoneOrEmail: giftAccount,
-        score: Number(giftPoints),
-      })
-      onUpdate?.()
-      control.close()
-      Toast.show('发送成功', 'check', 'center')
+      const flagRes = await server.dao(
+        'POST /score/send',
+        {
+          userPhoneOrEmail: giftAccount,
+          score: Number(giftPoints),
+        },
+        {getWholeBizData: true},
+      )
+      if (flagRes.data) {
+        onUpdate?.()
+        control.close()
+        Toast.show('发送成功', 'check', 'center')
+        return
+      }
+      Toast.show(flagRes.message, 'xmark', 'center')
     } catch (e: any) {
       logger.error('Failed to update user profile', {message: String(e)})
     }
