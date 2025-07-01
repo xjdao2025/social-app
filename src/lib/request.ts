@@ -14,7 +14,7 @@ function getToken() {
   return session.currentAccount?.daoJwt
 }
 
-const throttleLogout = throttle(
+export const throttleLogout = throttle(
   () => {
     // useUserInfoStore.getState().logout();
     clearStorage()

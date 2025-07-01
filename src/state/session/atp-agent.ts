@@ -21,6 +21,8 @@ import {
   XRPCError,
 } from '@atproto/xrpc'
 
+import {throttleLogout} from '#/lib/request'
+
 export type AtpAgentOptions = {
   service: string | URL
   persistSession?: AtpPersistSessionHandler
@@ -208,7 +210,6 @@ class CredentialSession implements SessionManager {
     const initialUri = new URL(url, this.dispatchUrl)
 
     let initialReq = new Request(initialUri, init)
-
     if (
       initialReq instanceof Request &&
       initialUri.href.indexOf(this.dispatchUrl.href) === -1
@@ -227,6 +228,13 @@ class CredentialSession implements SessionManager {
 
     initialReq.headers.set('authorization', `Bearer ${initialToken}`)
     const initialRes = await (0, this.fetch)(initialReq)
+
+    const cloneRes = initialRes.clone()
+    const res = await cloneRes.json()
+    if (res.code === 400001) {
+      throttleLogout()
+      return initialRes
+    }
 
     if (!this.session?.refreshJwt) {
       return initialRes
