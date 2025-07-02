@@ -34,7 +34,7 @@ import {BSKY_FEED_OWNER_DIDS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
-import {useAgent} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {PostsHashTagTypeMap} from '#/view/com/composer/HashTag'
 import {KnownError} from '#/view/com/posts/PostFeedErrorMessage'
@@ -165,6 +165,7 @@ export function usePostFeedQuery(
     result: InfiniteData<FeedPage>
   } | null>(null)
   const isDiscover = feedDesc.includes(DISCOVER_FEED_URI)
+  const {hasSession} = useSession()
 
   /**
    * The number of posts to fetch in a single request. Because we filter
@@ -218,6 +219,7 @@ export function usePostFeedQuery(
               userInterests,
               // Not in the query key. Reacting to it switching isn't important:
               enableFollowingToDiscoverFallback,
+              hasSession,
             }),
             cursor: undefined,
           }
@@ -368,7 +370,7 @@ export function usePostFeedQuery(
                     reason: slice.reason,
                     feedPostUri: slice.feedPostUri,
                     items: slice.items.map((item, i) => {
-                      const newPost = {...item.post}
+                      const newPost = item.post
                       if (newPost.record.realText) {
                         newPost.record.text = newPost.record.realText
                       }
@@ -482,6 +484,7 @@ function createApi({
   userInterests,
   agent,
   enableFollowingToDiscoverFallback,
+  hasSession,
 }: {
   feedDesc: FeedDescriptor
   feedParams: FeedParams
@@ -489,6 +492,7 @@ function createApi({
   userInterests?: string
   agent: BskyAgent
   enableFollowingToDiscoverFallback: boolean
+  hasSession: boolean
 }) {
   if (feedDesc === 'following') {
     console.log(
@@ -560,7 +564,10 @@ function createApi({
   } else if (feedDesc.startsWith('square-posts')) {
     const [_, tag] = feedDesc.split('|')
 
-    return new PostsFeedAPI({agent, params: {tag: PostsHashTagTypeMap[tag]}})
+    return new PostsFeedAPI({
+      agent,
+      params: {tag: PostsHashTagTypeMap[tag], useAuth: hasSession},
+    })
   } else {
     // shouldnt happen
     return new FollowingFeedAPI({agent})
