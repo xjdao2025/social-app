@@ -30,7 +30,7 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
     score: '',
   })
 
-  const {data: userInfo} = useRequest(
+  const {data: userInfo, refresh: refreshUser} = useRequest(
     async () => {
       const res = await server.dao('POST /user/login-user-detail')
       return res
@@ -72,6 +72,11 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
         type: 'setMutationStatus',
         status: 'success',
       })
+      dispatch({
+        type: 'setScore',
+        value: '',
+      })
+      refreshUser()
       control.close()
     } catch (e: any) {
       // logger.error('EmailDialog: update email failed', { safeMessage: e })
