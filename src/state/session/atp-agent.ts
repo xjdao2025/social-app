@@ -22,6 +22,7 @@ import {
 } from '@atproto/xrpc'
 
 import {throttleLogout} from '#/lib/request'
+import {clearStorage} from '#/state/persisted'
 
 export type AtpAgentOptions = {
   service: string | URL
@@ -165,7 +166,7 @@ class CredentialSession implements SessionManager {
     // includes the methods that are actually used by this class. This is a
     // known limitation that should be addressed in a future version of the
     // codegen.
-    new XrpcClient((url, init) => {
+    new XrpcClient(async (url, init) => {
       let newUrl = new URL(url, this.serviceUrl)
       if (newUrl.href.indexOf(this.serviceUrl.href) === -1) {
         const fixedUrl = newUrl.href.replace(
@@ -174,7 +175,21 @@ class CredentialSession implements SessionManager {
         )
         newUrl = new URL(fixedUrl)
       }
-      return (0, this.fetch)(newUrl, init)
+
+      const initialRes = await (0, this.fetch)(newUrl, init)
+
+      const isExpiredToken = await isErrorResponse(
+        initialRes,
+        [400],
+        ['ExpiredToken'],
+      )
+
+      if (!isExpiredToken) {
+        return initialRes
+      }
+
+      clearStorage()
+      return initialRes
     }, schemas),
   )
 
