@@ -218,23 +218,26 @@ class CredentialSession implements SessionManager {
     this.fetch = fetch
   }
 
-  async fetchHandler(url: string, init?: RequestInit): Promise<Response> {
-    // wait for any active session-refreshes to finish
-    await this.refreshSessionPromise
-
+  protected fetchRequestHack(url: string, init?: RequestInit) {
     const initialUri = new URL(url, this.dispatchUrl)
 
-    let initialReq = new Request(initialUri, init)
-    if (
-      initialReq instanceof Request &&
-      initialUri.href.indexOf(this.dispatchUrl.href) === -1
-    ) {
+    let req = new Request(initialUri, init)
+    if (initialUri.href.indexOf(this.dispatchUrl.href) === -1) {
       const fixedUrl = initialUri.href.replace(
         initialUri.origin,
         this.dispatchUrl.href,
       )
-      initialReq = new Request(fixedUrl, init)
+      req = new Request(fixedUrl, init)
     }
+
+    return req
+  }
+
+  async fetchHandler(url: string, init?: RequestInit): Promise<Response> {
+    // wait for any active session-refreshes to finish
+    await this.refreshSessionPromise
+
+    const initialReq = this.fetchRequestHack(url, init)
 
     const initialToken = this.session?.accessJwt
     if (!initialToken || initialReq.headers.has('authorization')) {
@@ -296,7 +299,8 @@ class CredentialSession implements SessionManager {
 
     // We need to re-compute the URI in case the PDS endpoint has changed
     const updatedUri = new URL(url, this.dispatchUrl)
-    const updatedReq = new Request(updatedUri, init)
+    // const updatedReq = new Request(updatedUri, init)
+    const updatedReq = this.fetchRequestHack(url, init)
 
     updatedReq.headers.set('authorization', `Bearer ${updatedToken}`)
 
