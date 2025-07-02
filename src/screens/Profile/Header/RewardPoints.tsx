@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {
   Image as RNImage,
   Pressable,
@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native'
 import {Image} from 'expo-image'
-import {useNavigation} from '@react-navigation/native'
+import {useNavigation, useRoute} from '@react-navigation/native'
 import {useRequest} from 'ahooks'
 
 import displayNumber from '#/lib/displayNumber'
@@ -26,10 +26,19 @@ export function ProfileHeaderRewardPoints() {
   const navigation = useNavigation<NavigationProp>()
   const sendPointsControl = useDialogControl()
   const receivePointsControl = useDialogControl()
+  const route = useRoute()
 
-  const {data: userDetail, refresh} = useRequest(() =>
-    server.dao('POST /user/login-user-detail'),
+  const {data: userDetail, refresh} = useRequest(
+    () => server.dao('POST /user/login-user-detail'),
+    {
+      manual: true,
+    },
   )
+
+  useEffect(() => {
+    if (!route) return
+    refresh()
+  }, [route, refresh])
 
   return (
     <View style={[styles.container, [a.mt_md, a.px_lg, a.py_xl]]}>
