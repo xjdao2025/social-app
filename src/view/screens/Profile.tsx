@@ -186,9 +186,9 @@ function ProfileScreenLoaded({
 
   const postsSectionRef = React.useRef<SectionRef>(null)
   const proposalSectionRef = React.useRef<SectionRef>(null)
-  const repliesSectionRef = React.useRef<SectionRef>(null)
-  const mediaSectionRef = React.useRef<SectionRef>(null)
-  const videosSectionRef = React.useRef<SectionRef>(null)
+  const taskSectionRef = React.useRef<SectionRef>(null)
+  const productSectionRef = React.useRef<SectionRef>(null)
+  const activitySectionRef = React.useRef<SectionRef>(null)
   const likesSectionRef = React.useRef<SectionRef>(null)
   const listsSectionRef = React.useRef<SectionRef>(null)
   const labelsSectionRef = React.useRef<SectionRef>(null)
@@ -222,19 +222,23 @@ function ProfileScreenLoaded({
   const sectionTitles = isMe ? commonSections.concat(['提案']) : commonSections
 
   const scrollSectionToTop = useCallback((index: number) => {
-    // if (index === filtersIndex) {
-    //   labelsSectionRef.current?.scrollToTop()
-    // } else if (index === postsIndex) {
-    //   postsSectionRef.current?.scrollToTop()
-    // } else if (index === repliesIndex) {
-    //   repliesSectionRef.current?.scrollToTop()
-    // } else if (index === mediaIndex) {
-    //   mediaSectionRef.current?.scrollToTop()
-    // } else if (index === videosIndex) {
-    //   videosSectionRef.current?.scrollToTop()
-    // } else if (index === likesIndex) {
-    //   likesSectionRef.current?.scrollToTop()
-    // }
+    switch (index) {
+      case 0:
+        postsSectionRef.current?.scrollToTop()
+        break
+      case 1:
+        taskSectionRef.current?.scrollToTop()
+        break
+      case 2:
+        productSectionRef.current?.scrollToTop()
+        break
+      case 3:
+        activitySectionRef.current?.scrollToTop()
+        break
+      case 4:
+        proposalSectionRef.current?.scrollToTop()
+        break
+    }
   }, [])
 
   useFocusEffect(
@@ -337,7 +341,7 @@ function ProfileScreenLoaded({
               {key: `likes|${profile.did}|tasks`, label: '喜欢'},
             ]}>
             <ProfileFeedSection
-              ref={postsSectionRef}
+              ref={taskSectionRef}
               feed={`author-tasks|${profile.did}`}
               headerHeight={headerHeight}
               isFocused={isFocused}
@@ -359,7 +363,7 @@ function ProfileScreenLoaded({
               {key: `likes|${profile.did}|products`, label: '喜欢'},
             ]}>
             <ProfileFeedSection
-              ref={postsSectionRef}
+              ref={productSectionRef}
               feed={`author-products|${profile.did}`}
               headerHeight={headerHeight}
               isFocused={isFocused}
@@ -381,7 +385,7 @@ function ProfileScreenLoaded({
               {key: `likes|${profile.did}|activity`, label: '喜欢'},
             ]}>
             <ProfileFeedSection
-              ref={postsSectionRef}
+              ref={activitySectionRef}
               feed={`author-activity|${profile.did}`}
               headerHeight={headerHeight}
               isFocused={isFocused}
