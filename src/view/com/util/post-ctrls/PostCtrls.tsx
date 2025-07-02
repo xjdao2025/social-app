@@ -28,6 +28,7 @@ import {shareUrl} from '#/lib/sharing'
 import {useGate} from '#/lib/statsig/statsig'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {type Shadow} from '#/state/cache/types'
+import {emitPostCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {
   usePostLikeMutationQueue,
@@ -143,6 +144,7 @@ let PostCtrls = ({
       } else {
         await queueUnlike()
       }
+      emitPostCreated()
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         throw e
@@ -171,6 +173,7 @@ let PostCtrls = ({
       } else {
         await queueUnrepost()
       }
+      emitPostCreated()
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         throw e
