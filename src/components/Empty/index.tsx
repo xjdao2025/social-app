@@ -14,6 +14,7 @@ const Empty = () => {
         a.flex_col,
         a.align_center,
         a.justify_center,
+        {minHeight: 300},
       ]}>
       <Image
         accessibilityIgnoresInvertColors
