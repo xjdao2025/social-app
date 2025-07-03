@@ -201,11 +201,7 @@ let PostCtrls = ({
 
   const onShare = () => {
     const urip = new AtUri(post.uri)
-    const href = makeProfileLink(
-      {...post.author, handle: ''},
-      'post',
-      urip.rkey,
-    )
+    const href = makeProfileLink(post.author, 'post', urip.rkey)
     const url = toShareUrl(href)
     shareUrl(url)
     sendInteraction({

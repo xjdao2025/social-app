@@ -121,11 +121,7 @@ function PostInner({
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
   const itemUrip = new AtUri(post.uri)
-  const itemHref = makeProfileLink(
-    {...post.author, handle: ''},
-    'post',
-    itemUrip.rkey,
-  )
+  const itemHref = makeProfileLink(post.author, 'post', itemUrip.rkey)
   let replyAuthorDid = ''
   if (record.reply) {
     const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)

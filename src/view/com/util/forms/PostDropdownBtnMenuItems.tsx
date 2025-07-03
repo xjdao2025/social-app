@@ -183,7 +183,7 @@ let PostDropdownMenuItems = ({
 
   const href = React.useMemo(() => {
     const urip = new AtUri(postUri)
-    return makeProfileLink({...postAuthor, handle: ''}, 'post', urip.rkey)
+    return makeProfileLink(postAuthor, 'post', urip.rkey)
   }, [postUri, postAuthor])
 
   const translatorUrl = getTranslatorLink(
@@ -205,11 +205,7 @@ let PostDropdownMenuItems = ({
             (params.name === currentAccount.handle ||
               params.name === currentAccount.did)
           ) {
-            const currentHref = makeProfileLink(
-              {...postAuthor, handle: ''},
-              'post',
-              params.rkey,
-            )
+            const currentHref = makeProfileLink(postAuthor, 'post', params.rkey)
             if (currentHref === href && navigation.canGoBack()) {
               navigation.goBack()
             }
