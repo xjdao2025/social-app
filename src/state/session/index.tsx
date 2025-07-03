@@ -144,6 +144,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
       const daoToken = loginRes.data?.token
       const bskyToken = loginRes.data?.blueSkyToken
+      const bskyRefreshToken = loginRes.data?.blueSkyRefreshToken
 
       const userInfoRes = await server.dao(
         'POST /user/login-user-detail',
@@ -155,6 +156,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
       const userInfo = userInfoRes.data
       const fakeAccount: persisted.PersistedAccount = {
+        refreshJwt: bskyRefreshToken,
         accessJwt: bskyToken,
         daoJwt: daoToken,
         did: userInfo?.did!,

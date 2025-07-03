@@ -4,82 +4,82 @@
 /** */
 export type APITypeTuple = {
   'POST /user-medal/page': [
-    APIDao.WebEndPointsUserMedalUserMedalPageReq,
+    APIDao.WebEndpointsUserMedalUserMedalPageReq,
     APIDao.NetCorePalExtensionsDtoPagedDataOfUserMedalPageVo,
   ]
   'POST /user/reset-password': [
-    APIDao.WebEndPointsUserResetPasswordReq,
+    APIDao.WebEndpointsUserResetPasswordReq,
     boolean,
   ]
-  'POST /user/delete': [APIDao.WebEndPointsUserUserDeleteReq, boolean]
-  'POST /user/login-user-detail': [null, APIDao.WebEndPointsUserUserDetailVo]
+  'POST /user/delete': [APIDao.WebEndpointsUserUserDeleteReq, boolean]
+  'POST /user/login-user-detail': [null, APIDao.WebEndpointsUserUserDetailVo]
   'POST /user/edit-profile': [
-    APIDao.WebEndPointsUserUserEditProfileReq,
+    APIDao.WebEndpointsUserUserEditProfileReq,
     boolean,
   ]
   'POST /user/login': [
-    APIDao.WebEndPointsUserUserLoginReq,
-    APIDao.WebEndPointsUserLoginTokenVo,
+    APIDao.WebEndpointsUserUserLoginReq,
+    APIDao.WebEndpointsUserLoginTokenVo,
   ]
   'POST /user/modify-email-address': [
-    APIDao.WebEndPointsUserUserModifyEmailAddressReq,
+    APIDao.WebEndpointsUserUserModifyEmailAddressReq,
     boolean,
   ]
   'POST /user/modify-phone': [
-    APIDao.WebEndPointsUserUserModifyPhoneReq,
+    APIDao.WebEndpointsUserUserModifyPhoneReq,
     boolean,
   ]
-  'POST /user/pre-register': [APIDao.WebEndPointsUserPreRegisterReq, string]
+  'POST /user/pre-register': [APIDao.WebEndpointsUserPreRegisterReq, string]
   'POST /user/register': [
-    APIDao.WebEndPointsUserRegisterReq,
-    APIDao.WebEndPointsUserRegisterTokenVo,
+    APIDao.WebEndpointsUserRegisterReq,
+    APIDao.WebEndpointsUserRegisterTokenVo,
   ]
-  'POST /sms/send': [APIDao.WebEndPointsSmsSendSmsRequest, boolean]
-  'POST /sms/verify': [APIDao.WebEndPointsSmsVerifySmsRequest, boolean]
-  'POST /score/reward': [APIDao.WebEndPointsScoreRewardScoreReq, boolean]
-  'POST /score/send': [APIDao.WebEndPointsScoreSendScoreReq, boolean]
+  'POST /sms/send': [APIDao.WebEndpointsSmsSendSmsRequest, boolean]
+  'POST /sms/verify': [APIDao.WebEndpointsSmsVerifySmsRequest, boolean]
+  'POST /score/reward': [APIDao.WebEndpointsScoreRewardScoreReq, boolean]
+  'POST /score/send': [APIDao.WebEndpointsScoreSendScoreReq, boolean]
   'POST /score/user-sore-record-page': [
-    APIDao.WebEndPointsScoreUserScoreRecordPageReq,
+    APIDao.WebEndpointsScoreUserScoreRecordPageReq,
     APIDao.NetCorePalExtensionsDtoPagedDataOfUserScoreRecordPageVo,
   ]
   'POST /proposal/create': [
-    APIDao.WebEndPointsProposalCreateProposalReq,
+    APIDao.WebEndpointsProposalCreateProposalReq,
     string,
   ]
   'POST /proposal/delete-my-proposal': [
-    APIDao.WebEndPointsProposalDeleteMyProposalReq,
+    APIDao.WebEndpointsProposalDeleteMyProposalReq,
     boolean,
   ]
   'POST /proposal/my-proposal-choice': [
-    APIDao.WebEndPointsProposalMyProposalChoiceReq,
-    APIDao.WebEndPointsProposalMyProposalChoiceVo,
+    APIDao.WebEndpointsProposalMyProposalChoiceReq,
+    APIDao.WebEndpointsProposalMyProposalChoiceVo,
   ]
   'POST /proposal/my-proposal-list': [
-    APIDao.WebEndPointsProposalMyProposalReq,
-    Array<APIDao.WebEndPointsProposalMyProposalVo>,
+    APIDao.WebEndpointsProposalMyProposalReq,
+    Array<APIDao.WebEndpointsProposalMyProposalVo>,
   ]
   'POST /proposal/detail': [
-    APIDao.WebEndPointsProposalProposalDetailReq,
-    APIDao.WebEndPointsProposalProposalDetailVo,
+    APIDao.WebEndpointsProposalProposalDetailReq,
+    APIDao.WebEndpointsProposalProposalDetailVo,
   ]
   'POST /proposal/page': [
-    APIDao.WebEndPointsProposalProposalPageReq,
+    APIDao.WebEndpointsProposalProposalPageReq,
     APIDao.NetCorePalExtensionsDtoPagedDataOfProposalPageVo,
   ]
-  'POST /proposal/vote': [APIDao.WebEndPointsProposalVoteProposalReq, boolean]
-  'POST /node/list': [null, Array<APIDao.WebEndPointsNodeNodeListVo>]
+  'POST /proposal/vote': [APIDao.WebEndpointsProposalVoteProposalReq, boolean]
+  'POST /node/list': [null, Array<APIDao.WebEndpointsNodeNodeListVo>]
   'POST /global-config/foundation-info': [
     null,
-    APIDao.WebEndPointsGlobalConfigFoundationInfoVo,
+    APIDao.WebEndpointsGlobalConfigFoundationInfoVo,
   ]
   'GET /file/download': [
     {fileId: string; fileType: APIDao.DomainEnumsFileType},
     Blob,
   ]
   'POST /file/upload': [
-    APIDao.WebEndPointsFileFileUploadForm,
+    APIDao.WebEndpointsFileFileUploadForm,
     APIDao.WebApplicationVoFileUploadSuccessVo,
   ]
-  'POST /email/send': [APIDao.WebEndPointsEmailSendEmailRequest, boolean]
+  'POST /email/send': [APIDao.WebEndpointsEmailSendEmailRequest, boolean]
   'POST /banner/list': [null, Array<APIDao.WebApplicationVoBannerVo>]
 }

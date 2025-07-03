@@ -340,6 +340,7 @@ export function useSubmitSignup() {
         }
         const daoToken = registerRes.data?.token
         const bskyToken = registerRes.data?.blueSkyToken
+        // const bskyRefreshToken = registerRes.data?.blueSkyRefreshToken
 
         const userInfoRes = await server.dao(
           'POST /user/login-user-detail',
@@ -351,6 +352,7 @@ export function useSubmitSignup() {
         }
         const userInfo = userInfoRes.data
         const fakeAccount: PersistedAccount = {
+          // refreshJwt: bskyRefreshToken,
           accessJwt: bskyToken,
           daoJwt: daoToken,
           did: userInfo?.did!,
