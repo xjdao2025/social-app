@@ -351,20 +351,19 @@ function HomeScreenReady({
       renderTabBar={renderTabBar}>
       {tabBarItems.map((feedInfo, index) => {
         const feed = feedInfo.feedDescriptor
-        // return (
-        //   <FeedPage
-        //     key={feed}
-        //     testID="allPosts"
-        //     isPageFocused={maybeSelectedFeed === feed}
-        //     isPageAdjacent={Math.abs(selectedIndex - index) === 1}
-        //     feed={feed}
-        //     feedParams={homeFeedParams}
-        //     renderEmptyState={renderFollowingEmptyState}
-        //     renderEndOfFeed={FollowingEndOfFeed}
-        //     feedInfo={feedInfo}
-        //   />
-        // )
-        return renderFollowingEmptyState()
+        return (
+          <FeedPage
+            key={feed}
+            testID="allPosts"
+            isPageFocused={maybeSelectedFeed === feed}
+            isPageAdjacent={Math.abs(selectedIndex - index) === 1}
+            feed={feed}
+            feedParams={homeFeedParams}
+            renderEmptyState={renderFollowingEmptyState}
+            renderEndOfFeed={FollowingEndOfFeed}
+            feedInfo={feedInfo}
+          />
+        )
       })}
     </Pager>
   )
