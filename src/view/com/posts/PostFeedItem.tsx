@@ -171,7 +171,7 @@ let FeedItemInner = ({
 
   const href = useMemo(() => {
     const urip = new AtUri(post.uri)
-    return makeProfileLink(post.author, 'post', urip.rkey)
+    return makeProfileLink({...post.author, handle: ''}, 'post', urip.rkey)
   }, [post.uri, post.author])
   const {sendInteraction} = useFeedFeedbackContext()
 

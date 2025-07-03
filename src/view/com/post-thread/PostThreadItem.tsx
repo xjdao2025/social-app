@@ -214,7 +214,7 @@ let PostThreadItemLoaded = ({
   const rootUri = record.reply?.root?.uri || post.uri
   const postHref = React.useMemo(() => {
     const urip = new AtUri(post.uri)
-    return makeProfileLink(post.author, 'post', urip.rkey)
+    return makeProfileLink({...post.author, handle: ''}, 'post', urip.rkey)
   }, [post.uri, post.author])
   const itemTitle = _(msg`Post by ${post.author.handle}`)
   const authorHref = makeProfileLink(post.author)
@@ -222,12 +222,22 @@ let PostThreadItemLoaded = ({
   const isThreadAuthor = getThreadAuthor(post, record) === currentAccount?.did
   const likesHref = React.useMemo(() => {
     const urip = new AtUri(post.uri)
-    return makeProfileLink(post.author, 'post', urip.rkey, 'liked-by')
+    return makeProfileLink(
+      {...post.author, handle: ''},
+      'post',
+      urip.rkey,
+      'liked-by',
+    )
   }, [post.uri, post.author])
   const likesTitle = _(msg`Likes on this post`)
   const repostsHref = React.useMemo(() => {
     const urip = new AtUri(post.uri)
-    return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
+    return makeProfileLink(
+      {...post.author, handle: ''},
+      'post',
+      urip.rkey,
+      'reposted-by',
+    )
   }, [post.uri, post.author])
   const repostsTitle = _(msg`Reposts of this post`)
   const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
@@ -248,7 +258,12 @@ let PostThreadItemLoaded = ({
   }, [post, currentAccount?.did, threadgateHiddenReplies, rootUri])
   const quotesHref = React.useMemo(() => {
     const urip = new AtUri(post.uri)
-    return makeProfileLink(post.author, 'post', urip.rkey, 'quotes')
+    return makeProfileLink(
+      {...post.author, handle: ''},
+      'post',
+      urip.rkey,
+      'quotes',
+    )
   }, [post.uri, post.author])
   const quotesTitle = _(msg`Quotes of this post`)
   const onlyFollowersCanReply = !!threadgateRecord?.allow?.find(

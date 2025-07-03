@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {View} from 'react-native'
-import {AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -14,7 +14,7 @@ export function PostThreadLoadMore({post}: {post: AppBskyFeedDefs.PostView}) {
 
   const postHref = React.useMemo(() => {
     const urip = new AtUri(post.uri)
-    return makeProfileLink(post.author, 'post', urip.rkey)
+    return makeProfileLink({...post.author, handle: ''}, 'post', urip.rkey)
   }, [post.uri, post.author])
 
   return (

@@ -1,10 +1,10 @@
 import React from 'react'
 import {
-  StyleProp,
+  type StyleProp,
   StyleSheet,
   TouchableOpacity,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {
   AppBskyEmbedExternal,
@@ -12,10 +12,10 @@ import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyEmbedVideo,
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
   moderatePost,
-  ModerationDecision,
+  type ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
@@ -43,7 +43,7 @@ import {Link} from '../Link'
 import {PostMeta} from '../PostMeta'
 import {Text} from '../text/Text'
 import {PostEmbeds} from '.'
-import {QuoteEmbedViewContext} from './types'
+import {type QuoteEmbedViewContext} from './types'
 
 export function MaybeQuoteEmbed({
   embed,
@@ -168,7 +168,11 @@ export function QuoteEmbed({
   const queryClient = useQueryClient()
   const pal = usePalette('default')
   const itemUrip = new AtUri(quote.uri)
-  const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey)
+  const itemHref = makeProfileLink(
+    {...quote.author, handle: ''},
+    'post',
+    itemUrip.rkey,
+  )
   const itemTitle = `Post by ${quote.author.handle}`
 
   const richText = React.useMemo(() => {
