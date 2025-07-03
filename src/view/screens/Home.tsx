@@ -37,6 +37,7 @@ import {CustomFeedEmptyState} from '#/view/com/posts/CustomFeedEmptyState'
 import {FollowingEmptyState} from '#/view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from '#/view/com/posts/FollowingEndOfFeed'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
+import Empty from '#/components/Empty'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
@@ -244,7 +245,7 @@ function HomeScreenReady({
   )
 
   const renderFollowingEmptyState = React.useCallback(() => {
-    return <FollowingEmptyState />
+    return <Empty />
   }, [])
 
   const renderCustomFeedEmptyState = React.useCallback(() => {
@@ -350,19 +351,20 @@ function HomeScreenReady({
       renderTabBar={renderTabBar}>
       {tabBarItems.map((feedInfo, index) => {
         const feed = feedInfo.feedDescriptor
-        return (
-          <FeedPage
-            key={feed}
-            testID="allPosts"
-            isPageFocused={maybeSelectedFeed === feed}
-            isPageAdjacent={Math.abs(selectedIndex - index) === 1}
-            feed={feed}
-            feedParams={homeFeedParams}
-            renderEmptyState={renderFollowingEmptyState}
-            renderEndOfFeed={FollowingEndOfFeed}
-            feedInfo={feedInfo}
-          />
-        )
+        // return (
+        //   <FeedPage
+        //     key={feed}
+        //     testID="allPosts"
+        //     isPageFocused={maybeSelectedFeed === feed}
+        //     isPageAdjacent={Math.abs(selectedIndex - index) === 1}
+        //     feed={feed}
+        //     feedParams={homeFeedParams}
+        //     renderEmptyState={renderFollowingEmptyState}
+        //     renderEndOfFeed={FollowingEndOfFeed}
+        //     feedInfo={feedInfo}
+        //   />
+        // )
+        return renderFollowingEmptyState()
       })}
     </Pager>
   )
