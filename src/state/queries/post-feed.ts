@@ -140,7 +140,7 @@ export interface FeedPage {
  * filter out unwanted content, we may fetch more than this number to ensure
  * that we get _at least_ this number.
  */
-const MIN_POSTS = 20
+const MIN_POSTS = 30
 
 export function usePostFeedQuery(
   feedDesc: FeedDescriptor,
