@@ -55,7 +55,6 @@ export type AuthorFilter =
   | 'posts_and_author_threads'
   | 'posts_with_media'
   | 'posts_with_video'
-  | 'posts_with_likes'
   | 'reply'
   | 'media'
 type FeedUri = string
@@ -74,6 +73,7 @@ export type FeedDescriptor =
   | `author-activity|${ActorDid}|${AuthorFilter}`
   | `author-activity|${ActorDid}`
   | `feedgen|${FeedUri}`
+  | `likes|${ActorDid}|${'products' | 'activity' | 'tasks'}`
   | `list|${ListUri}`
   | `proposal|${ProposalStatus}`
   | `proposal|${ProposalStatus}|${ActorDid}`
@@ -526,7 +526,7 @@ function createApi({
         agent,
         params: {
           tag: PostsHashTagTypeMap[tag],
-          actor: did,
+          repo: did,
           filter,
           useAuth: true,
         },
@@ -534,9 +534,12 @@ function createApi({
     }
 
     const [_, did, filter] = feedDesc.split('|')
-    return new PostsFeedAPI({
+    return new PostsFeedAPI({agent, params: {repo: did, filter, useAuth: true}})
+  } else if (feedDesc.startsWith('likes')) {
+    const [_, actor, tag] = feedDesc.split('|')
+    return new LikesFeedAPI({
       agent,
-      params: {actor: did, filter, useAuth: true},
+      params: {repo: actor, tag: PostsHashTagTypeMap[tag], useAuth: true},
     })
   } else if (feedDesc.startsWith('feedgen')) {
     const [_, feed] = feedDesc.split('|')
