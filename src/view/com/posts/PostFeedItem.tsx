@@ -15,6 +15,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useRoute} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useActorStatus} from '#/lib/actor-status'
@@ -245,9 +246,12 @@ let FeedItemInner = ({
   ]
 
   const {currentAccount} = useSession()
+  const route = useRoute()
+
   const isOwner =
     AppBskyFeedDefs.isReasonRepost(reason) &&
-    reason.by.did === currentAccount?.did
+    (reason.by.did === currentAccount?.did ||
+      route.params?.name === currentAccount?.handle)
 
   /**
    * If `post[0]` in this slice is the actual root post (not an orphan thread),
