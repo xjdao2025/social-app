@@ -8,37 +8,32 @@ import {type FeedAPI, type FeedAPIResponse} from './types'
 
 type RequestParams = {
   tag?: string // 类别，正文中的 `#任务`
-  repo?: string // 用户did
-  filter?: 'reply' | 'media' | string // 回复或媒体类型[reply, media]
+  actor?: string // 用户did
+  filter?: 'posts_with_replies' | 'posts_with_media' | string // 回复或媒体类型[reply, media]
   useAuth?: boolean
 }
 
 type FetchPostsParams = {
-  pageNum: number
-  pageSize: number
+  cursor?: string
+  limit: number
   params?: any
   useAuth?: boolean
 }
 
-async function fetchPosts({
-  pageNum,
-  pageSize,
-  params,
-  useAuth,
-}: FetchPostsParams) {
+async function fetchPosts({cursor, limit, params, useAuth}: FetchPostsParams) {
   const result = await proxyRequest(
-    '/post/api/posts',
+    '/post/api/posts_by_cursor',
     'POST',
     {
-      page: pageNum,
-      per_page: pageSize,
+      cursor,
+      limit,
       ...(params || {}),
     },
     useAuth,
   )
   return {
     ...result,
-    items: result?.posts?.map(restructFeedItem),
+    feed: result?.feed?.map(restructFeedItem),
   }
 }
 
@@ -60,26 +55,24 @@ export class PostsFeedAPI implements FeedAPI {
     //   return items?.[0] ?? null
     // }
     const res = await fetchPosts({
-      pageNum: 1,
-      pageSize: 1,
+      limit: 1,
       params: this.params,
       useAuth: this.useAuth,
     })
-    return res?.items?.[0] || null
+    return res?.feed?.[0] || null
   }
 
   async fetch({cursor, limit}: {cursor: string | undefined; limit: number}) {
-    const page = cursor ? +cursor : 1
     const res = await fetchPosts({
-      pageNum: page,
-      pageSize: limit,
+      cursor,
+      limit,
       params: this.params,
       useAuth: this.useAuth,
     })
-    if (res?.items) {
+    if (res?.feed?.length > 0) {
       return {
-        cursor: `${res.page * res.per_page > res.total ? '' : res.page + 1}`,
-        feed: res.items,
+        cursor: res.cursor,
+        feed: res.feed,
       }
     }
     return {
