@@ -511,7 +511,7 @@ let PostDropdownMenuItems = ({
             <Menu.ItemIcon icon={Share} position="right" />
           </Menu.Item>
 
-          {canEmbed && (
+          {/* {canEmbed && (
             <Menu.Item
               testID="postDropdownEmbedBtn"
               label={_(msg`Embed post`)}
@@ -519,10 +519,10 @@ let PostDropdownMenuItems = ({
               <Menu.ItemText>{_(msg`Embed post`)}</Menu.ItemText>
               <Menu.ItemIcon icon={CodeBrackets} position="right" />
             </Menu.Item>
-          )}
+          )} */}
         </Menu.Group>
 
-        {hasSession && feedFeedback.enabled && (
+        {/* {hasSession && feedFeedback.enabled && (
           <>
             <Menu.Divider />
             <Menu.Group>
@@ -543,9 +543,9 @@ let PostDropdownMenuItems = ({
               </Menu.Item>
             </Menu.Group>
           </>
-        )}
+        )} */}
 
-        {hasSession &&
+        {/* {hasSession &&
           IS_INTERNAL &&
           DISCOVER_DEBUG_DIDS[currentAccount?.did ?? ''] && (
             <Menu.Item
@@ -770,7 +770,7 @@ let PostDropdownMenuItems = ({
               </>
             ) : null}
           </>
-        )}
+        )} */}
       </Menu.Outer>
 
       <Prompt.Basic
