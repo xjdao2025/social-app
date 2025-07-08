@@ -472,7 +472,7 @@ function VoteResult(props: VoteResultProps) {
           <View style={{width: 18}}>
             <Text>{agreeVal}</Text>
           </View>
-          <View style={{width: 45}}>
+          <View style={{width: 50}}>
             <Text>({agreePercent})</Text>
           </View>
         </View>
@@ -489,7 +489,7 @@ function VoteResult(props: VoteResultProps) {
           <View style={{width: 18}}>
             <Text>{disagreeVal}</Text>
           </View>
-          <View style={{width: 45}}>
+          <View style={{width: 50}}>
             <Text>({disagreePercent})</Text>
           </View>
         </View>

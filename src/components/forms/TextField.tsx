@@ -1,12 +1,12 @@
 import React from 'react'
 import {
-  AccessibilityProps,
+  type AccessibilityProps,
   StyleSheet,
   TextInput,
-  TextInputProps,
-  TextStyle,
+  type TextInputProps,
+  type TextStyle,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 
 import {HITSLOP_20} from '#/lib/constants'
@@ -16,13 +16,13 @@ import {
   applyFonts,
   atoms as a,
   ios,
-  TextStyleProp,
+  type TextStyleProp,
   useAlf,
   useTheme,
   web,
 } from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
 const Context = React.createContext<{
@@ -280,7 +280,13 @@ export function LabelText({
   )
 }
 
-export function Icon({icon: Comp}: {icon: React.ComponentType<SVGIconProps>}) {
+export function Icon({
+  icon: Comp,
+  iconProps,
+}: {
+  icon: React.ComponentType<SVGIconProps>
+  iconProps?: any
+}) {
   const t = useTheme()
   const ctx = React.useContext(Context)
   const {hover, focus, errorHover, errorFocus} = React.useMemo(() => {
@@ -317,13 +323,15 @@ export function Icon({icon: Comp}: {icon: React.ComponentType<SVGIconProps>}) {
     <View style={[a.z_20, a.pr_xs]}>
       <Comp
         size="md"
-        style={[
+        {...iconProps}
+        style={StyleSheet.flatten([
           {color: t.palette.contrast_500, pointerEvents: 'none', flexShrink: 0},
           ctx.hovered ? hover : {},
           ctx.focused ? focus : {},
           ctx.isInvalid && ctx.hovered ? errorHover : {},
           ctx.isInvalid && ctx.focused ? errorFocus : {},
-        ]}
+          iconProps?.style,
+        ])}
       />
     </View>
   )

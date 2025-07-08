@@ -24,6 +24,7 @@ import useSMS from '#/hooks/useSMS'
 import server from '#/server'
 import {Admonition} from '../Admonition'
 import {Button, ButtonIcon, ButtonText} from '../Button'
+import SettingsPhoneSvg from '../DAO/settings.phone'
 import {ResendEmailText} from '../dialogs/EmailDialog/components/ResendEmailText'
 import {Divider} from '../Divider'
 import {Loader} from '../Loader'
@@ -163,7 +164,14 @@ const ContactModifyDialog = forwardRef<
                 请输入你的新{fieldTypeCN}
               </Text>
               <TextField.Root>
-                <TextField.Icon icon={Envelope} />
+                <TextField.Icon
+                  icon={state.field === 'phone' ? SettingsPhoneSvg : Envelope}
+                  iconProps={
+                    state.field === 'phone'
+                      ? {size: 20, inactiveColor: 'currentColor'}
+                      : undefined
+                  }
+                />
                 <TextField.Input
                   label={_(msg`New email address`)}
                   placeholder={`请输入你的新${fieldTypeCN}`}
