@@ -355,7 +355,7 @@ export function StepInfo({
                 />
               </TextField.Root>
             </View>
-            <View>
+            {/* <View>
               <DateField.LabelText>
                 <Trans>Your birth date</Trans>
               </DateField.LabelText>
@@ -373,7 +373,7 @@ export function StepInfo({
                 accessibilityHint={_(msg`Select your date of birth`)}
                 maximumDate={new Date()}
               />
-            </View>
+            </View> */}
             <Policies
               serviceDescription={state.serviceDescription}
               needsGuardian={false} // {!is18(state.dateOfBirth)}
