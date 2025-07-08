@@ -49,7 +49,7 @@ function HomeHeaderLayoutDesktopAndTablet({
             <View style={[a.flex_1, a.align_center, a.justify_center]}>
               <Logo width={kawaii ? 60 : 28} />
             </View>
-            <Link
+            {/* <Link
               to="/feeds"
               hitSlop={10}
               label={_(msg`View your feeds and explore more`)}
@@ -59,7 +59,7 @@ function HomeHeaderLayoutDesktopAndTablet({
               shape="square"
               style={[a.justify_center]}>
               <ButtonIcon icon={FeedsIcon} size="lg" />
-            </Link>
+            </Link> */}
           </View>
         </Layout.Center>
       )}
