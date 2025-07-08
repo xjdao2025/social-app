@@ -1,4 +1,9 @@
-import {TouchableWithoutFeedback, View} from 'react-native'
+import {
+  Pressable,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
 import {Image} from 'expo-image'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {useNavigation} from '@react-navigation/native'
@@ -32,33 +37,53 @@ export function ProfileHeaderMedal({
   })
 
   return (
-    <TouchableWithoutFeedback
+    <Pressable
       onPress={() => {
         navigation.push('MedalsWall', {name: profile.handle})
       }}
       testID={'profileModal'}
       accessibilityLabel={''}
       accessibilityHint=""
-      accessibilityLabelledBy="list-description">
-      <View style={[a.flex_row, a.align_center, a.pt_xs]}>
-        <Text style={[a.text_md, t.atoms.text_contrast_medium]}>勋章</Text>
-        <View style={[a.ml_md, a.flex_row, a.gap_2xs, a.align_center]}>
-          {medals?.data?.map(md => {
-            return (
-              <OssImage
-                key={md.medalId}
-                style={[{width: 16}, {aspectRatio: 1}]}
-                attachId={md.attachId}
-              />
-            )
-          })}
-        </View>
-        <Text
-          style={[a.text_sm, t.atoms.text_contrast_medium, {color: '#6F869F'}]}>
-          {medals?.totoal ?? 0}枚
-        </Text>
-        <ArrowRight_Angle fill={'#6F869F'} style={[a.ml_xs]} size={'xs'} />
+      accessibilityLabelledBy="list-description"
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.gap_2xs,
+        a.px_xs,
+        a.py_2xs,
+        styles.medalBox,
+      ]}>
+      <Image
+        source={require('#/assets/medals/medal-icon.png')}
+        style={{width: 20, height: 20}}
+      />
+      <Text style={[a.text_md, t.atoms.text_contrast_medium]}>勋章</Text>
+      <View style={[a.flex_row, a.gap_2xs, a.align_center]}>
+        {medals?.data?.map(md => {
+          return (
+            <OssImage
+              key={md.medalId}
+              style={[{width: 16}, {aspectRatio: 1}]}
+              attachId={md.attachId}
+            />
+          )
+        })}
       </View>
-    </TouchableWithoutFeedback>
+      <Text
+        style={[a.text_sm, t.atoms.text_contrast_medium, {color: '#6F869F'}]}>
+        {medals?.totoal ?? 0}枚
+      </Text>
+      <ArrowRight_Angle fill={'#6F869F'} style={[a.ml_xs]} size={'xs'} />
+    </Pressable>
   )
 }
+
+const styles = StyleSheet.create({
+  medalBox: {
+    borderRadius: 4,
+    alignSelf: 'flex-start',
+    backgroundColor: '#F1F3F5',
+    marginBottom: 4,
+    marginTop: 7,
+  },
+})
