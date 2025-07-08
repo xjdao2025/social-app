@@ -126,6 +126,17 @@ function restructFeedItem(
     })
   }
 
+  if (post.embed?.record?.value?.embed?.images) {
+    post.embed?.record?.value?.embed?.images.forEach(item => {
+      item.image = new BlobRef(
+        item.image.ref,
+        item.image.mimeType,
+        item.image.size,
+        item.image,
+      )
+    })
+  }
+
   newItem.post = post
   return newItem
 }
