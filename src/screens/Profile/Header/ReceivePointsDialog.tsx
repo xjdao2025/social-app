@@ -106,7 +106,7 @@ function DialogInner({
             <QRCode
               size={110}
               value={qrLink}
-              logo={require('#/assets/close.svg')}
+              logo={require('#/assets/logo.png')}
               logoSize={25}
               logoBackgroundColor="transparent"
             />
