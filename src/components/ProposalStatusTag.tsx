@@ -11,7 +11,7 @@ import {Text} from './Typography'
 // }
 
 const statusCfgMap = {
-  [ProposalStatus.InProgress]: {text: '审核中', styleName: 'inprogress'},
+  [ProposalStatus.InProgress]: {text: '进行中', styleName: 'inprogress'},
   [ProposalStatus.Pass]: {text: '已通过', styleName: 'pass'},
   [ProposalStatus.Fail]: {text: '未通过', styleName: 'fail'},
 } as const

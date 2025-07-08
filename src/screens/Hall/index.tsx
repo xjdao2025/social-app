@@ -36,7 +36,7 @@ import NodeInfo from './components/NodeInfo'
 
 const proposalStageOptions: Array<{key: ProposalStatus; label: string}> = [
   {key: ProposalStatus.Unknown, label: '全部'},
-  {key: ProposalStatus.InProgress, label: '审核中'},
+  {key: ProposalStatus.InProgress, label: '进行中'},
   {key: ProposalStatus.Pass, label: '通过'},
   {key: ProposalStatus.Fail, label: '未通过'},
 ]
