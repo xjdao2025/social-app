@@ -577,7 +577,8 @@ export function PostThread({uri}: {uri: string | undefined}) {
               onRetry={refetch}
               // 300 is based on the minimum height of a post. This is enough extra height for the `maintainVisPos` to
               // work without causing weird jumps on web or glitches on native
-              height={windowHeight - 200}
+              // height={windowHeight - 200}
+              height={200}
             />
           }
           initialNumToRender={initialNumToRender}
