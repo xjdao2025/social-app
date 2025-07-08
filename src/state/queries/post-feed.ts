@@ -464,15 +464,15 @@ export async function pollLatest(page: FeedPage | undefined) {
   }
 
   logger.debug('usePostFeedQuery: pollLatest')
-  const post = await page.api.peekLatest()
-  if (post) {
-    const slices = page.tuner.tune([post], {
-      dryRun: true,
-    })
-    if (slices[0]) {
-      return true
-    }
-  }
+  // const post = await page.api.peekLatest()
+  // if (post) {
+  //   const slices = page.tuner.tune([post], {
+  //     dryRun: true,
+  //   })
+  //   if (slices[0]) {
+  //     return true
+  //   }
+  // }
 
   return false
 }
