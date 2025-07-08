@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react'
+import {useContext, useEffect, useRef, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useRequest} from 'ahooks'
@@ -7,8 +7,17 @@ import {format} from 'date-fns'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import MedalEmpty from '#/screens/MedalsWall/MedalEmpty'
 import MedalsHeader from '#/screens/MedalsWall/MedalsHeader'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {
+  atoms as a,
+  useBreakpoints,
+  useLayoutBreakpoints,
+  useTheme,
+  web,
+} from '#/alf'
+import {useDialogContext} from '#/components/Dialog'
 import * as Layout from '#/components/Layout'
+import {CENTER_COLUMN_OFFSET, SCROLLBAR_OFFSET} from '#/components/Layout'
+import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import OssImage from '#/components/OssImage'
 import {Text} from '#/components/Typography'
 import server from '#/server'
@@ -49,6 +58,12 @@ const MedalsWallScreen = ({route}: Props) => {
 
   const isEmpty = userMedals?.medals?.length === 0
 
+  const placeHolderHeight = 285 + 48
+
+  const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
+  const {centerColumnOffset} = useLayoutBreakpoints()
+  const {isWithinDialog} = useDialogContext()
+
   return (
     <Layout.Screen testID="MedalsWallScreen">
       <View
@@ -58,8 +73,23 @@ const MedalsWallScreen = ({route}: Props) => {
           gtMobile && {
             maxWidth: 600,
           },
+          !isWithinOffsetView && {
+            transform: [
+              {
+                translateX:
+                  centerColumnOffset && !isWithinDialog
+                    ? CENTER_COLUMN_OFFSET
+                    : 0,
+              },
+              {translateX: web(SCROLLBAR_OFFSET) ?? 0},
+            ],
+          },
         ]}>
-        <View style={{height: 285 + 48}} />
+        <View
+          style={{
+            height: gtMobile ? placeHolderHeight + 80 : placeHolderHeight,
+          }}
+        />
         <MedalsHeader
           list={userMedals?.received}
           total={userMedals?.receivedTotal}

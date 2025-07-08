@@ -1,154 +1,172 @@
-import { useRef } from "react";
-import { Dimensions, Pressable, StyleSheet, View } from "react-native";
-import { useSharedValue } from "react-native-reanimated";
-import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
-import { Image } from "expo-image";
+import {useRef} from 'react'
+import {Dimensions, Pressable, StyleSheet, View} from 'react-native'
+import {useSharedValue} from 'react-native-reanimated'
+import Carousel, {type ICarouselInstance} from 'react-native-reanimated-carousel'
+import {Image} from 'expo-image'
+import {gt} from 'lodash'
 
-import { useGoBack } from "#/lib/hooks/useGoBack";
-import { atoms as a, useBreakpoints, useTheme } from "#/alf";
-import OssImage from "#/components/OssImage";
-import { Text } from "#/components/Typography";
+import {useGoBack} from '#/lib/hooks/useGoBack'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import OssImage from '#/components/OssImage'
+import {Text} from '#/components/Typography'
 
 // const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCALE_RATIO = 240 / 750
 const SCROLL_OFFSET_RATIO = 465 / 750
-const SCREEN_WIDTH = Math.min(600, Dimensions.get("window").width)
+const SCREEN_WIDTH = Math.min(600, Dimensions.get('window').width)
 
 const MedalsHeader = (props: {
   list?: APIDao.WebEndPointsUserMedalUserMedalPageVo[]
   total?: number
 }) => {
-  const { list = [], total = 0 } = props;
+  const {list = [], total = 0} = props
   const t = useTheme()
   const goBack = useGoBack()
-  const { gtMobile } = useBreakpoints()
-  const ref = useRef<ICarouselInstance>(null);
-  const progress = useSharedValue<number>(0);
+  const {gtMobile} = useBreakpoints()
+  const ref = useRef<ICarouselInstance>(null)
+  const progress = useSharedValue<number>(0)
 
   const screenWidth = gtMobile ? 600 : Dimensions.get('window').width
 
   const fullWidth = gtMobile ? 600 : '100%'
 
-  return <>
-    <View
-      style={[
-        a.fixed,
-        a.top_0,
-        a.z_10,
-        { width: fullWidth, height: 44, overflow: 'hidden' },
-      ]}
-    >
+  const carouselHeight = gtMobile ? 250 : 165
+
+  const defaultHeight = 285 + 48
+
+  const containerHeight = gtMobile ? defaultHeight + 50 : defaultHeight
+
+  return (
+    <>
       <View
-        style={[styles.container, styles.bgColor, a.pl_lg, { paddingTop: 18 }]}
-      >
-        <Pressable
-          accessibilityRole="button"
-          accessibilityIgnoresInvertColors
-          onPress={goBack}
-        >
-          <Image
+        style={[
+          a.fixed,
+          a.top_0,
+          a.z_10,
+          {width: fullWidth, height: 44, overflow: 'hidden'},
+        ]}>
+        <View
+          style={[
+            styles.container,
+            styles.bgColor,
+            a.pl_lg,
+            {paddingTop: 18, height: containerHeight},
+          ]}>
+          <Pressable
+            accessibilityRole="button"
             accessibilityIgnoresInvertColors
-            style={{ width: 14, height: 12 }}
-            source={require('#/assets/arrow-left-white.svg')}
-          />
-        </Pressable>
-      </View>
-      <Image
-        accessibilityIgnoresInvertColors
-        style={[{ width: 263, height: 253, top: 0 }, styles.topBg]}
-        source={require('#/assets/medals/light.png')}
-      />
-    </View>
-    <View
-      style={[
-        styles.container,
-        styles.bgColor,
-        a.fixed,
-        { width: fullWidth }
-      ]}
-    >
-      <Image
-        accessibilityIgnoresInvertColors
-        style={[{ width: 263, height: 253 }, styles.topBg]}
-        source={require('#/assets/medals/light.png')}
-      />
-      <Image
-        accessibilityIgnoresInvertColors
-        style={[{ width: 209, height: 165, bottom: 11 + 48 }, styles.topBg]}
-        source={require('#/assets/medals/medal.png')}
-      />
-      <View style={[styles.header, a.gap_sm]}>
+            onPress={goBack}>
+            <Image
+              accessibilityIgnoresInvertColors
+              style={{width: 14, height: 12}}
+              source={require('#/assets/arrow-left-white.svg')}
+            />
+          </Pressable>
+        </View>
         <Image
           accessibilityIgnoresInvertColors
-          style={[styles.wing]}
-          source={require('#/assets/medals/wing.svg')}
+          style={[{width: 263, height: 253, top: 0}, styles.topBg]}
+          source={require('#/assets/medals/light.png')}
         />
-        <Text style={[a.text_xl, a.font_bold, t.atoms.text_inverted]}>
-          总成就<Text style={[a.text_xl, a.font_bold, a.mx_sm, { color: '#1083FE' }]}>{total}</Text>枚
+      </View>
+      <View
+        style={[
+          styles.container,
+          styles.bgColor,
+          a.fixed,
+          {width: fullWidth, height: containerHeight},
+        ]}>
+        <Image
+          accessibilityIgnoresInvertColors
+          style={[{width: 263, height: 253}, styles.topBg]}
+          source={require('#/assets/medals/light.png')}
+        />
+        <Image
+          accessibilityIgnoresInvertColors
+          style={[{width: 209, height: 165, bottom: 11 + 48}, styles.topBg]}
+          source={require('#/assets/medals/medal.png')}
+        />
+        <View style={[styles.header, a.gap_sm]}>
+          <Image
+            accessibilityIgnoresInvertColors
+            style={[styles.wing]}
+            source={require('#/assets/medals/wing.svg')}
+          />
+          <Text style={[a.text_xl, a.font_bold, t.atoms.text_inverted]}>
+            总成就
+            <Text style={[a.text_xl, a.font_bold, a.mx_sm, {color: '#1083FE'}]}>
+              {total}
+            </Text>
+            枚
+          </Text>
+          <Image
+            accessibilityIgnoresInvertColors
+            style={[styles.wing, {transform: 'scaleX(-1)'}]}
+            source={require('#/assets/medals/wing.svg')}
+          />
+        </View>
+        <Text style={[styles.new_get, a.text_xs, a.mt_md, a.mb_sm]}>
+          最新获得
         </Text>
-        <Image
-          accessibilityIgnoresInvertColors
-          style={[styles.wing, { transform: 'scaleX(-1)' }]}
-          source={require('#/assets/medals/wing.svg')}
-        />
-      </View>
-      <Text style={[styles.new_get, a.text_xs, a.mt_md, a.mb_sm]}>最新获得</Text>
-      {list.length === 0 ?
-        <View style={styles.empty}>
-          <Image
-            accessibilityIgnoresInvertColors
-            style={{ width: 60, aspectRatio: 1 }}
-            source={require('#/assets/medals/question.svg')}
+        {list.length === 0 ? (
+          <View style={styles.empty}>
+            <Image
+              accessibilityIgnoresInvertColors
+              style={{width: 60, aspectRatio: 1}}
+              source={require('#/assets/medals/question.svg')}
+            />
+            <Text style={styles.emptyText}>待获得</Text>
+          </View>
+        ) : (
+          <Carousel
+            ref={ref}
+            data={list}
+            height={carouselHeight}
+            loop={false}
+            pagingEnabled={true}
+            snapEnabled={true}
+            width={SCREEN_WIDTH}
+            mode="parallax"
+            onProgressChange={progress}
+            modeConfig={{
+              parallaxScrollingOffset: SCROLL_OFFSET_RATIO * screenWidth,
+              parallaxAdjacentItemScale: 0.15,
+              parallaxScrollingScale: SCALE_RATIO,
+            }}
+            renderItem={({item, index}) => {
+              const currentIndex = ref.current?.getCurrentIndex()
+              return (
+                <View style={[styles.swiper]}>
+                  <OssImage
+                    attachId={item.attachId}
+                    style={{width: '100%', aspectRatio: 1}}
+                  />
+                  {index === currentIndex && (
+                    <Text style={styles.swiper_text}>{item.name}</Text>
+                  )}
+                </View>
+              )
+            }}
           />
-          <Text style={styles.emptyText}>待获得</Text>
-        </View> :
-        <Carousel
-          ref={ref}
-          data={list}
-          height={165}
-          loop={false}
-          pagingEnabled={true}
-          snapEnabled={true}
-          width={SCREEN_WIDTH}
-          mode="parallax"
-          onProgressChange={progress}
-          modeConfig={{
-            parallaxScrollingOffset: SCROLL_OFFSET_RATIO * screenWidth,
-            parallaxAdjacentItemScale: 0.15,
-            parallaxScrollingScale: SCALE_RATIO
-          }}
-          renderItem={({ item, index }) => {
-            const currentIndex = ref.current?.getCurrentIndex()
-            return <View
-              style={[styles.swiper]}
-            >
-              <OssImage
-                attachId={item.attachId}
-                style={{ width: '100%', aspectRatio: 1 }}
-              />
-              {index === currentIndex && <Text style={styles.swiper_text}>{item.name}</Text>}
-            </View>
-          }}
-        />
-      }
-    </View>
-  </>;
+        )}
+      </View>
+    </>
+  )
 }
 
-export default MedalsHeader;
+export default MedalsHeader
 
 const styles = StyleSheet.create({
   bgColor: {
     backgroundImage: 'linear-gradient(180deg, #3A394A 0%, #1E1F23 100%)',
   },
   container: {
-    height: 285 + 48,
     top: 0,
   },
   topBg: {
     position: 'absolute',
     left: '50%',
-    transform: 'translateX(-50%)'
+    transform: 'translateX(-50%)',
   },
   header: {
     marginTop: 59,
@@ -177,7 +195,7 @@ const styles = StyleSheet.create({
     fontSize: 14 / SCALE_RATIO,
     fontWeight: 500,
     color: '#fff',
-    marginTop: 23
+    marginTop: 23,
   },
   empty: {
     display: 'flex',
@@ -191,5 +209,5 @@ const styles = StyleSheet.create({
     color: '#6F869F',
     fontSize: 14,
     fontWeight: 500,
-  }
+  },
 })
