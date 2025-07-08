@@ -42,16 +42,18 @@ export function useListConvosQuery({
     enabled,
     queryKey: RQKEY(status ?? 'all', readState),
     queryFn: async ({pageParam}) => {
-      const {data} = await agent.chat.bsky.convo.listConvos(
-        {
-          limit: 20,
-          cursor: pageParam,
-          readState: readState === 'unread' ? 'unread' : undefined,
-          status,
-        },
-        {headers: DM_SERVICE_HEADERS},
-      )
-      return data
+      // const {data} = await agent.chat.bsky.convo.listConvos(
+      //   {
+      //     limit: 20,
+      //     cursor: pageParam,
+      //     readState: readState === 'unread' ? 'unread' : undefined,
+      //     status,
+      //   },
+      //   {headers: DM_SERVICE_HEADERS},
+      // )
+      return {
+        convos: [],
+      }
     },
     initialPageParam: undefined as RQPageParam,
     getNextPageParam: lastPage => lastPage.cursor,

@@ -1,4 +1,4 @@
-import {BskyAgent, ChatBskyConvoGetLog} from '@atproto/api'
+import {type BskyAgent, type ChatBskyConvoGetLog} from '@atproto/api'
 import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
@@ -9,11 +9,11 @@ import {
   DEFAULT_POLL_INTERVAL,
 } from '#/state/messages/events/const'
 import {
-  MessagesEventBusDispatch,
+  type MessagesEventBusDispatch,
   MessagesEventBusDispatchEvent,
   MessagesEventBusErrorCode,
-  MessagesEventBusEvent,
-  MessagesEventBusParams,
+  type MessagesEventBusEvent,
+  type MessagesEventBusParams,
   MessagesEventBusStatus,
 } from '#/state/messages/events/types'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
@@ -240,10 +240,15 @@ export class MessagesEventBus {
 
     try {
       const response = await networkRetry(2, () => {
-        return this.agent.chat.bsky.convo.getLog(
-          {},
-          {headers: DM_SERVICE_HEADERS},
-        )
+        // return this.agent.chat.bsky.convo.getLog(
+        //   {},
+        //   {headers: DM_SERVICE_HEADERS},
+        // )
+        return Promise.resolve({
+          data: {
+            logs: [],
+          },
+        })
       })
       // throw new Error('UNCOMMENT TO TEST INIT FAILURE')
 
@@ -334,12 +339,17 @@ export class MessagesEventBus {
 
     try {
       const response = await networkRetry(2, () => {
-        return this.agent.chat.bsky.convo.getLog(
-          {
-            cursor: this.latestRev,
+        // return this.agent.chat.bsky.convo.getLog(
+        //   {
+        //     cursor: this.latestRev,
+        //   },
+        //   {headers: DM_SERVICE_HEADERS},
+        // )
+        return Promise.resolve({
+          data: {
+            logs: [],
           },
-          {headers: DM_SERVICE_HEADERS},
-        )
+        })
       })
 
       // throw new Error('UNCOMMENT TO TEST POLL FAILURE')

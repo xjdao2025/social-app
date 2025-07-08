@@ -42,7 +42,7 @@ export function MessageProfileButton({
       return
     }
 
-    if (convoAvailability.convo) {
+    if (convoAvailability?.convo) {
       logEvent('chat:open', {logContext: 'ProfileHeader'})
       navigation.navigate('MessagesConversation', {
         conversation: convoAvailability.convo.id,
