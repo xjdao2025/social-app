@@ -95,14 +95,14 @@ export function AboutSettingsScreen({}: Props) {
               <Trans>Privacy Policy</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
-          <SettingsList.LinkItem
+          {/* <SettingsList.LinkItem
             to={STATUS_PAGE_URL}
             label={_(msg`Status Page`)}>
             <SettingsList.ItemIcon icon={GlobeIcon} />
             <SettingsList.ItemText>
               <Trans>Status Page</Trans>
             </SettingsList.ItemText>
-          </SettingsList.LinkItem>
+          </SettingsList.LinkItem> */}
           <SettingsList.Divider />
           <SettingsList.LinkItem to="/sys/log" label={_(msg`System log`)}>
             <SettingsList.ItemIcon icon={CodeLinesIcon} />

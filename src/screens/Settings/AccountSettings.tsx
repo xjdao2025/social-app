@@ -53,7 +53,6 @@ export function AccountSettingsScreen({}: Props) {
   const passwordUpdateDialogControl = useDialogControl()
   const delAccountDialogControl = useDialogControl()
   // const emailDialogControl = useEmailDialogControl()
-  const birthdayControl = useDialogControl()
 
   const contactModifyRef = useRef<ContactModifyDialogRef>(null)
   const {data: profile, run: reloadProfile} = useRequest(async () => {
@@ -172,18 +171,6 @@ export function AccountSettingsScreen({}: Props) {
           </SettingsList.PressableItem>
 
           <SettingsList.Divider />
-          <SettingsList.Item>
-            <SettingsList.ItemIcon icon={BirthdayCakeIcon} />
-            <SettingsList.ItemText>
-              {/* <Trans>Birthday</Trans> */}
-              生日
-            </SettingsList.ItemText>
-            <SettingsList.BadgeButton
-              label="编辑"
-              // label={_(msg`Edit`)}
-              onPress={() => birthdayControl.open()}
-            />
-          </SettingsList.Item>
           <SettingsList.PressableItem
             label="密码"
             // label={_(msg`Password`)}
@@ -221,8 +208,6 @@ export function AccountSettingsScreen({}: Props) {
         </SettingsList.Container>
       </Layout.Content>
 
-      <BirthDateSettingsDialog control={birthdayControl} />
-
       <PasswordUpdateDialog
         control={passwordUpdateDialogControl}
         contact={profile?.phone || profile?.email}
@@ -259,8 +244,22 @@ function DEPRECATED_FUNC() {
   const changeHandleControl = useDialogControl()
   const exportCarControl = useDialogControl()
   const deactivateAccountControl = useDialogControl()
+  const birthdayControl = useDialogControl()
+
   return (
     <>
+      <SettingsList.Item>
+        <SettingsList.ItemIcon icon={BirthdayCakeIcon} />
+        <SettingsList.ItemText>
+          {/* <Trans>Birthday</Trans> */}
+          生日
+        </SettingsList.ItemText>
+        <SettingsList.BadgeButton
+          label="编辑"
+          // label={_(msg`Edit`)}
+          onPress={() => birthdayControl.open()}
+        />
+      </SettingsList.Item>
       <SettingsList.PressableItem
         label={_(msg`Handle`)}
         accessibilityHint={_(msg`Opens change handle dialog`)}
@@ -293,6 +292,7 @@ function DEPRECATED_FUNC() {
       <ChangeHandleDialog control={changeHandleControl} />
       <ExportCarDialog control={exportCarControl} />
       <DeactivateAccountDialog control={deactivateAccountControl} />
+      <BirthDateSettingsDialog control={birthdayControl} />
     </>
   )
 }
