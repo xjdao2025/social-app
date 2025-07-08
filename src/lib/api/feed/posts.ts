@@ -112,6 +112,27 @@ function restructFeedItem(
       },
     }
 
+    if (reply.parent?.record?.embed?.images) {
+      reply.parent?.record.embed?.images.forEach(item => {
+        item.image = new BlobRef(
+          item.image.ref,
+          item.image.mimeType,
+          item.image.size,
+          item.image,
+        )
+      })
+    }
+    if (reply.root?.record?.embed?.images) {
+      reply.root?.record.embed?.images.forEach(item => {
+        item.image = new BlobRef(
+          item.image.ref,
+          item.image.mimeType,
+          item.image.size,
+          item.image,
+        )
+      })
+    }
+
     newItem.reply = reply
   }
 
