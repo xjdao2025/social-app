@@ -252,12 +252,12 @@ export function StepFinished() {
       <TitleText>
         <Trans>You're ready to go!</Trans>
       </TitleText>
-      <DescriptionText>
+      {/* <DescriptionText>
         <Trans>We hope you have a wonderful time. Remember, Bluesky is:</Trans>
-      </DescriptionText>
+      </DescriptionText> */}
 
       <View style={[a.pt_5xl, a.gap_3xl]}>
-        <View style={[a.flex_row, a.align_center, a.w_full, a.gap_lg]}>
+        {/* <View style={[a.flex_row, a.align_center, a.w_full, a.gap_lg]}>
           <IconCircle icon={Growth} size="lg" style={{width: 48, height: 48}} />
           <View style={[a.flex_1, a.gap_xs]}>
             <Text style={[a.font_bold, a.text_lg]}>
@@ -298,7 +298,7 @@ export function StepFinished() {
               <Trans>Choose the algorithms that power your custom feeds.</Trans>
             </Text>
           </View>
-        </View>
+        </View> */}
       </View>
 
       <OnboardingControls.Portal>

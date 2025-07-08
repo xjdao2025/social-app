@@ -11,7 +11,7 @@ import {
   atoms as a,
   flatten,
   native,
-  TextStyleProp,
+  type TextStyleProp,
   useBreakpoints,
   useTheme,
   web,
@@ -133,6 +133,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
                         a.rounded_full,
                         t.atoms.bg_contrast_50,
                         {
+                          display: i == 1 ? 'none' : 'flex',
                           backgroundColor:
                             i + 1 <= state.activeStepIndex
                               ? t.palette.primary_500

@@ -3,7 +3,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
-import {AvatarColor, Emoji} from '#/screens/Onboarding/StepProfile/types'
+import {type AvatarColor, type Emoji} from '#/screens/Onboarding/StepProfile/types'
 
 export type OnboardingState = {
   hasPrev: boolean
@@ -157,8 +157,10 @@ export function reducer(
   switch (a.type) {
     case 'next': {
       if (s.activeStep === 'profile') {
-        next.activeStep = 'interests'
-        next.activeStepIndex = 2
+        next.activeStep = 'finished'
+        next.activeStepIndex = 3
+        // next.activeStep = 'interests'
+        // next.activeStepIndex = 2
       } else if (s.activeStep === 'interests') {
         next.activeStep = 'finished'
         next.activeStepIndex = 3
@@ -170,8 +172,10 @@ export function reducer(
         next.activeStep = 'profile'
         next.activeStepIndex = 1
       } else if (s.activeStep === 'finished') {
-        next.activeStep = 'interests'
-        next.activeStepIndex = 2
+        next.activeStep = 'profile'
+        next.activeStepIndex = 1
+        // next.activeStep = 'interests'
+        // next.activeStepIndex = 2
       }
       break
     }

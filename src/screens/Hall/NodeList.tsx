@@ -20,69 +20,73 @@ export default function HallNodeListScreen() {
   })
   return (
     <Layout.Screen testID="HallNodeList">
-      <Pressable
-        accessibilityRole="button"
-        accessibilityIgnoresInvertColors
-        style={{position: 'absolute', left: 16, top: 18, zIndex: 1}}
-        onPress={() =>
-          !navigation.canGoBack()
-            ? navigation.push('Hall')
-            : navigation.goBack()
-        }>
-        <Image
+      <Layout.Center>
+        <Pressable
+          accessibilityRole="button"
           accessibilityIgnoresInvertColors
-          style={{width: 14, height: 12}}
-          source={require('#/assets/arrow-left.svg')}
-        />
-      </Pressable>
-      <View style={[styles.headContainer, a.pb_lg]}>
-        <View style={styles.linearBg} />
-        <View style={[styles.headPlaceholder, a.mb_lg]} />
-        <View style={[a.px_lg]}>
-          <Text style={[t.atoms.text, a.text_2xl, a.font_bold]}>节点</Text>
+          style={{position: 'absolute', left: 16, top: 18, zIndex: 1}}
+          onPress={() =>
+            !navigation.canGoBack()
+              ? navigation.push('Hall')
+              : navigation.goBack()
+          }>
+          <Image
+            accessibilityIgnoresInvertColors
+            style={{width: 14, height: 12}}
+            source={require('#/assets/arrow-left.svg')}
+          />
+        </Pressable>
+        <View style={[styles.headContainer, a.pb_lg]}>
+          <View style={styles.linearBg} />
+          <View style={[styles.headPlaceholder, a.mb_lg]} />
+          <View style={[a.px_lg]}>
+            <Text style={[t.atoms.text, a.text_2xl, a.font_bold]}>节点</Text>
+          </View>
         </View>
-      </View>
 
-      <View style={styles.card}>
-        {nodeList?.map(node => (
-          <View
-            key={node.nodeId}
-            style={[
-              a.flex_row,
-              a.gap_sm,
-              a.px_lg,
-              a.py_xl,
-              a.align_center,
-              styles.item,
-            ]}>
+        <View style={styles.card}>
+          {nodeList?.map(node => (
             <View
+              key={node.nodeId}
               style={[
-                a.flex_0,
-                a.rounded_full,
-                {width: 44, height: 44, overflow: 'hidden'},
+                a.flex_row,
+                a.gap_sm,
+                a.px_lg,
+                a.py_xl,
+                a.align_center,
+                styles.item,
               ]}>
-              <Image
-                accessibilityIgnoresInvertColors
-                style={{width: '100%', height: '100%'}}
-                source={{
-                  uri: extractAssetUrl(node.logo),
-                }}
+              <View
+                style={[
+                  a.flex_0,
+                  a.rounded_full,
+                  {width: 44, height: 44, overflow: 'hidden'},
+                ]}>
+                <Image
+                  accessibilityIgnoresInvertColors
+                  style={{width: '100%', height: '100%'}}
+                  source={{
+                    uri: extractAssetUrl(node.logo),
+                  }}
+                />
+              </View>
+              <View style={[a.flex_1]}>
+                <Text style={[a.text_md]}>{node.name}</Text>
+              </View>
+              <NodeInfo
+                node={node}
+                trigger={
+                  <View
+                    style={[styles.button]}
+                    accessibilityIgnoresInvertColors>
+                    <Text style={[t.atoms.text_contrast_medium]}>查看</Text>
+                  </View>
+                }
               />
             </View>
-            <View style={[a.flex_1]}>
-              <Text style={[a.text_md]}>{node.name}</Text>
-            </View>
-            <NodeInfo
-              node={node}
-              trigger={
-                <View style={[styles.button]} accessibilityIgnoresInvertColors>
-                  <Text style={[t.atoms.text_contrast_medium]}>查看</Text>
-                </View>
-              }
-            />
-          </View>
-        ))}
-      </View>
+          ))}
+        </View>
+      </Layout.Center>
     </Layout.Screen>
   )
 }
