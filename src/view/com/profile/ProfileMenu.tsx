@@ -199,7 +199,7 @@ let ProfileMenu = ({
   }, [profile.did])
 
   const onPressSearch = React.useCallback(() => {
-    navigation.navigate('ProfileSearch', {name: profile.handle}, )
+    navigation.navigate('ProfileSearch', {name: profile.handle})
   }, [navigation, profile.handle])
 
   const verificationCreatePromptControl = Prompt.usePromptControl()
@@ -262,145 +262,145 @@ let ProfileMenu = ({
 
           {hasSession && (
             <>
-              <Menu.Divider />
-              <Menu.Group>
-                {!isSelf && (
-                  <>
-                    {(isLabelerAndNotBlocked || isFollowingBlockedAccount) && (
-                      <Menu.Item
-                        testID="profileHeaderDropdownFollowBtn"
-                        label={
-                          isFollowing
-                            ? _(msg`Unfollow account`)
-                            : _(msg`Follow account`)
-                        }
-                        onPress={
-                          isFollowing
-                            ? onPressUnfollowAccount
-                            : onPressFollowAccount
-                        }>
-                        <Menu.ItemText>
-                          {isFollowing ? (
-                            <Trans>Unfollow account</Trans>
-                          ) : (
-                            <Trans>Follow account</Trans>
-                          )}
-                        </Menu.ItemText>
-                        <Menu.ItemIcon icon={isFollowing ? UserMinus : Plus} />
-                      </Menu.Item>
-                    )}
-                  </>
-                )}
-                <Menu.Item
-                  testID="profileHeaderDropdownListAddRemoveBtn"
-                  label={_(msg`Add to lists`)}
-                  onPress={onPressAddRemoveLists}>
-                  <Menu.ItemText>
-                    <Trans>Add to lists</Trans>
-                  </Menu.ItemText>
-                  <Menu.ItemIcon icon={List} />
-                </Menu.Item>
-                {/*{isSelf && canGoLive && (*/}
-                {/*  <Menu.Item*/}
-                {/*    testID="profileHeaderDropdownListAddRemoveBtn"*/}
-                {/*    label={*/}
-                {/*      status.isActive*/}
-                {/*        ? _(msg`Edit live status`)*/}
-                {/*        : _(msg`Go live`)*/}
-                {/*    }*/}
-                {/*    onPress={goLiveDialogControl.open}>*/}
-                {/*    <Menu.ItemText>*/}
-                {/*      {status.isActive ? (*/}
-                {/*        <Trans>Edit live status</Trans>*/}
-                {/*      ) : (*/}
-                {/*        <Trans>Go live</Trans>*/}
-                {/*      )}*/}
-                {/*    </Menu.ItemText>*/}
-                {/*    <Menu.ItemIcon icon={LiveIcon} />*/}
-                {/*  </Menu.Item>*/}
-                {/*)}*/}
-                {verification.viewer.role === 'verifier' &&
-                  !verification.profile.isViewer &&
-                  (verification.viewer.hasIssuedVerification ? (
-                    <Menu.Item
-                      testID="profileHeaderDropdownVerificationRemoveButton"
-                      label={_(msg`Remove verification`)}
-                      onPress={() => verificationRemovePromptControl.open()}>
-                      <Menu.ItemText>
-                        <Trans>Remove verification</Trans>
-                      </Menu.ItemText>
-                      <Menu.ItemIcon icon={CircleX} />
-                    </Menu.Item>
-                  ) : (
-                    <Menu.Item
-                      testID="profileHeaderDropdownVerificationCreateButton"
-                      label={_(msg`Verify account`)}
-                      onPress={() => verificationCreatePromptControl.open()}>
-                      <Menu.ItemText>
-                        <Trans>Verify account</Trans>
-                      </Menu.ItemText>
-                      <Menu.ItemIcon icon={CircleCheck} />
-                    </Menu.Item>
-                  ))}
-                {!isSelf && (
-                  <>
-                    {!profile.viewer?.blocking &&
-                      !profile.viewer?.mutedByList && (
-                        <Menu.Item
-                          testID="profileHeaderDropdownMuteBtn"
-                          label={
-                            profile.viewer?.muted
-                              ? _(msg`Unmute account`)
-                              : _(msg`Mute account`)
-                          }
-                          onPress={onPressMuteAccount}>
-                          <Menu.ItemText>
-                            {profile.viewer?.muted ? (
-                              <Trans>Unmute account</Trans>
-                            ) : (
-                              <Trans>Mute account</Trans>
-                            )}
-                          </Menu.ItemText>
-                          <Menu.ItemIcon
-                            icon={profile.viewer?.muted ? Unmute : Mute}
-                          />
-                        </Menu.Item>
-                      )}
-                    {!profile.viewer?.blockingByList && (
-                      <Menu.Item
-                        testID="profileHeaderDropdownBlockBtn"
-                        label={
-                          profile.viewer
-                            ? _(msg`Unblock account`)
-                            : _(msg`Block account`)
-                        }
-                        onPress={() => blockPromptControl.open()}>
-                        <Menu.ItemText>
-                          {profile.viewer?.blocking ? (
-                            <Trans>Unblock account</Trans>
-                          ) : (
-                            <Trans>Block account</Trans>
-                          )}
-                        </Menu.ItemText>
-                        <Menu.ItemIcon
-                          icon={
-                            profile.viewer?.blocking ? PersonCheck : PersonX
-                          }
-                        />
-                      </Menu.Item>
-                    )}
-                    <Menu.Item
-                      testID="profileHeaderDropdownReportBtn"
-                      label={_(msg`Report account`)}
-                      onPress={onPressReportAccount}>
-                      <Menu.ItemText>
-                        <Trans>Report account</Trans>
-                      </Menu.ItemText>
-                      <Menu.ItemIcon icon={Flag} />
-                    </Menu.Item>
-                  </>
-                )}
-              </Menu.Group>
+              {/*<Menu.Divider />*/}
+              {/*<Menu.Group>*/}
+              {/*{!isSelf && (*/}
+              {/*  <>*/}
+              {/*    {(isLabelerAndNotBlocked || isFollowingBlockedAccount) && (*/}
+              {/*      <Menu.Item*/}
+              {/*        testID="profileHeaderDropdownFollowBtn"*/}
+              {/*        label={*/}
+              {/*          isFollowing*/}
+              {/*            ? _(msg`Unfollow account`)*/}
+              {/*            : _(msg`Follow account`)*/}
+              {/*        }*/}
+              {/*        onPress={*/}
+              {/*          isFollowing*/}
+              {/*            ? onPressUnfollowAccount*/}
+              {/*            : onPressFollowAccount*/}
+              {/*        }>*/}
+              {/*        <Menu.ItemText>*/}
+              {/*          {isFollowing ? (*/}
+              {/*            <Trans>Unfollow account</Trans>*/}
+              {/*          ) : (*/}
+              {/*            <Trans>Follow account</Trans>*/}
+              {/*          )}*/}
+              {/*        </Menu.ItemText>*/}
+              {/*        <Menu.ItemIcon icon={isFollowing ? UserMinus : Plus} />*/}
+              {/*      </Menu.Item>*/}
+              {/*    )}*/}
+              {/*  </>*/}
+              {/*)}*/}
+              {/*<Menu.Item*/}
+              {/*  testID="profileHeaderDropdownListAddRemoveBtn"*/}
+              {/*  label={_(msg`Add to lists`)}*/}
+              {/*  onPress={onPressAddRemoveLists}>*/}
+              {/*  <Menu.ItemText>*/}
+              {/*    <Trans>Add to lists</Trans>*/}
+              {/*  </Menu.ItemText>*/}
+              {/*  <Menu.ItemIcon icon={List} />*/}
+              {/*</Menu.Item>*/}
+              {/*{isSelf && canGoLive && (*/}
+              {/*  <Menu.Item*/}
+              {/*    testID="profileHeaderDropdownListAddRemoveBtn"*/}
+              {/*    label={*/}
+              {/*      status.isActive*/}
+              {/*        ? _(msg`Edit live status`)*/}
+              {/*        : _(msg`Go live`)*/}
+              {/*    }*/}
+              {/*    onPress={goLiveDialogControl.open}>*/}
+              {/*    <Menu.ItemText>*/}
+              {/*      {status.isActive ? (*/}
+              {/*        <Trans>Edit live status</Trans>*/}
+              {/*      ) : (*/}
+              {/*        <Trans>Go live</Trans>*/}
+              {/*      )}*/}
+              {/*    </Menu.ItemText>*/}
+              {/*    <Menu.ItemIcon icon={LiveIcon} />*/}
+              {/*  </Menu.Item>*/}
+              {/*)}*/}
+              {/*{verification.viewer.role === 'verifier' &&*/}
+              {/*  !verification.profile.isViewer &&*/}
+              {/*  (verification.viewer.hasIssuedVerification ? (*/}
+              {/*    <Menu.Item*/}
+              {/*      testID="profileHeaderDropdownVerificationRemoveButton"*/}
+              {/*      label={_(msg`Remove verification`)}*/}
+              {/*      onPress={() => verificationRemovePromptControl.open()}>*/}
+              {/*      <Menu.ItemText>*/}
+              {/*        <Trans>Remove verification</Trans>*/}
+              {/*      </Menu.ItemText>*/}
+              {/*      <Menu.ItemIcon icon={CircleX} />*/}
+              {/*    </Menu.Item>*/}
+              {/*  ) : (*/}
+              {/*    <Menu.Item*/}
+              {/*      testID="profileHeaderDropdownVerificationCreateButton"*/}
+              {/*      label={_(msg`Verify account`)}*/}
+              {/*      onPress={() => verificationCreatePromptControl.open()}>*/}
+              {/*      <Menu.ItemText>*/}
+              {/*        <Trans>Verify account</Trans>*/}
+              {/*      </Menu.ItemText>*/}
+              {/*      <Menu.ItemIcon icon={CircleCheck} />*/}
+              {/*    </Menu.Item>*/}
+              {/*  ))}*/}
+              {/*{!isSelf && (*/}
+              {/*  <>*/}
+              {/*    {!profile.viewer?.blocking &&*/}
+              {/*      !profile.viewer?.mutedByList && (*/}
+              {/*        <Menu.Item*/}
+              {/*          testID="profileHeaderDropdownMuteBtn"*/}
+              {/*          label={*/}
+              {/*            profile.viewer?.muted*/}
+              {/*              ? _(msg`Unmute account`)*/}
+              {/*              : _(msg`Mute account`)*/}
+              {/*          }*/}
+              {/*          onPress={onPressMuteAccount}>*/}
+              {/*          <Menu.ItemText>*/}
+              {/*            {profile.viewer?.muted ? (*/}
+              {/*              <Trans>Unmute account</Trans>*/}
+              {/*            ) : (*/}
+              {/*              <Trans>Mute account</Trans>*/}
+              {/*            )}*/}
+              {/*          </Menu.ItemText>*/}
+              {/*          <Menu.ItemIcon*/}
+              {/*            icon={profile.viewer?.muted ? Unmute : Mute}*/}
+              {/*          />*/}
+              {/*        </Menu.Item>*/}
+              {/*      )}*/}
+              {/*    {!profile.viewer?.blockingByList && (*/}
+              {/*      <Menu.Item*/}
+              {/*        testID="profileHeaderDropdownBlockBtn"*/}
+              {/*        label={*/}
+              {/*          profile.viewer*/}
+              {/*            ? _(msg`Unblock account`)*/}
+              {/*            : _(msg`Block account`)*/}
+              {/*        }*/}
+              {/*        onPress={() => blockPromptControl.open()}>*/}
+              {/*        <Menu.ItemText>*/}
+              {/*          {profile.viewer?.blocking ? (*/}
+              {/*            <Trans>Unblock account</Trans>*/}
+              {/*          ) : (*/}
+              {/*            <Trans>Block account</Trans>*/}
+              {/*          )}*/}
+              {/*        </Menu.ItemText>*/}
+              {/*        <Menu.ItemIcon*/}
+              {/*          icon={*/}
+              {/*            profile.viewer?.blocking ? PersonCheck : PersonX*/}
+              {/*          }*/}
+              {/*        />*/}
+              {/*      </Menu.Item>*/}
+              {/*    )}*/}
+              {/*    <Menu.Item*/}
+              {/*      testID="profileHeaderDropdownReportBtn"*/}
+              {/*      label={_(msg`Report account`)}*/}
+              {/*      onPress={onPressReportAccount}>*/}
+              {/*      <Menu.ItemText>*/}
+              {/*        <Trans>Report account</Trans>*/}
+              {/*      </Menu.ItemText>*/}
+              {/*      <Menu.ItemIcon icon={Flag} />*/}
+              {/*    </Menu.Item>*/}
+              {/*  </>*/}
+              {/*)}*/}
+              {/*</Menu.Group>*/}
             </>
           )}
           {devModeEnabled ? (
