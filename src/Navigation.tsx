@@ -715,7 +715,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Hall"
         getComponent={() => HallScreen}
-        options={{title: title(msg`Explore`)}}
+        options={{title: '乡建厅'}}
       />
       <Flat.Screen
         name="Notifications"

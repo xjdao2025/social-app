@@ -141,7 +141,7 @@ export function AccountSettingsScreen({}: Props) {
           </SettingsList.PressableItem>
 
           <SettingsList.Item>
-            <SettingsList.ItemIcon icon={SettingsPhoneSvg} size="lg" />
+            <SettingsList.ItemIcon icon={SettingsPhoneSvg} />
             {/* Tricky flexbox situation here: we want the email to truncate, but by default it will make the "Email" text wrap instead.
                 For numberOfLines to work, we need flex: 1 on the BadgeText, but that means it goes to width: 50% because the
                 ItemText is also flex: 1. So we need to set flex: 0 on the ItemText to prevent it from growing, but if we did that everywhere
@@ -165,7 +165,7 @@ export function AccountSettingsScreen({}: Props) {
           <SettingsList.PressableItem
             label="更新手机号"
             onPress={() => contactModifyRef.current?.open('phone')}>
-            <SettingsList.ItemIcon icon={SettingsUpdatePhoneSvg} size="lg" />
+            <SettingsList.ItemIcon icon={SettingsUpdatePhoneSvg} />
             <SettingsList.ItemText>更新手机号</SettingsList.ItemText>
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
