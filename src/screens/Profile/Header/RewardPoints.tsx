@@ -14,7 +14,7 @@ import displayNumber from '#/lib/displayNumber'
 import {type NavigationProp} from '#/lib/routes/types'
 import {ReceivePointsDialog} from '#/screens/Profile/Header/ReceivePointsDialog'
 import {SendPointsDialog} from '#/screens/Profile/Header/SendPointsDialog'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowRight_Angle} from '#/components/icons/Arrow'
 import {QrCode_Icon, QrCode_Scan} from '#/components/icons/QrCode'
@@ -27,6 +27,7 @@ export function ProfileHeaderRewardPoints() {
   const sendPointsControl = useDialogControl()
   const receivePointsControl = useDialogControl()
   const route = useRoute()
+  const {gtMobile} = useBreakpoints()
 
   const {data: userDetail, refresh} = useRequest(
     () => server.dao('POST /user/login-user-detail'),
@@ -44,7 +45,11 @@ export function ProfileHeaderRewardPoints() {
     <View style={[styles.container, [a.mt_md, a.px_lg, a.py_xl]]}>
       <Image
         accessibilityIgnoresInvertColors
-        source={require('./assets/points_bg.png')}
+        source={
+          gtMobile
+            ? require('./assets/points_bg.web.png')
+            : require('./assets/points_bg.png')
+        }
         style={[StyleSheet.absoluteFillObject, {left: -5, right: -5}]}
         contentFit={'fill'}
       />
