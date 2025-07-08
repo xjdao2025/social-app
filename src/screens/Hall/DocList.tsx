@@ -83,7 +83,9 @@ export default function HallDocListScreen() {
                     accessibilityRole="button"
                     style={[styles.button]}
                     accessibilityIgnoresInvertColors>
-                    <Text style={[t.atoms.text_contrast_medium]}>查看</Text>
+                    <Text style={[t.atoms.text_contrast_medium, styles.link]}>
+                      查看
+                    </Text>
                   </Pressable>
                 </a>
               </View>
@@ -98,6 +100,9 @@ export default function HallDocListScreen() {
 const styles = StyleSheet.create({
   headContainer: {
     position: 'relative',
+  },
+  link: {
+    textDecorationLine: 'none',
   },
   headImage: {
     position: 'absolute',

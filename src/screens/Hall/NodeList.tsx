@@ -141,5 +141,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     paddingInline: 12,
     paddingBlock: 6,
+    cursor: 'pointer',
   },
 })

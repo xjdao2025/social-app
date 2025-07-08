@@ -12,7 +12,6 @@ import server from '#/server'
 import {Admonition} from '../Admonition'
 import {Button, ButtonIcon, ButtonText} from '../Button'
 import {Loader} from '../Loader'
-import Popup, {PopupRef} from '../Popup'
 import {Text} from '../Typography'
 
 type RewardScoresDialogProps = {
