@@ -195,8 +195,8 @@ function ProfileScreenLoaded({
   const listsSectionRef = React.useRef<SectionRef>(null)
   const labelsSectionRef = React.useRef<SectionRef>(null)
 
-  useSetTitle(combinedDisplayName(profile))
-
+  // useSetTitle(combinedDisplayName(profile))
+  useSetTitle('个人中心')
   const {data: currentUserInfo} = useRequest(
     async () => {
       const res = await server.dao('POST /user/login-user-detail')
