@@ -18,6 +18,7 @@ import {type DateFieldRef} from '#/components/forms/DateField/types'
 import {FormError} from '#/components/forms/FormError'
 // import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
+import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {ShieldCheck_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
@@ -236,11 +237,9 @@ export function StepInfo({
               </View>
             )}
             <View>
-              <TextField.LabelText>
-                <Trans>Email</Trans>
-              </TextField.LabelText>
+              <TextField.LabelText>账户</TextField.LabelText>
               <TextField.Root isInvalid={state.errorField === 'email'}>
-                <TextField.Icon icon={Envelope} />
+                <TextField.Icon icon={At} />
                 <TextField.Input
                   testID="emailInput"
                   inputRef={emailInputRef}
@@ -375,7 +374,14 @@ export function StepInfo({
               />
             </View> */}
             <Policies
-              serviceDescription={state.serviceDescription}
+              serviceDescription={{
+                // inviteCodeRequired: false,
+                // phoneVerificationRequired: false,
+                links: {
+                  termsOfService: 'https://www.baidu.com',
+                  privacyPolicy: 'https://www.baidu.com',
+                },
+              }}
               needsGuardian={false} // {!is18(state.dateOfBirth)}
               under13={false} // {!is13(state.dateOfBirth)}
             />

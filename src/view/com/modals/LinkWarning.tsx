@@ -62,7 +62,7 @@ export function Component({
             </>
           ) : (
             <Text type="title-lg" style={[pal.text, styles.title]}>
-              <Trans>Leaving Bluesky</Trans>
+              离开当前网站
             </Text>
           )}
         </View>
