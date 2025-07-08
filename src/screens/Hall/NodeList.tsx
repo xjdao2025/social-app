@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F1F3F5',
     borderRadius: 15,
     paddingInline: 12,
-    paddingBlock: 6,
+    paddingBlock: 8,
     cursor: 'pointer',
   },
 })
