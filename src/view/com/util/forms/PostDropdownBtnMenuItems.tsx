@@ -545,7 +545,7 @@ let PostDropdownMenuItems = ({
           </>
         )} */}
 
-        {/* {hasSession &&
+        {hasSession &&
           IS_INTERNAL &&
           DISCOVER_DEBUG_DIDS[currentAccount?.did ?? ''] && (
             <Menu.Item
@@ -559,7 +559,7 @@ let PostDropdownMenuItems = ({
             </Menu.Item>
           )}
 
-        {hasSession && (
+        {/* {hasSession && (
           <>
             <Menu.Divider />
             <Menu.Group>
@@ -587,9 +587,9 @@ let PostDropdownMenuItems = ({
               </Menu.Item>
             </Menu.Group>
           </>
-        )}
+        )} */}
 
-        {hasSession &&
+        {/* {hasSession &&
           (canHideReplyForEveryone || canDetachQuote || canHidePostForMe) && (
             <>
               <Menu.Divider />
@@ -669,13 +669,11 @@ let PostDropdownMenuItems = ({
                 )}
               </Menu.Group>
             </>
-          )}
+          )} */}
 
         {hasSession && (
           <>
-            <Menu.Divider />
-            <Menu.Group>
-              {!isAuthor && (
+            {/* {!isAuthor && (
                 <>
                   <Menu.Item
                     testID="postDropdownMuteBtn"
@@ -714,11 +712,13 @@ let PostDropdownMenuItems = ({
                     <Menu.ItemIcon icon={Warning} position="right" />
                   </Menu.Item>
                 </>
-              )}
+              )} */}
 
-              {isAuthor && (
-                <>
-                  <Menu.Item
+            {isAuthor && (
+              <>
+                <Menu.Divider />
+                <Menu.Group>
+                  {/* <Menu.Item
                     testID="postDropdownEditPostInteractions"
                     label={_(msg`Edit interaction settings`)}
                     onPress={() => postInteractionSettingsDialogControl.open()}
@@ -736,7 +736,7 @@ let PostDropdownMenuItems = ({
                       {_(msg`Edit interaction settings`)}
                     </Menu.ItemText>
                     <Menu.ItemIcon icon={Gear} position="right" />
-                  </Menu.Item>
+                  </Menu.Item> */}
                   <Menu.Item
                     testID="postDropdownDeleteBtn"
                     label={_(msg`Delete post`)}
@@ -744,9 +744,9 @@ let PostDropdownMenuItems = ({
                     <Menu.ItemText>{_(msg`Delete post`)}</Menu.ItemText>
                     <Menu.ItemIcon icon={Trash} position="right" />
                   </Menu.Item>
-                </>
-              )}
-            </Menu.Group>
+                </Menu.Group>
+              </>
+            )}
 
             {devModeEnabled ? (
               <>
@@ -770,7 +770,7 @@ let PostDropdownMenuItems = ({
               </>
             ) : null}
           </>
-        )} */}
+        )}
       </Menu.Outer>
 
       <Prompt.Basic
