@@ -11,6 +11,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
+import {useRequest} from 'ahooks'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
@@ -48,6 +49,7 @@ import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
 import {navigate} from '#/Navigation'
+import server from '#/server'
 import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
 
 interface SectionRef {
@@ -195,6 +197,16 @@ function ProfileScreenLoaded({
 
   useSetTitle(combinedDisplayName(profile))
 
+  const {data: currentUserInfo} = useRequest(
+    async () => {
+      const res = await server.dao('POST /user/login-user-detail')
+      return res
+    },
+    {
+      ready: !!currentAccount?.did,
+    },
+  )
+
   const description = profile.description ?? ''
   const hasDescription = description !== ''
   const [descriptionRT, isResolvingDescriptionRT] = useRichText(description)
@@ -219,7 +231,10 @@ function ProfileScreenLoaded({
 
   const commonSections = ['全部', '任务', '商品', '活动']
 
-  const sectionTitles = isMe ? commonSections.concat(['提案']) : commonSections
+  const sectionTitles =
+    isMe && currentUserInfo?.nodeUser
+      ? commonSections.concat(['提案'])
+      : commonSections
 
   const scrollSectionToTop = useCallback((index: number) => {
     switch (index) {

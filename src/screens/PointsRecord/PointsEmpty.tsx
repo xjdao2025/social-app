@@ -20,7 +20,7 @@ const MedalEmpty = () => {
         source={require('#/assets/empty.png')}
         style={{width: 135, height: 70, marginBottom: 15}}
       />
-      <Text style={[a.text_sm, {color: '#42576C'}]}>空空如也~</Text>
+      <Text style={[a.text_sm, {color: '#42576C'}]}>快去获得吧~</Text>
     </View>
   )
 }

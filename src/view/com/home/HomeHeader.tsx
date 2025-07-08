@@ -65,7 +65,7 @@ export function HomeHeader(
     <>
       <HomeHeaderLayout tabBarAnchor={props.tabBarAnchor} />
       <Layout.Center>
-        <View style={{height: 52}} />
+        {!gtMobile && <View style={{height: 52}} />}
         <Carousel
           testID={'banner'}
           loop={false}

@@ -92,19 +92,19 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
       {showTrending && <SidebarTrendingTopics />}
 
       <Text style={[a.leading_snug, t.atoms.text_contrast_low]}>
-        {hasSession && (
-          <>
-            <InlineLinkText
-              to={FEEDBACK_FORM_URL({
-                email: currentAccount?.email,
-                handle: currentAccount?.handle,
-              })}
-              label={_(msg`Feedback`)}>
-              {_(msg`Feedback`)}
-            </InlineLinkText>
-            {' • '}
-          </>
-        )}
+        {/*{hasSession && (*/}
+        {/*  <>*/}
+        {/*    <InlineLinkText*/}
+        {/*      to={FEEDBACK_FORM_URL({*/}
+        {/*        email: currentAccount?.email,*/}
+        {/*        handle: currentAccount?.handle,*/}
+        {/*      })}*/}
+        {/*      label={_(msg`Feedback`)}>*/}
+        {/*      {_(msg`Feedback`)}*/}
+        {/*    </InlineLinkText>*/}
+        {/*    {' • '}*/}
+        {/*  </>*/}
+        {/*)}*/}
         <InlineLinkText
           to="https://bsky.social/about/support/privacy-policy"
           label={_(msg`Privacy`)}>
@@ -117,9 +117,9 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           {_(msg`Terms`)}
         </InlineLinkText>
         {' • '}
-        <InlineLinkText label={_(msg`Help`)} to={HELP_DESK_URL}>
-          {_(msg`Help`)}
-        </InlineLinkText>
+        {/*<InlineLinkText label={_(msg`Help`)} to={HELP_DESK_URL}>*/}
+        {/*  {_(msg`Help`)}*/}
+        {/*</InlineLinkText>*/}
       </Text>
 
       {kawaii && (
