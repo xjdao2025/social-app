@@ -81,7 +81,7 @@ export function HomeHeaderLayoutMobile({
         </View>
 
         <Layout.Header.Slot>
-          {hasSession && (
+          {/* {hasSession && (
             <Link
               testID="viewHeaderHomeFeedPrefsBtn"
               to="/notifications"
@@ -102,11 +102,10 @@ export function HomeHeaderLayoutMobile({
                       other: '# unread items',
                     })}`,
                   )}>
-                  {/* <Text style={styles.notificationCountLabel}>{notificationCount}</Text> */}
                 </View>
               ) : null}
             </Link>
-          )}
+          )} */}
         </Layout.Header.Slot>
       </Layout.Header.Outer>
       {children}

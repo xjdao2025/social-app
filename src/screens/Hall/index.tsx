@@ -22,7 +22,10 @@ import {useSetMinimalShellMode} from '#/state/shell'
 import {HomeHeaderLayoutMobile} from '#/view/com/home/HomeHeaderLayoutMobile'
 import {type ListRef} from '#/view/com/util/List'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
+import ExpandRightIcon from '#/components/DAO/icons/expand-right'
 import * as Layout from '#/components/Layout'
+import {Link} from '#/components/Link'
 import ProposalFormModal from '#/components/ProposalForm'
 import {Text} from '#/components/Typography'
 import server from '#/server'
@@ -145,21 +148,26 @@ export default function HallScreen() {
         <View style={[a.flex_col, a.px_lg, a.flex_0, styles.topInfo]}>
           <View style={[a.flex_row, a.align_baseline, a.justify_between]}>
             <Text style={[t.atoms.text, a.text_2xl, a.font_bold]}>基金会</Text>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityIgnoresInvertColors
-              style={[a.flex_row]}
-              onPress={() => {
-                navigation.push('HallDocList')
-              }}>
-              <Text style={[t.atoms.text_contrast_medium, a.text_sm]}>
+            <Link
+              label="文档列表"
+              // accessibilityRole="button"
+              // accessibilityIgnoresInvertColors
+              // style={[a.flex_row]}
+              // onPress={() => {
+              //   navigation.push('HallDocList')
+              // }}
+              to="/hall/documents"
+              style={{color: '#6F869F'}}>
+              <Text
+                style={[
+                  t.atoms.text_contrast_medium,
+                  a.text_sm,
+                  {color: 'inherit'},
+                ]}>
                 更多
               </Text>
-              <Image
-                style={{width: 14, height: 14}}
-                source={require('#/assets/expand-right.svg')}
-              />
-            </Pressable>
+              <ExpandRightIcon size={14} />
+            </Link>
           </View>
           <View style={[a.flex_row, a.gap_md, a.mt_xl]}>
             <View style={[a.flex_1, styles.foundCard, styles.foundScale]}>
@@ -212,21 +220,30 @@ export default function HallScreen() {
               ]}>
               <Text style={[t.atoms.text, a.text_lg, a.font_bold]}>节点</Text>
               {(nodeList?.length ?? 0) > 4 && (
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityIgnoresInvertColors
-                  style={[a.flex_row]}
-                  onPress={() => {
-                    navigation.push('HallNodeList')
-                  }}>
-                  <Text style={[t.atoms.text_contrast_medium, a.text_sm]}>
+                <Link
+                  label="节点列表"
+                  // accessibilityRole="button"
+                  // accessibilityIgnoresInvertColors
+                  // style={[a.flex_row]}
+                  // onPress={() => {
+                  //   navigation.push('HallNodeList')
+                  // }}
+                  to="/hall/nodes"
+                  style={{color: '#6F869F'}}>
+                  <Text
+                    style={[
+                      t.atoms.text_contrast_medium,
+                      a.text_sm,
+                      {color: 'inherit'},
+                    ]}>
                     更多
                   </Text>
-                  <Image
-                    style={{width: 14, height: 14}}
+                  <ExpandRightIcon size={14} />
+                  {/* <Image
+                    style={{ width: 14, height: 14 }}
                     source={require('#/assets/expand-right.svg')}
-                  />
-                </Pressable>
+                  /> */}
+                </Link>
               )}
             </View>
 
@@ -275,7 +292,8 @@ export default function HallScreen() {
               <View style={[a.flex_row, a.mt_md, a.gap_md]}>
                 {proposalStageOptions.map(({label, key}, idx) => {
                   return (
-                    <View
+                    <Button
+                      label={label}
                       key={key}
                       style={[
                         a.flex_0,
@@ -283,22 +301,24 @@ export default function HallScreen() {
                         a.align_center,
                         a.justify_center,
                         styles.tab,
+                        {color: '#42576C'},
                         currentTabKey === key ? styles.activeTab : undefined,
                       ]}
-                      onClick={() => {
+                      hoverStyle={[styles.activeTab]}
+                      onPress={() => {
                         setTabKey(key)
                         postsSectionRef.current?.scrollToTop()
                       }}>
                       <Text
                         style={[
-                          styles.tabText,
                           currentTabKey === key
                             ? styles.activeTabText
                             : undefined,
+                          {color: 'inherit'},
                         ]}>
                         {label}
                       </Text>
-                    </View>
+                    </Button>
                   )
                 })}
               </View>
@@ -423,8 +443,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#D4DBE2',
     borderRadius: 15,
+    cursor: 'pointer',
   },
-  tabText: {color: '#42576C'},
-  activeTab: {backgroundColor: '#0B0F14', borderColor: '#0B0F14'},
+  activeTab: {
+    backgroundColor: '#0B0F14',
+    borderColor: '#0B0F14',
+    color: '#fff',
+  },
   activeTabText: {color: '#fff'},
 })

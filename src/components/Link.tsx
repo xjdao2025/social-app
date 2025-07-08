@@ -245,6 +245,7 @@ export function Link({
 
   return (
     <Button
+      hoverStyle={{color: '#1083FE'}}
       {...rest}
       style={[a.justify_start, flatten(rest.style)]}
       role="link"
