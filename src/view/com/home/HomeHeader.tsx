@@ -61,6 +61,8 @@ export function HomeHeader(
   )
 
   const screenWidth = gtMobile ? 600 : Dimensions.get('window').width
+
+  const carouselHeight = screenWidth / (750 / 400)
   return (
     <>
       <HomeHeaderLayout tabBarAnchor={props.tabBarAnchor} />
@@ -70,7 +72,7 @@ export function HomeHeader(
           testID={'banner'}
           loop={false}
           width={screenWidth}
-          height={200}
+          height={carouselHeight}
           snapEnabled={true}
           pagingEnabled={true}
           autoPlayInterval={1000}
