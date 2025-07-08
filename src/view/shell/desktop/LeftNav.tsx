@@ -36,6 +36,8 @@ import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {atoms as a, tokens, useLayoutBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import MenuHallSvg from '#/components/DAO/menu.hall'
+import MenuNotificationsSvg from '#/components/DAO/menu.notifications'
+import MenuSearchSvg from '#/components/DAO/menu.search'
 import MenuSquareSvg from '#/components/DAO/menu.square'
 import MenuUserCenterSvg from '#/components/DAO/menu.usercenter'
 import {type DialogControlProps} from '#/components/Dialog'
@@ -80,7 +82,7 @@ import {Text} from '#/components/Typography'
 import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
 import {router} from '../../../routes'
 
-const NAV_ICON_WIDTH = 28
+const NAV_ICON_WIDTH = 24
 
 function ProfileCard() {
   const {currentAccount, accounts} = useSession()
@@ -383,8 +385,8 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
           a.justify_center,
           a.z_10,
           {
-            width: 24,
-            height: 24,
+            width: NAV_ICON_WIDTH,
+            height: NAV_ICON_WIDTH,
           },
           leftNavMinimal && {
             width: 40,
@@ -603,18 +605,20 @@ export function DesktopLeftNav() {
           <NavItem
             href="/search"
             icon={
-              <MagnifyingGlass
-                style={pal.text}
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-              />
+              <MenuSearchSvg size={NAV_ICON_WIDTH} />
+              // <MagnifyingGlass
+              //   style={pal.text}
+              //   aria-hidden={true}
+              //   width={NAV_ICON_WIDTH}
+              // />
             }
             iconFilled={
-              <MagnifyingGlassFilled
-                style={pal.text}
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-              />
+              <MenuSearchSvg size={NAV_ICON_WIDTH} active />
+              // <MagnifyingGlassFilled
+              //   style={pal.text}
+              //   aria-hidden={true}
+              //   width={NAV_ICON_WIDTH}
+              // />
             }
             label={_(msg`Explore`)}
           />
@@ -642,18 +646,20 @@ export function DesktopLeftNav() {
             href="/notifications"
             count={numUnreadNotifications}
             icon={
-              <Bell
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={pal.text}
-              />
+              <MenuNotificationsSvg size={NAV_ICON_WIDTH} />
+              // <Bell
+              //   aria-hidden={true}
+              //   width={NAV_ICON_WIDTH}
+              //   style={pal.text}
+              // />
             }
             iconFilled={
-              <BellFilled
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={pal.text}
-              />
+              <MenuNotificationsSvg size={NAV_ICON_WIDTH} active />
+              // <BellFilled
+              //   aria-hidden={true}
+              //   width={NAV_ICON_WIDTH}
+              //   style={pal.text}
+              // />
             }
             label={_(msg`Notifications`)}
           />

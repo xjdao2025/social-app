@@ -393,7 +393,7 @@ let SearchMenuItem = ({
         // ) : (
         //   <MagnifyingGlass style={[t.atoms.text]} width={iconWidth} />
         // )
-        <MenuSearchSvg size={iconWidth} />
+        <MenuSearchSvg size={iconWidth} active={isActive} />
       }
       label={_(msg`Explore`)}
       bold={isActive}
