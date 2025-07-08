@@ -6807,7 +6807,7 @@ msgstr "搜尋更多動態源"
 
 #: src/screens/Search/Shell.tsx:334
 msgid "Search for posts, users, or feeds"
-msgstr "搜尋貼文、用戶或動態源"
+msgstr "搜尋貼文、用戶"
 
 #: src/components/dialogs/GifSelect.tsx:177
 msgid "Search GIFs"
