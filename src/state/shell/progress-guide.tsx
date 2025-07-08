@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 import {logEvent} from '#/lib/statsig/statsig'
 import {
   ProgressGuideToast,
-  ProgressGuideToastRef,
+  type ProgressGuideToastRef,
 } from '#/components/ProgressGuide/Toast'
 import {
   usePreferencesQuery,
@@ -206,35 +206,35 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     <ProgressGuideContext.Provider value={localGuideState}>
       <ProgressGuideControlContext.Provider value={controls}>
         {children}
-        {localGuideState?.guide === 'like-10-and-follow-7' && (
-          <>
-            <ProgressGuideToast
-              ref={firstLikeToastRef}
-              title={_(msg`Your first like!`)}
-              subtitle={_(msg`Like 10 posts to train the Discover feed`)}
-            />
-            <ProgressGuideToast
-              ref={fifthLikeToastRef}
-              title={_(msg`Half way there!`)}
-              subtitle={_(msg`Like 10 posts to train the Discover feed`)}
-            />
-            <ProgressGuideToast
-              ref={tenthLikeToastRef}
-              title={_(msg`Task complete - 10 likes!`)}
-              subtitle={_(msg`The Discover feed now knows what you like`)}
-            />
-            <ProgressGuideToast
-              ref={fifthFollowToastRef}
-              title={_(msg`Half way there!`)}
-              subtitle={_(msg`Follow 10 accounts`)}
-            />
-            <ProgressGuideToast
-              ref={tenthFollowToastRef}
-              title={_(msg`Task complete - 10 follows!`)}
-              subtitle={_(msg`You've found some people to follow`)}
-            />
-          </>
-        )}
+        {/*{localGuideState?.guide === 'like-10-and-follow-7' && (*/}
+        {/*  <>*/}
+        {/*    <ProgressGuideToast*/}
+        {/*      ref={firstLikeToastRef}*/}
+        {/*      title={_(msg`Your first like!`)}*/}
+        {/*      subtitle={_(msg`Like 10 posts to train the Discover feed`)}*/}
+        {/*    />*/}
+        {/*    <ProgressGuideToast*/}
+        {/*      ref={fifthLikeToastRef}*/}
+        {/*      title={_(msg`Half way there!`)}*/}
+        {/*      subtitle={_(msg`Like 10 posts to train the Discover feed`)}*/}
+        {/*    />*/}
+        {/*    <ProgressGuideToast*/}
+        {/*      ref={tenthLikeToastRef}*/}
+        {/*      title={_(msg`Task complete - 10 likes!`)}*/}
+        {/*      subtitle={_(msg`The Discover feed now knows what you like`)}*/}
+        {/*    />*/}
+        {/*    <ProgressGuideToast*/}
+        {/*      ref={fifthFollowToastRef}*/}
+        {/*      title={_(msg`Half way there!`)}*/}
+        {/*      subtitle={_(msg`Follow 10 accounts`)}*/}
+        {/*    />*/}
+        {/*    <ProgressGuideToast*/}
+        {/*      ref={tenthFollowToastRef}*/}
+        {/*      title={_(msg`Task complete - 10 follows!`)}*/}
+        {/*      subtitle={_(msg`You've found some people to follow`)}*/}
+        {/*    />*/}
+        {/*  </>*/}
+        {/*)}*/}
       </ProgressGuideControlContext.Provider>
     </ProgressGuideContext.Provider>
   )

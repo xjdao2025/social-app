@@ -1,5 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
+import {Image} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
@@ -160,7 +161,13 @@ export function NotificationsScreen({}: Props) {
       <FAB
         testID="composeFAB"
         onPress={() => openComposer({})}
-        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+        icon={
+          <Image
+            source={require('#/assets/plus.svg')}
+            accessibilityIgnoresInvertColors
+            style={{width: 60, aspectRatio: 1}}
+          />
+        }
         accessibilityRole="button"
         accessibilityLabel={_(msg`New post`)}
         accessibilityHint=""

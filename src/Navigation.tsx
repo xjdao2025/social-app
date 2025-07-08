@@ -502,7 +502,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="PointsRecord"
         getComponent={() => PointsRecordScreen}
         options={{
-          title: 'Points Record', // title(msg`Video Feed`),
+          title: '积分', // title(msg`Video Feed`),
           requireAuth: false,
         }}
       />
@@ -510,7 +510,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="MedalsWall"
         getComponent={() => MedalsWallScreen}
         options={{
-          title: 'Medals Wall', // title(msg`Video Feed`),
+          title: '勋章', // title(msg`Video Feed`),
           requireAuth: false,
         }}
       />
