@@ -1,5 +1,6 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
+import {Image} from 'expo-image'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -86,16 +87,25 @@ export const SplashScreen = ({
           ]}>
           <ErrorBoundary>
             <View style={[a.justify_center, a.align_center]}>
-              <Logo width={kawaii ? 300 : 92} fill="sky" />
+              {/* <Logo width={kawaii ? 300 : 92} fill="sky" /> */}
+              <Image
+                source={require('#/assets/logo.png')}
+                style={{width: 96, height: 96}}
+              />
 
-              {!kawaii && (
+              {/* {!kawaii && (
                 <View style={[a.pb_sm, a.pt_5xl]}>
                   <Logotype width={161} fill={t.atoms.text.color} />
                 </View>
-              )}
+              )} */}
 
               <Text
-                style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+                style={[
+                  a.text_md,
+                  a.font_bold,
+                  t.atoms.text_contrast_medium,
+                  a.pt_5xl,
+                ]}>
                 <Trans>What's up?</Trans>
               </Text>
             </View>
