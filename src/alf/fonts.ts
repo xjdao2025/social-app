@@ -19,7 +19,8 @@ export function computeFontScaleMultiplier(scale: Device['fontScale']) {
 }
 
 export function getFontScale() {
-  return device.get(['fontScale']) ?? '0'
+  console.log('device font scale:', device.get(['fontScale']))
+  return device.get(['fontScale']) ?? '1'
 }
 
 export function setFontScale(fontScale: Device['fontScale']) {
