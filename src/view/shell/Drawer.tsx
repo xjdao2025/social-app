@@ -1,12 +1,14 @@
 import React, {type ComponentProps} from 'react'
 import {Linking, ScrollView, TouchableOpacity, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {Image} from 'expo-image'
 import {msg, Plural, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {useActorStatus} from '#/lib/actor-status'
 import {
+  CONTACT_EMAIL,
   FEEDBACK_FORM_URL,
   HELP_DESK_URL,
   PRIVACY_PROTOCOL_FILE_URL,
@@ -345,6 +347,22 @@ let DrawerFooter = ({
           ),
         },
       ]}>
+      <View style={[a.flex_1]}>
+        <View style={[a.mb_xs]}>
+          <Text>联系邮箱：</Text>
+        </View>
+        <View style={[a.flex_row, a.gap_xs, a.align_center]}>
+          <Image
+            source={require('#/assets/envelope.svg')}
+            style={{width: 14, height: 14}}
+          />
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            style={{...a.text_sm, lineHeight: '18px', color: '#6F869F'}}>
+            {CONTACT_EMAIL}
+          </a>
+        </View>
+      </View>
       {/*<Button*/}
       {/*  label={_(msg`Send feedback`)}*/}
       {/*  size="small"*/}

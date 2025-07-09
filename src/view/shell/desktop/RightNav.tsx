@@ -1,10 +1,12 @@
 import {useEffect, useState} from 'react'
 import {View} from 'react-native'
+import {Image} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/core'
 
 import {
+  CONTACT_EMAIL,
   FEEDBACK_FORM_URL,
   HELP_DESK_URL,
   PRIVACY_PROTOCOL_FILE_URL,
@@ -125,18 +127,24 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         {/*</InlineLinkText>*/}
       </Text>
 
-      {kawaii && (
-        <Text style={[t.atoms.text_contrast_medium, {marginTop: 12}]}>
-          <Trans>
-            Logo by{' '}
-            <InlineLinkText
-              label={_(msg`Logo by @sawaratsuki.bsky.social`)}
-              to="/profile/sawaratsuki.bsky.social">
-              @sawaratsuki.bsky.social
-            </InlineLinkText>
-          </Trans>
-        </Text>
-      )}
+      <View
+        style={{height: 1, backgroundColor: '#D4DBE2', width: '100%'}} />
+      <View style={[a.flex_1]}>
+        <View style={[a.mb_xs]}>
+          <Text>联系邮箱：</Text>
+        </View>
+        <View style={[a.flex_row, a.gap_xs, a.align_center]}>
+          <Image
+            source={require('#/assets/envelope.svg')}
+            style={{width: 14, height: 14}}
+          />
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            style={{...a.text_sm, lineHeight: '18px', color: '#6F869F'}}>
+            {CONTACT_EMAIL}
+          </a>
+        </View>
+      </View>
 
       {/* {!hasSession && leftNavMinimal && (
         <View style={[a.w_full, { height: 32 }]}>
