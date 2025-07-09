@@ -532,7 +532,7 @@ let PostContent = ({
             numberOfLines={limitLines ? MAX_POST_LINES : undefined}
             style={[a.flex_1, a.text_md]}
             authorHandle={postAuthor.handle}
-            shouldProxyLinks={true}
+            shouldProxyLinks={false}
           />
         </View>
       ) : undefined}
