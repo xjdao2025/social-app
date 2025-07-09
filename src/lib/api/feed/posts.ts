@@ -111,9 +111,15 @@ function structPostImages(post: AppBskyFeedDefs.PostView) {
   if (post.embed?.record?.value?.embed?.images) {
     structImageBlobRef(post.embed?.record?.value?.embed?.images)
   }
+  if (post.embed?.record?.value?.embed?.media?.images) {
+    structImageBlobRef(post.embed?.record?.value?.embed?.media?.images)
+  }
 
   if (post.embed?.record?.record?.value?.embed?.images) {
     structImageBlobRef(post.embed?.record?.record?.value?.embed?.images)
+  }
+  if (post.embed?.record?.record?.value?.embed?.media?.images) {
+    structImageBlobRef(post.embed?.record?.record?.value?.embed?.media?.images)
   }
 }
 
