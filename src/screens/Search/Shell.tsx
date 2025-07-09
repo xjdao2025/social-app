@@ -353,20 +353,20 @@ export function SearchScreenShell({
                 )}
               </View>
 
-              {showFilters && !showHeader && (
-                <View
-                  style={[
-                    a.flex_row,
-                    a.align_center,
-                    a.justify_between,
-                    a.gap_sm,
-                  ]}>
-                  <SearchLanguageDropdown
-                    value={params.lang}
-                    onChange={params.setLang}
-                  />
-                </View>
-              )}
+              {/*{showFilters && !showHeader && (*/}
+              {/*  <View*/}
+              {/*    style={[*/}
+              {/*      a.flex_row,*/}
+              {/*      a.align_center,*/}
+              {/*      a.justify_between,*/}
+              {/*      a.gap_sm,*/}
+              {/*    ]}>*/}
+              {/*    <SearchLanguageDropdown*/}
+              {/*      value={params.lang}*/}
+              {/*      onChange={params.setLang}*/}
+              {/*    />*/}
+              {/*  </View>*/}
+              {/*)}*/}
             </View>
           </View>
         </Layout.Center>

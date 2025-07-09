@@ -64,12 +64,12 @@ let SearchResults = ({
           <SearchScreenUserResults query={query} active={activeTab === 2} />
         ),
       },
-      noParams && {
-        title: _(msg`Feeds`),
-        component: (
-          <SearchScreenFeedsResults query={query} active={activeTab === 3} />
-        ),
-      },
+      // noParams && {
+      //   title: _(msg`Feeds`),
+      //   component: (
+      //     <SearchScreenFeedsResults query={query} active={activeTab === 3} />
+      //   ),
+      // },
     ].filter(Boolean) as {
       title: string
       component: React.ReactNode
