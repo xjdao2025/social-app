@@ -88,6 +88,35 @@ export class PostsFeedAPI implements FeedAPI {
   }
 }
 
+function structImageBlobRef(imgList: any[]) {
+  imgList.forEach(item => {
+    item.image = new BlobRef(
+      item.image.ref,
+      item.image.mimeType,
+      item.image.size,
+      item.image.image,
+    )
+  })
+}
+
+function structPostImages(post: AppBskyFeedDefs.PostView) {
+  if (post.record?.embed?.images) {
+    structImageBlobRef(post.record.embed?.images)
+  }
+
+  if (post.record?.embed?.media?.images) {
+    structImageBlobRef(post.record?.embed?.media?.images)
+  }
+
+  if (post.embed?.record?.value?.embed?.images) {
+    structImageBlobRef(post.embed?.record?.value?.embed?.images)
+  }
+
+  if (post.embed?.record?.record?.value?.embed?.images) {
+    structImageBlobRef(post.embed?.record?.record?.value?.embed?.images)
+  }
+}
+
 function restructFeedItem(
   item: AppBskyFeedDefs.FeedViewPost,
 ): AppBskyFeedDefs.FeedViewPost {
@@ -112,51 +141,33 @@ function restructFeedItem(
       },
     }
 
-    if (reply.parent?.record?.embed?.images) {
-      reply.parent?.record.embed?.images.forEach(item => {
-        item.image = new BlobRef(
-          item.image.ref,
-          item.image.mimeType,
-          item.image.size,
-          item.image,
-        )
-      })
+    if (reply.parent) {
+      structPostImages(reply.parent)
     }
-    if (reply.root?.record?.embed?.images) {
-      reply.root?.record.embed?.images.forEach(item => {
-        item.image = new BlobRef(
-          item.image.ref,
-          item.image.mimeType,
-          item.image.size,
-          item.image,
-        )
-      })
+
+    if (reply.root) {
+      structPostImages(reply.root)
     }
 
     newItem.reply = reply
   }
 
-  if (post.record.embed?.images) {
-    post.record.embed?.images.forEach(item => {
-      item.image = new BlobRef(
-        item.image.ref,
-        item.image.mimeType,
-        item.image.size,
-        item.image,
-      )
-    })
-  }
-
-  if (post.embed?.record?.value?.embed?.images) {
-    post.embed?.record?.value?.embed?.images.forEach(item => {
-      item.image = new BlobRef(
-        item.image.ref,
-        item.image.mimeType,
-        item.image.size,
-        item.image,
-      )
-    })
-  }
+  // if (post.record.embed?.images) {
+  //   structImageBlobRef(post.record.embed?.images)
+  // }
+  //
+  // if (post.record?.embed?.media?.images) {
+  //   structImageBlobRef(post.record?.embed?.media?.images)
+  // }
+  //
+  // if (post.embed?.record?.value?.embed?.images) {
+  //   structImageBlobRef(post.embed?.record?.value?.embed?.images)
+  // }
+  //
+  // if (post.embed?.record?.record?.value?.embed?.images) {
+  //   structImageBlobRef(post.embed?.record?.record?.value?.embed?.images)
+  // }
+  structPostImages(post)
 
   newItem.post = post
   return newItem
