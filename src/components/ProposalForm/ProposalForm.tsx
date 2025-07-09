@@ -739,7 +739,8 @@ export default function ProposalForm(
               }
             />
           </TopBar>
-          <View style={[a.flex_row, a.align_center, a.pl_lg, a.gap_sm]}>
+          <View
+            style={[a.flex_row, a.align_center, a.pl_lg, a.gap_sm, a.py_sm]}>
             <NewText style={[a.text_md]}>发起方:</NewText>
             <UserAvatar
               avatar={currentProfile?.avatar}
@@ -919,7 +920,7 @@ let ProposalBlock = React.memo(function ProposalBlock({
         a.mb_sm,
         !isActive && styles.inactivePost,
         // isTextOnly && isNative && a.flex_grow,
-        isProposalTitle && a.pt_3xl,
+        isProposalTitle && a.pt_sm,
         ...(!isProposalTitle && !isModuleTitle
           ? [a.pt_lg, styles.blockContent]
           : []),
