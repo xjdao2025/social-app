@@ -28,8 +28,16 @@ export async function openPicker(opts?: ImagePickerOptions) {
   return (response.assets ?? [])
     .slice(0, 4)
     .filter(asset => {
-      if (asset.mimeType?.startsWith('image/')) return true
-      Toast.show(t`Only image files are supported`, 'exclamation-circle')
+      if (
+        asset.mimeType?.startsWith('image/') &&
+        !asset.mimeType?.includes('gif')
+      )
+        return true
+      Toast.show(
+        t`Only image files are supported`,
+        'exclamation-circle',
+        'center',
+      )
       return false
     })
     .map(image => {
