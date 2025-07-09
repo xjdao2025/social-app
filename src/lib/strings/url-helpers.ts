@@ -247,7 +247,7 @@ export function postUriToRelativePath(
  */
 export function linkRequiresWarning(uri: string, label: string) {
   const labelDomain = labelToDomain(label)
-  debugger
+
   // We should trust any relative URL or a # since we know it links to internal content
   if (isRelativeUrl(uri) || uri === '#') {
     return false
