@@ -107,14 +107,14 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         {/*)}*/}
         <InlineLinkText
           to="https://bsky.social/about/support/privacy-policy"
-          label={_(msg`Privacy`)}>
-          {_(msg`Privacy`)}
+          label="隐私政策">
+          隐私政策
         </InlineLinkText>
         {' • '}
         <InlineLinkText
           to="https://bsky.social/about/support/tos"
-          label={_(msg`Terms`)}>
-          {_(msg`Terms`)}
+          label="服务条款">
+          服务条款
         </InlineLinkText>
         {/* {' • '} */}
         {/*<InlineLinkText label={_(msg`Help`)} to={HELP_DESK_URL}>*/}
@@ -135,11 +135,11 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         </Text>
       )}
 
-      {!hasSession && leftNavMinimal && (
-        <View style={[a.w_full, {height: 32}]}>
+      {/* {!hasSession && leftNavMinimal && (
+        <View style={[a.w_full, { height: 32 }]}>
           <AppLanguageDropdown />
         </View>
-      )}
+      )} */}
     </View>
   )
 }

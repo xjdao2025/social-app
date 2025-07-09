@@ -82,7 +82,7 @@ export default function HallDocListScreen() {
                 <View style={[a.flex_1]}>
                   <Text style={[a.text_md]}>{fileInfo.fileName}</Text>
                 </View>
-                <a style={styles.link} href={fileInfo.url}>
+                <a style={styles.link} target="_blank" href={fileInfo.url} rel="noreferrer">
                   <Pressable
                     accessibilityRole="button"
                     style={[styles.button]}

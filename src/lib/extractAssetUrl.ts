@@ -47,6 +47,6 @@ export function parseFileComposeId(fileComposeId: string) {
     fileType,
     fileId,
     fileName,
-    url: `${DAO_SERVICE}/api/v1/file/download?fileId=${fileId}&fileType=${fileType}`,
+    url: `${DAO_SERVICE}/api/v1/file/download?fileId=${fileId}&fileType=${fileType}&autoDownload=false`,
   }
 }
