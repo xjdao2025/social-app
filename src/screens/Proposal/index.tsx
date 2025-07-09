@@ -1,4 +1,10 @@
-import {type PropsWithChildren, ReactNode, useMemo, useRef} from 'react'
+import {
+  type PropsWithChildren,
+  ReactNode,
+  useContext,
+  useMemo,
+  useRef,
+} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {Image} from 'expo-image'
@@ -24,9 +30,16 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {
+  atoms as a,
+  useBreakpoints,
+  useLayoutBreakpoints,
+  useTheme,
+  web,
+} from '#/alf'
 import {Button} from '#/components/Button'
 import * as Layout from '#/components/Layout'
+import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import * as Prompt from '#/components/Prompt'
 import ProposalStatusTag from '#/components/ProposalStatusTag'
 import {RichText} from '#/components/RichText'
@@ -38,6 +51,7 @@ import ProposalEmbeds from './ProposalEmbeds'
 import parserHTMLFile, {type HTMLBlock} from './util'
 import VoteConfirm, {type VoteConfirmRef} from './VoteConfirm'
 const {Header} = Layout
+import {CENTER_COLUMN_OFFSET,SCROLLBAR_OFFSET} from '#/components/Layout/const'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProposalDetail'>
 
@@ -49,6 +63,8 @@ export default function ProposalDetailScreen({route}: Props) {
   const {gtMobile} = useBreakpoints()
   const delControl = Prompt.usePromptControl()
   const voteConfirmRef = useRef<VoteConfirmRef>(null)
+  const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
+  const {centerColumnOffset} = useLayoutBreakpoints()
   const {data: currentUserInfo} = useRequest(
     async () => {
       const res = await server.dao('POST /user/login-user-detail')
@@ -161,6 +177,7 @@ export default function ProposalDetailScreen({route}: Props) {
         styles.page,
         // isMobileWeb ? { height: '-webkit-fill-available' } : {},
         gtMobile && styles.maxPageWidth,
+
         // { paddingBottom: gtMobile ? 0 : 58 }
       ]}
       testID="proposalDetailScreen">
@@ -195,7 +212,16 @@ export default function ProposalDetailScreen({route}: Props) {
         </Header.Slot>
       </Header.Outer>
 
-      <View style={[a.px_lg]}>
+      <View
+        style={[
+          a.px_lg,
+          !isWithinOffsetView && {
+            transform: [
+              {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
+              {translateX: web(SCROLLBAR_OFFSET) ?? 0},
+            ],
+          },
+        ]}>
         <View style={[a.pt_lg]}>
           {mockAuthor && <ProposalAuthor author={mockAuthor} />}
         </View>
@@ -290,6 +316,12 @@ export default function ProposalDetailScreen({route}: Props) {
               left: 0,
               right: 0,
               backgroundColor: '#fff',
+            },
+            !isWithinOffsetView && {
+              transform: [
+                {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
+                {translateX: web(SCROLLBAR_OFFSET) ?? 0},
+              ],
             },
           ]}>
           <SkewButton
