@@ -140,7 +140,7 @@ function HomeScreenReady({
   const maybeSelectedFeed: FeedDescriptor | undefined = allFeeds[selectedIndex]
   const requestNotificationsPermission = useRequestNotificationsPermission()
 
-  useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
+  // useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
   useOTAUpdates()
 
   React.useEffect(() => {
