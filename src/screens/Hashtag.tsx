@@ -1,14 +1,14 @@
 import React from 'react'
-import {ListRenderItemInfo, View} from 'react-native'
-import {PostView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {type ListRenderItemInfo, View} from 'react-native'
+import {type PostView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -164,7 +164,8 @@ function HashtagScreenTab({
 
   const queryParam = React.useMemo(() => {
     if (!author) return fullTag
-    return `${fullTag} from:${author}`
+    // return `${fullTag} from:${author}`
+    return fullTag
   }, [fullTag, author])
 
   const {
@@ -177,7 +178,7 @@ function HashtagScreenTab({
     refetch,
     fetchNextPage,
     hasNextPage,
-  } = useSearchPostsQuery({query: queryParam, sort, enabled: active})
+  } = useSearchPostsQuery({query: queryParam, sort, enabled: active, author})
 
   const posts = React.useMemo(() => {
     return data?.pages.flatMap(page => page.posts) || []
