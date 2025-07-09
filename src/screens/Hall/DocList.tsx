@@ -78,14 +78,12 @@ export default function HallDocListScreen() {
                 <View style={[a.flex_1]}>
                   <Text style={[a.text_md]}>{fileInfo.fileName}</Text>
                 </View>
-                <a href={fileInfo.url}>
+                <a style={styles.link} href={fileInfo.url}>
                   <Pressable
                     accessibilityRole="button"
                     style={[styles.button]}
                     accessibilityIgnoresInvertColors>
-                    <Text style={[t.atoms.text_contrast_medium, styles.link]}>
-                      查看
-                    </Text>
+                    <Text style={[t.atoms.text_contrast_medium]}>查看</Text>
                   </Pressable>
                 </a>
               </View>
