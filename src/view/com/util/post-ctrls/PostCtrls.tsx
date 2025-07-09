@@ -313,40 +313,40 @@ let PostCtrls = ({
           />
         </Pressable>
       </View>
-      {big && (
-        <>
-          <View style={a.align_center}>
-            <Pressable
-              testID="shareBtn"
-              style={btnStyle}
-              onPress={() => {
-                if (shouldShowLoggedOutWarning) {
-                  loggedOutWarningPromptControl.open()
-                } else {
-                  onShare()
-                }
-              }}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Share`)}
-              accessibilityHint=""
-              hitSlop={POST_CTRL_HITSLOP}>
-              <ArrowOutOfBox
-                style={[defaultCtrlColor, {pointerEvents: 'none'}]}
-                width={22}
-              />
-            </Pressable>
-          </View>
-          <Prompt.Basic
-            control={loggedOutWarningPromptControl}
-            title={_(msg`Note about sharing`)}
-            description={_(
-              msg`This post is only visible to logged-in users. It won't be visible to people who aren't signed in.`,
-            )}
-            onConfirm={onShare}
-            confirmButtonCta={_(msg`Share anyway`)}
-          />
-        </>
-      )}
+      {/*{big && (*/}
+      {/*  <>*/}
+      {/*    <View style={a.align_center}>*/}
+      {/*      <Pressable*/}
+      {/*        testID="shareBtn"*/}
+      {/*        style={btnStyle}*/}
+      {/*        onPress={() => {*/}
+      {/*          if (shouldShowLoggedOutWarning) {*/}
+      {/*            loggedOutWarningPromptControl.open()*/}
+      {/*          } else {*/}
+      {/*            onShare()*/}
+      {/*          }*/}
+      {/*        }}*/}
+      {/*        accessibilityRole="button"*/}
+      {/*        accessibilityLabel={_(msg`Share`)}*/}
+      {/*        accessibilityHint=""*/}
+      {/*        hitSlop={POST_CTRL_HITSLOP}>*/}
+      {/*        <ArrowOutOfBox*/}
+      {/*          style={[defaultCtrlColor, {pointerEvents: 'none'}]}*/}
+      {/*          width={22}*/}
+      {/*        />*/}
+      {/*      </Pressable>*/}
+      {/*    </View>*/}
+      {/*    <Prompt.Basic*/}
+      {/*      control={loggedOutWarningPromptControl}*/}
+      {/*      title={_(msg`Note about sharing`)}*/}
+      {/*      description={_(*/}
+      {/*        msg`This post is only visible to logged-in users. It won't be visible to people who aren't signed in.`,*/}
+      {/*      )}*/}
+      {/*      onConfirm={onShare}*/}
+      {/*      confirmButtonCta={_(msg`Share anyway`)}*/}
+      {/*    />*/}
+      {/*  </>*/}
+      {/*)}*/}
       <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
         <PostDropdownBtn
           testID="postDropdownBtn"
