@@ -324,7 +324,9 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     style.lineHeight = style.lineHeight
       ? ((style.lineHeight + 'px') as unknown as number)
       : undefined
-    style.minHeight = webForceMinHeight ? 140 : undefined
+    if (webForceMinHeight) {
+      style.minHeight = 140
+    }
     return style
   }, [t, fonts, propsInputStyle, webForceMinHeight])
 

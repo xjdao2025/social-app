@@ -146,6 +146,7 @@ import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '#/../modules/bottom-sheet'
 import server from '#/server'
+import TrashIcon from '../DAO/icons/trash'
 import {DateTimeField} from '../forms/DateField/DateTimeField'
 import {
   type BlockAction,
@@ -916,36 +917,34 @@ let ProposalBlock = React.memo(function ProposalBlock({
     <View
       style={[
         a.mx_lg,
+        a.mb_sm,
         !isActive && styles.inactivePost,
         // isTextOnly && isNative && a.flex_grow,
         isProposalTitle && a.pt_3xl,
-        !isProposalTitle && !isModuleTitle && a.pt_lg,
+        ...(!isProposalTitle && !isModuleTitle
+          ? [a.pt_lg, styles.blockContent]
+          : []),
         isModuleTitle && styles.moduleTitle,
+        isProposalTitle && styles.proposalTitle,
       ]}>
-      <View
-        style={[
-          a.flex_row,
-          isNative && a.flex_1,
-          isProposalTitle && styles.proposalTitle,
-        ]}>
+      <View style={[a.flex_row, isNative && a.flex_1, {color: 'red'}]}>
         <TextInput
           ref={textInput}
           containerStyle={[
-            a.pt_xs,
+            // a.pt_xs,
             {marginLeft: 0, paddingLeft: 0},
-            isModuleTitle && {marginBottom: 0},
+            {marginBottom: 0},
           ]}
           inputStyle={[
             a.text_sm,
             isProposalTitle && a.text_2xl,
             isModuleTitle && a.text_md,
+            {minHeight: isProposalTitle || isModuleTitle ? undefined : 50},
           ]}
           richtext={richtext}
           placeholder={selectTextInputPlaceholder}
           autoFocus
-          webForceMinHeight={
-            isProposalTitle || isModuleTitle ? false : forceMinHeight
-          }
+          // webForceMinHeight={isProposalTitle || isModuleTitle ? false : forceMinHeight}
           // To avoid overlap with the close button:
           hasRightPadding={false}
           // hasRightPadding={isPartOfThread}
@@ -981,7 +980,10 @@ let ProposalBlock = React.memo(function ProposalBlock({
             color="secondary"
             variant="ghost"
             shape="round"
-            style={[a.absolute, {top: isModuleTitle ? 9 : 0, right: 10}]}
+            style={[
+              styles.delBtn,
+              {[isModuleTitle ? 'top' : 'bottom']: isModuleTitle ? 9 : 6},
+            ]}
             onPress={() => {
               if (
                 post.shortenedGraphemeLength > 0 ||
@@ -997,7 +999,7 @@ let ProposalBlock = React.memo(function ProposalBlock({
                 })
               }
             }}>
-            <ButtonIcon icon={X} />
+            <TrashIcon size={20} color="#42576C" />
           </Button>
           <Prompt.Basic
             control={discardPromptControl}
@@ -1397,7 +1399,7 @@ function Footer({
         </LayoutAnimationConfig>
       </View>
       <View style={[a.flex_row, a.align_center, a.justify_between]}>
-        <Button
+        {/* <Button
           label={_(msg`Add new post`)}
           onPress={() => onAddPost('content')}
           style={[a.p_sm, a.m_2xs]}
@@ -1405,14 +1407,17 @@ function Footer({
           shape="round"
           color="primary">
           <FontAwesomeIcon icon="add" size={20} color={t.palette.primary_500} />
-        </Button>
+        </Button> */}
         <Button
-          style={{
-            backgroundColor: '#f1f3f5',
-            paddingBlock: 6,
-            paddingInline: 10,
-            borderRadius: 6,
-          }}
+          style={[
+            {
+              backgroundColor: '#f1f3f5',
+              paddingBlock: 6,
+              paddingInline: 10,
+              borderRadius: 6,
+              marginRight: 4,
+            },
+          ]}
           label="添加模块标题"
           onPress={() => onAddPost('module-title')}>
           <Image
@@ -1421,6 +1426,22 @@ function Footer({
             source={require('#/assets/hall/block-title.svg')}
           />
           <NewText>添加模块标题</NewText>
+        </Button>
+        <Button
+          style={{
+            backgroundColor: '#f1f3f5',
+            paddingBlock: 6,
+            paddingInline: 10,
+            borderRadius: 6,
+          }}
+          label="添加内容"
+          onPress={() => onAddPost('content')}>
+          <Image
+            accessibilityIgnoresInvertColors
+            style={{width: 20, height: 20}}
+            source={require('#/assets/hall/block-title.svg')}
+          />
+          <NewText>添加内容</NewText>
         </Button>
 
         {/* <SelectLangBtn />
@@ -1671,12 +1692,24 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#D4DBE2',
     borderStyle: 'solid',
+    marginBottom: 16,
   },
   moduleTitle: {
-    marginTop: 16,
+    // marginTop: 16,
     padding: 12,
     borderRadius: 6,
     backgroundColor: 'rgba(16, 131, 254, 0.1)',
+  },
+  blockContent: {
+    borderRadius: 6,
+    backgroundColor: '#F1F3F5',
+    padding: 12,
+    paddingBottom: 46,
+  },
+  delBtn: {
+    position: 'absolute',
+    right: 6,
+    backgroundColor: 'transparent',
   },
 })
 
