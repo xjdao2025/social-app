@@ -181,11 +181,11 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
               )}
             </LayoutAnimationConfig>
 
-            <Divider />
+            {/* <Divider />
 
             <View
               style={[a.w_full, a.py_lg, a.flex_row, a.gap_md, a.align_center]}>
-              {/* <AppLanguageDropdown /> */}
+              <AppLanguageDropdown />
               <Text
                 style={[
                   a.flex_1,
@@ -200,7 +200,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                   <Trans>Contact support</Trans>
                 </InlineLinkText>
               </Text>
-            </View>
+            </View> */}
           </View>
         </View>
       </LoggedOutLayout>
