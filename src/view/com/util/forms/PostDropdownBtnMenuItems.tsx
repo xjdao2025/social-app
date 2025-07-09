@@ -435,32 +435,32 @@ let PostDropdownMenuItems = ({
   return (
     <>
       <Menu.Outer>
-        {isAuthor && (
-          <>
-            <Menu.Group>
-              <Menu.Item
-                testID="pinPostBtn"
-                label={
-                  isPinned
-                    ? _(msg`Unpin from profile`)
-                    : _(msg`Pin to your profile`)
-                }
-                disabled={isPinPending}
-                onPress={onPressPin}>
-                <Menu.ItemText>
-                  {isPinned
-                    ? _(msg`Unpin from profile`)
-                    : _(msg`Pin to your profile`)}
-                </Menu.ItemText>
-                <Menu.ItemIcon
-                  icon={isPinPending ? Loader : PinIcon}
-                  position="right"
-                />
-              </Menu.Item>
-            </Menu.Group>
-            <Menu.Divider />
-          </>
-        )}
+        {/*{isAuthor && (*/}
+        {/*  <>*/}
+        {/*    <Menu.Group>*/}
+        {/*      <Menu.Item*/}
+        {/*        testID="pinPostBtn"*/}
+        {/*        label={*/}
+        {/*          isPinned*/}
+        {/*            ? _(msg`Unpin from profile`)*/}
+        {/*            : _(msg`Pin to your profile`)*/}
+        {/*        }*/}
+        {/*        disabled={isPinPending}*/}
+        {/*        onPress={onPressPin}>*/}
+        {/*        <Menu.ItemText>*/}
+        {/*          {isPinned*/}
+        {/*            ? _(msg`Unpin from profile`)*/}
+        {/*            : _(msg`Pin to your profile`)}*/}
+        {/*        </Menu.ItemText>*/}
+        {/*        <Menu.ItemIcon*/}
+        {/*          icon={isPinPending ? Loader : PinIcon}*/}
+        {/*          position="right"*/}
+        {/*        />*/}
+        {/*      </Menu.Item>*/}
+        {/*    </Menu.Group>*/}
+        {/*    <Menu.Divider />*/}
+        {/*  </>*/}
+        {/*)}*/}
 
         <Menu.Group>
           {(!hideInPWI || hasSession) && (
