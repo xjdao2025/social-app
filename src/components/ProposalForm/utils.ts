@@ -28,7 +28,6 @@ export function renderBlockToHTML(
   }
 
   if (block.type === 'content') {
-    debugger
     return `<div class="proposal-content" style="${contentStyle}">${mapMultilineTextToHtml(
       block.richtext,
     )}</div>${mediaDom}`
