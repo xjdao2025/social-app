@@ -188,7 +188,8 @@ export default function ProposalDetailScreen({route}: Props) {
             /> */}
         </Header.Slot>
       </Header.Outer>
-      <View style={[styles.main]}>
+      <View
+        style={[{height: `calc(100% - 52px - ${gtMobile ? '0px' : '58px'})`}]}>
         <View style={[a.px_lg, a.pt_lg]}>
           {mockAuthor && <ProposalAuthor author={mockAuthor} />}
         </View>
@@ -506,9 +507,9 @@ const styles = StyleSheet.create({
     maxWidth: 600,
     alignSelf: 'center',
   },
-  main: {
-    height: 'calc(100% - 52px - 58px)',
-  },
+  // main: {
+  //   height: 'calc(100% - 52px - 58px)',
+  // },
   blockTitle: {
     marginTop: 16,
     padding: 12,
