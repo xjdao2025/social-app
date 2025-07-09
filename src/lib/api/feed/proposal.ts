@@ -1,5 +1,6 @@
 import {type AppBskyFeedDefs, type BskyAgent} from '@atproto/api'
 
+import {get} from '#/state/persisted'
 import server from '#/server'
 import {type ProposalStatus} from '#/server/dao/enums'
 import {type FeedAPI, type FeedAPIResponse} from './types'
@@ -21,10 +22,13 @@ async function fetchProposal(
   pageNum: number,
   pageSize: number,
 ) {
+  const session = get('session')
+  const did = session.currentAccount?.did
   const res = await server.dao('POST /proposal/page', {
     status: +status,
     pageNum,
     pageSize,
+    did,
   })
   return {
     ...res,

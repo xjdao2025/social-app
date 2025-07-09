@@ -73,7 +73,11 @@ export type APITypeTuple = {
     APIDao.WebEndpointsGlobalConfigFoundationInfoVo,
   ]
   'GET /file/download': [
-    {fileId: string; fileType: APIDao.DomainEnumsFileType},
+    {
+      fileId: string
+      fileType: APIDao.DomainEnumsFileType
+      autoDownload: boolean
+    },
     Blob,
   ]
   'POST /file/upload': [

@@ -53,7 +53,7 @@ const VoteConfirm = forwardRef<VoteConfirmRef, VoteConfirmProps>(
         } else {
           const timeout = setTimeout(() => {
             setShowPopupDelayedExit(false)
-          }, 160)
+          }, 150)
           return () => clearTimeout(timeout)
         }
       }
@@ -193,5 +193,6 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     zIndex: 10,
+    cursor: 'pointer',
   },
 })

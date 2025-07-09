@@ -59,7 +59,7 @@ import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text} from '#/components/Typography'
 import server from '#/server'
-import {ProposalStatus} from '#/server/dao/enums'
+import {ProposalStatus, ProposalVoteType} from '#/server/dao/enums'
 import * as bsky from '#/types/bsky'
 import {Link, TextLink, TextLinkOnWebOnly} from '../util/Link'
 
@@ -481,7 +481,19 @@ let PostContent = ({
           <Text style={[a.mt_xs, a.text_sm, t.atoms.text_contrast_high]}>
             {post.name}
           </Text>
-          <ProposalStatusTag status={post.status} style={[a.mt_sm]} />
+          <View style={[a.flex_row, a.gap_xs, a.mt_sm]}>
+            <ProposalStatusTag status={post.status} />
+            {post.choice === ProposalVoteType.Oppose ||
+            post.choice === ProposalVoteType.Agree ? (
+              <View
+                style={[
+                  a.p_xs,
+                  {borderColor: '#6F869F', borderWidth: 1, borderRadius: 2},
+                ]}>
+                <Text style={[a.text_xs, {color: '#6F869F'}]}>已投票</Text>
+              </View>
+            ) : null}
+          </View>
           <VoltState agree={post.agreeVotes} disagree={post.opposeVotes} />
           {/* <RichText
             enableTags

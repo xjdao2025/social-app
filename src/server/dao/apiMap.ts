@@ -126,7 +126,11 @@ const apiMap = {
   >('/global-config/foundation-info', 'POST'),
   /** 下载文件 */
   'GET /file/download': defineAPI<
-    {fileId: string; fileType: APIDao.DomainEnumsFileType},
+    {
+      fileId: string
+      fileType: APIDao.DomainEnumsFileType
+      autoDownload: boolean
+    },
     Blob
   >('/file/download', 'GET'),
   /** 上传文件 */

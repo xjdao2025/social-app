@@ -343,6 +343,8 @@ declare namespace APIDao {
 
     /** 发起方域名 */
     initiatorDomainName: string
+
+    choice: DomainEnumsVoteType
   }
 
   /** POST /proposal/detail */
@@ -407,6 +409,9 @@ declare namespace APIDao {
     pageSize: number
 
     status: DomainEnumsProposalStatus
+
+    /** 查询用户的 Did，当前登陆用户 Did */
+    did: string
   }
 
   /** POST /proposal/page */
@@ -581,6 +586,8 @@ declare namespace APIDao {
 
     /** 创建时间 {"format":"date-time"} */
     createdAt: string
+
+    choice: DomainEnumsVoteType
   }
 
   /** 积分来源类型 0-未知 1-打赏 2-赠送 3-后台发放 {"x-enumNames":["Unknown","Reward","Send","AdminDistribution"]} */
