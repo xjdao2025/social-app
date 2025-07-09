@@ -8,7 +8,12 @@ import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {type ComposerImage} from '#/state/gallery'
 import {type Gif} from '#/state/queries/tenor'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
-import {createVideoState, type VideoAction, type VideoMedia, videoReducer} from './video'
+import {
+  createVideoState,
+  type VideoAction,
+  type VideoMedia,
+  videoReducer,
+} from './video'
 
 type ImagesMedia = {
   type: 'images'
@@ -460,7 +465,10 @@ export function createPoposalState(): ProposalState {
   return {
     activeBlockIndex: 0,
     mutableNeedsFocusActive: false,
-    endDate: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+    endDate: format(
+      new Date(new Date().valueOf() + 3600 * 1000),
+      'yyyy-MM-dd HH:mm:ss',
+    ),
     blocks: [
       {
         id: nanoid(),

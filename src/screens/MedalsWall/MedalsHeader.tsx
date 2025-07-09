@@ -1,10 +1,13 @@
 import {useRef} from 'react'
 import {Dimensions, Pressable, StyleSheet, View} from 'react-native'
 import {useSharedValue} from 'react-native-reanimated'
-import Carousel, {type ICarouselInstance} from 'react-native-reanimated-carousel'
+import Carousel, {
+  type ICarouselInstance,
+} from 'react-native-reanimated-carousel'
 import {Image} from 'expo-image'
 import {gt} from 'lodash'
 
+import {extractAssetUrl} from '#/lib/extractAssetUrl'
 import {useGoBack} from '#/lib/hooks/useGoBack'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import OssImage from '#/components/OssImage'
@@ -137,9 +140,10 @@ const MedalsHeader = (props: {
               const currentIndex = ref.current?.getCurrentIndex()
               return (
                 <View style={[styles.swiper]}>
-                  <OssImage
-                    attachId={item.attachId}
-                    style={{width: '100%', aspectRatio: 1}}
+                  <img
+                    src={extractAssetUrl(item.attachId)}
+                    style={{width: '100%', aspectRatio: 1, userSelect: 'none'}}
+                    draggable="false"
                   />
                   {index === currentIndex && (
                     <Text style={styles.swiper_text}>{item.name}</Text>
