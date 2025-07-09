@@ -340,30 +340,30 @@ let DrawerFooter = ({
           ),
         },
       ]}>
-      <Button
-        label={_(msg`Send feedback`)}
-        size="small"
-        variant="solid"
-        color="secondary"
-        onPress={onPressFeedback}>
-        <ButtonIcon icon={Message} position="left" />
-        <ButtonText>
-          <Trans>Feedback</Trans>
-        </ButtonText>
-      </Button>
-      <Button
-        label={_(msg`Get help`)}
-        size="small"
-        variant="outline"
-        color="secondary"
-        onPress={onPressHelp}
-        style={{
-          backgroundColor: 'transparent',
-        }}>
-        <ButtonText>
-          <Trans>Help</Trans>
-        </ButtonText>
-      </Button>
+      {/*<Button*/}
+      {/*  label={_(msg`Send feedback`)}*/}
+      {/*  size="small"*/}
+      {/*  variant="solid"*/}
+      {/*  color="secondary"*/}
+      {/*  onPress={onPressFeedback}>*/}
+      {/*  <ButtonIcon icon={Message} position="left" />*/}
+      {/*  <ButtonText>*/}
+      {/*    <Trans>Feedback</Trans>*/}
+      {/*  </ButtonText>*/}
+      {/*</Button>*/}
+      {/*<Button*/}
+      {/*  label={_(msg`Get help`)}*/}
+      {/*  size="small"*/}
+      {/*  variant="outline"*/}
+      {/*  color="secondary"*/}
+      {/*  onPress={onPressHelp}*/}
+      {/*  style={{*/}
+      {/*    backgroundColor: 'transparent',*/}
+      {/*  }}>*/}
+      {/*  <ButtonText>*/}
+      {/*    <Trans>Help</Trans>*/}
+      {/*  </ButtonText>*/}
+      {/*</Button>*/}
     </View>
   )
 }
