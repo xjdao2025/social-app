@@ -5,6 +5,10 @@ import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
 import type tldts from 'tldts'
 
+import {
+  PRIVACY_PROTOCOL_FILE_URL,
+  SERVICE_PROTOCOL_FILE_URL,
+} from '#/lib/constants'
 import {isEmailMaybeInvalid} from '#/lib/strings/email'
 import {isPhoneNumber, validateAccount} from '#/lib/validator'
 import {logger} from '#/logger'
@@ -378,8 +382,8 @@ export function StepInfo({
                 // inviteCodeRequired: false,
                 // phoneVerificationRequired: false,
                 links: {
-                  termsOfService: `${window.location.origin}/doc/乡建DAO-隐私政策.pdf`, // 'https://www.baidu.com',
-                  privacyPolicy: `${window.location.origin}/doc/乡建DAO-隐私政策.pdf`, // 'https://www.baidu.com',
+                  termsOfService: SERVICE_PROTOCOL_FILE_URL, // 'https://www.baidu.com',
+                  privacyPolicy: PRIVACY_PROTOCOL_FILE_URL, // 'https://www.baidu.com',
                 },
               }}
               needsGuardian={false} // {!is18(state.dateOfBirth)}

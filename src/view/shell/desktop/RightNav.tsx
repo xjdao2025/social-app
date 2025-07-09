@@ -4,7 +4,12 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/core'
 
-import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
+import {
+  FEEDBACK_FORM_URL,
+  HELP_DESK_URL,
+  PRIVACY_PROTOCOL_FILE_URL,
+  SERVICE_PROTOCOL_FILE_URL,
+} from '#/lib/constants'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
 import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
@@ -106,14 +111,12 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         {/*  </>*/}
         {/*)}*/}
         <InlineLinkText
-          to={`${window.location.origin}/doc/乡建DAO-隐私政策.pdf`} // "https://bsky.social/about/support/privacy-policy"
+          to={PRIVACY_PROTOCOL_FILE_URL} // "https://bsky.social/about/support/privacy-policy"
           label="隐私政策">
           隐私政策
         </InlineLinkText>
         {' • '}
-        <InlineLinkText
-          to={`${window.location.origin}/doc/乡建DAO-隐私政策.pdf`}
-          label="服务条款">
+        <InlineLinkText to={SERVICE_PROTOCOL_FILE_URL} label="服务条款">
           服务条款
         </InlineLinkText>
         {/* {' • '} */}

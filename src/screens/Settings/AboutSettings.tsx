@@ -10,7 +10,11 @@ import {useMutation} from '@tanstack/react-query'
 import {Statsig} from 'statsig-react-native-expo'
 
 import {appVersion, BUNDLE_DATE, bundleInfo} from '#/lib/app-info'
-import {STATUS_PAGE_URL} from '#/lib/constants'
+import {
+  PRIVACY_PROTOCOL_FILE_URL,
+  SERVICE_PROTOCOL_FILE_URL,
+  STATUS_PAGE_URL,
+} from '#/lib/constants'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {isAndroid, isIOS, isNative} from '#/platform/detection'
 import * as Toast from '#/view/com/util/Toast'
@@ -80,7 +84,7 @@ export function AboutSettingsScreen({}: Props) {
       <Layout.Content>
         <SettingsList.Container>
           <SettingsList.LinkItem
-            to="https://bsky.social/about/support/tos"
+            to={SERVICE_PROTOCOL_FILE_URL}
             label={_(msg`Terms of Service`)}>
             <SettingsList.ItemIcon icon={NewspaperIcon} />
             <SettingsList.ItemText>
@@ -88,7 +92,7 @@ export function AboutSettingsScreen({}: Props) {
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
-            to="https://bsky.social/about/support/privacy-policy"
+            to={PRIVACY_PROTOCOL_FILE_URL}
             label={_(msg`Privacy Policy`)}>
             <SettingsList.ItemIcon icon={NewspaperIcon} />
             <SettingsList.ItemText>
