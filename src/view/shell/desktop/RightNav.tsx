@@ -106,13 +106,13 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         {/*  </>*/}
         {/*)}*/}
         <InlineLinkText
-          to="https://bsky.social/about/support/privacy-policy"
+          to={`${window.location.origin}/doc/乡建DAO-隐私政策.pdf`} // "https://bsky.social/about/support/privacy-policy"
           label="隐私政策">
           隐私政策
         </InlineLinkText>
         {' • '}
         <InlineLinkText
-          to="https://bsky.social/about/support/tos"
+          to={`${window.location.origin}/doc/乡建DAO-隐私政策.pdf`}
           label="服务条款">
           服务条款
         </InlineLinkText>

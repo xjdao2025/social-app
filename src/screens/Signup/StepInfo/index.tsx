@@ -378,8 +378,8 @@ export function StepInfo({
                 // inviteCodeRequired: false,
                 // phoneVerificationRequired: false,
                 links: {
-                  termsOfService: 'https://www.baidu.com',
-                  privacyPolicy: 'https://www.baidu.com',
+                  termsOfService: `${window.location.origin}/doc/乡建DAO-隐私政策.pdf`, // 'https://www.baidu.com',
+                  privacyPolicy: `${window.location.origin}/doc/乡建DAO-隐私政策.pdf`, // 'https://www.baidu.com',
                 },
               }}
               needsGuardian={false} // {!is18(state.dateOfBirth)}
