@@ -2,10 +2,10 @@ import {createContext, useCallback, useContext} from 'react'
 import {type GestureResponderEvent, Keyboard, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
+import {ParamListBase, useNavigation} from '@react-navigation/native'
 
 import {HITSLOP_30} from '#/lib/constants'
-import {type NavigationProp} from '#/lib/routes/types'
+import {type AllNavigatorParams, type NavigationProp} from '#/lib/routes/types'
 import {isIOS} from '#/platform/detection'
 import {useSetDrawerOpen} from '#/state/shell'
 import {
@@ -112,7 +112,12 @@ export function Slot({children}: {children?: React.ReactNode}) {
   return <View style={[a.z_50, {width: HEADER_SLOT_SIZE}]}>{children}</View>
 }
 
-export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
+export function BackButton({
+  onPress,
+  style,
+  defalutBackRoute = 'Home',
+  ...props
+}: Partial<ButtonProps & {defalutBackRoute: keyof AllNavigatorParams}>) {
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
 
@@ -123,10 +128,10 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
       if (navigation.canGoBack()) {
         navigation.goBack()
       } else {
-        navigation.navigate('Home')
+        navigation.navigate(defalutBackRoute)
       }
     },
-    [onPress, navigation],
+    [onPress, navigation, defalutBackRoute],
   )
 
   return (

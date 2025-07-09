@@ -13,6 +13,7 @@ import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
+import {isMobileWeb} from '#/platform/detection'
 import {emitProposalCreated} from '#/state/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
@@ -153,14 +154,19 @@ export default function ProposalDetailScreen({route}: Props) {
     votedInfo?.choice === ProposalVoteType.Unknown &&
     proposalInfo?.status === ProposalStatus.InProgress
   // if(!propsosalDetail) return null;
-
+  // console.log(canVote, !!currentUserInfo?.nodeUser, votedInfo?.choice === ProposalVoteType.Unknown, proposalInfo?.status === ProposalStatus.InProgress)
   return (
     <Layout.Screen
-      style={[styles.page, gtMobile && styles.maxPageWidth]}
-      testID="proposalDetailScrren">
+      style={[
+        styles.page,
+        // isMobileWeb ? { height: '-webkit-fill-available' } : {},
+        gtMobile && styles.maxPageWidth,
+        // { paddingBottom: gtMobile ? 0 : 58 }
+      ]}
+      testID="proposalDetailScreen">
       {/* <PostThreadComponent uri={uri} /> */}
       <Header.Outer headerRef={headerRef}>
-        <Header.BackButton />
+        <Header.BackButton defalutBackRoute="Hall" />
         <Header.Content>
           <Header.TitleText>提案</Header.TitleText>
         </Header.Content>
@@ -188,22 +194,15 @@ export default function ProposalDetailScreen({route}: Props) {
             /> */}
         </Header.Slot>
       </Header.Outer>
-      <View
-        style={[{height: `calc(100% - 52px - ${gtMobile ? '0px' : '58px'})`}]}>
-        <View style={[a.px_lg, a.pt_lg]}>
+
+      <View style={[a.px_lg]}>
+        <View style={[a.pt_lg]}>
           {mockAuthor && <ProposalAuthor author={mockAuthor} />}
         </View>
-        <View style={[a.px_lg, a.pt_md]}>
+        <View style={[a.pt_md]}>
           <Text style={[a.text_xl, a.font_bold]}>{proposalInfo?.name}</Text>
         </View>
-        <View
-          style={[
-            a.flex_row,
-            a.align_center,
-            a.justify_between,
-            a.my_md,
-            a.px_lg,
-          ]}>
+        <View style={[a.flex_row, a.align_center, a.justify_between, a.my_md]}>
           <ProposalStatusTag status={proposalInfo?.status} />
           {proposalInfo?.createdAt && (
             <View style={[a.flex_row, a.align_center, a.gap_xs]}>
@@ -218,39 +217,36 @@ export default function ProposalDetailScreen({route}: Props) {
             </View>
           )}
         </View>
-        <View style={[a.px_lg]}>
+        <View>
           <View style={[styles.spliter]} />
         </View>
 
-        <Animated.ScrollView
-          style={[a.flex_1, a.px_lg, a.pb_lg]}
-          contentContainerStyle={a.flex_grow}>
-          {/* <pre dangerouslySetInnerHTML={{ __html: proposalInfo?.content }} /> */}
-          {proposalInfo?.blocks?.map((block, index) => {
-            if (block.type === 'images') {
-              return (
-                <ProposalEmbeds
-                  key={index}
-                  embed={{
-                    $type: 'app.bsky.embed.images#view',
-                    images: block.srcs.map(imgSrc => ({
-                      thumb: imgSrc,
-                      fullsize: imgSrc,
-                      alt: '',
-                      aspectRatio: {width: 474, height: 474},
-                    })),
-                  }}
-                />
-              )
-            }
+        {/* <pre dangerouslySetInnerHTML={{ __html: proposalInfo?.content }} /> */}
+        {proposalInfo?.blocks?.map((block, index) => {
+          if (block.type === 'images') {
             return (
-              <div
+              <ProposalEmbeds
                 key={index}
-                dangerouslySetInnerHTML={{__html: block.content}}
+                embed={{
+                  $type: 'app.bsky.embed.images#view',
+                  images: block.srcs.map(imgSrc => ({
+                    thumb: imgSrc,
+                    fullsize: imgSrc,
+                    alt: '',
+                    aspectRatio: {width: 474, height: 474},
+                  })),
+                }}
               />
             )
-          })}
-          {/* <View style={[styles.blockTitle]}>
+          }
+          return (
+            <div
+              key={index}
+              dangerouslySetInnerHTML={{__html: block.content}}
+            />
+          )
+        })}
+        {/* <View style={[styles.blockTitle]}>
             <Text style={[a.text_md]}>proposalId: {proposalId}</Text>
           </View>
           <View style={[styles.blockContent]}>
@@ -266,48 +262,56 @@ export default function ProposalDetailScreen({route}: Props) {
               <ProposalEmbeds embed={mockEmbed} />
             </View>
           </View> */}
-          <VoteResult
-            agree={proposalInfo?.agreeVotes}
-            disagree={proposalInfo?.opposeVotes}
-            status={proposalInfo?.status}
-            endDate={proposalInfo?.endAt}
-            votedInfo={votedInfo}
-          />
-        </Animated.ScrollView>
-
-        {canVote ? (
-          <View
-            style={[
-              a.flex_row,
-              a.align_center,
-              a.px_lg,
-              a.gap_sm,
-              a.py_sm,
-              styles.voteActionBorder,
-            ]}>
-            <SkewButton
-              label="disagree"
-              position="left"
-              color="#FD615B"
-              onPress={() =>
-                voteConfirmRef.current?.open(ProposalVoteType.Oppose)
-              }>
-              <Text style={[a.text_md, {color: '#fff'}]}>反对</Text>
-            </SkewButton>
-            <SkewButton
-              label="agree"
-              position="right"
-              color="#1083FE"
-              onPress={() =>
-                voteConfirmRef.current?.open(ProposalVoteType.Agree)
-              }>
-              <Text style={[a.text_md, {color: '#fff'}]}>同意</Text>
-            </SkewButton>
-          </View>
-        ) : (
-          <View style={{height: 32}} />
-        )}
+        <VoteResult
+          agree={proposalInfo?.agreeVotes}
+          disagree={proposalInfo?.opposeVotes}
+          status={proposalInfo?.status}
+          endDate={proposalInfo?.endAt}
+          votedInfo={votedInfo}
+        />
+        {/* 投票框底部占位 */}
+        <View style={{height: 100}} />
+        {/* { canVote ? <View style={{ height: 40 }} /> : null} */}
       </View>
+
+      {canVote ? (
+        <View
+          style={[
+            a.flex_row,
+            a.align_center,
+            a.px_lg,
+            a.gap_sm,
+            a.py_sm,
+            styles.voteActionBorder,
+            // a.absolute,
+            {
+              position: gtMobile ? 'sticky' : 'fixed',
+              bottom: gtMobile ? 0 : 58,
+              left: 0,
+              right: 0,
+              backgroundColor: '#fff',
+            },
+          ]}>
+          <SkewButton
+            label="disagree"
+            position="left"
+            color="#FD615B"
+            onPress={() =>
+              voteConfirmRef.current?.open(ProposalVoteType.Oppose)
+            }>
+            <Text style={[a.text_md, {color: '#fff'}]}>反对</Text>
+          </SkewButton>
+          <SkewButton
+            label="agree"
+            position="right"
+            color="#1083FE"
+            onPress={() =>
+              voteConfirmRef.current?.open(ProposalVoteType.Agree)
+            }>
+            <Text style={[a.text_md, {color: '#fff'}]}>同意</Text>
+          </SkewButton>
+        </View>
+      ) : null}
       <Prompt.Basic
         control={delControl}
         title="要删除这则提案吗？"
@@ -500,7 +504,7 @@ function VoteResult(props: VoteResultProps) {
 
 const styles = StyleSheet.create({
   page: {
-    height: '100%',
+    minHeight: '100%',
     width: '100%',
   },
   maxPageWidth: {
