@@ -404,7 +404,7 @@ let PostThreadItemLoaded = ({
                   value={richText}
                   style={[a.flex_1, a.text_xl]}
                   authorHandle={post.author.handle}
-                  shouldProxyLinks={true}
+                  shouldProxyLinks={false}
                 />
               ) : undefined}
               {post.embed && (
@@ -621,7 +621,7 @@ let PostThreadItemLoaded = ({
                     style={[a.flex_1, a.text_md]}
                     numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                     authorHandle={post.author.handle}
-                    shouldProxyLinks={true}
+                    shouldProxyLinks={false}
                   />
                 </View>
               ) : undefined}
