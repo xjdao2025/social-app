@@ -982,7 +982,7 @@ let ProposalBlock = React.memo(function ProposalBlock({
             shape="round"
             style={[
               styles.delBtn,
-              {[isModuleTitle ? 'top' : 'bottom']: isModuleTitle ? 9 : 6},
+              {[isModuleTitle ? 'top' : 'bottom']: isModuleTitle ? 10 : 6},
             ]}
             onPress={() => {
               if (
@@ -1697,6 +1697,7 @@ const styles = StyleSheet.create({
   moduleTitle: {
     // marginTop: 16,
     padding: 12,
+    paddingRight: 40,
     borderRadius: 6,
     backgroundColor: 'rgba(16, 131, 254, 0.1)',
   },
