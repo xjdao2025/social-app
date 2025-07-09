@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native'
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {$Typed, AppBskyEmbedImages} from '@atproto/api'
+import {$Typed, AppBskyEmbedImages, type RichText} from '@atproto/api'
 
 import {DAO_SERVICE, PUBLIC_BSKY_SERVICE} from '#/lib/constants'
 import server from '#/server'
@@ -28,20 +28,60 @@ export function renderBlockToHTML(
   }
 
   if (block.type === 'content') {
+    debugger
     return `<div class="proposal-content" style="${contentStyle}">${mapMultilineTextToHtml(
-      block.richtext.unicodeText.toString(),
+      block.richtext,
     )}</div>${mediaDom}`
   }
   if (block.type === 'module-title') {
     return `<div class="proposal-module-title" style="${h2Style}">${mapMultilineTextToHtml(
-      block.richtext.unicodeText.toString(),
+      block.richtext,
     )}</div>`
   }
   return `<p>unknwon block type: ${block.type}</p>`
 }
 
-function mapMultilineTextToHtml(text: string) {
-  return text
+function mapMultilineTextToHtml(rt: RichText) {
+  let outputStr = ''
+  if (rt.facets?.length) {
+    // const list = [];
+    let startIndex = 0
+    const uint8Arr = rt.unicodeText.utf8
+    rt.facets.forEach(item => {
+      if (item.features[0].$type !== 'app.bsky.richtext.facet#link') {
+        return
+      }
+      const {byteStart, byteEnd} = item.index
+      if (byteStart !== startIndex) {
+        const iStr = new TextDecoder().decode(
+          uint8Arr.slice(startIndex, byteStart),
+        )
+        outputStr += iStr
+        // list.push(iStr);
+        startIndex = byteStart
+      }
+      const url = new TextDecoder().decode(uint8Arr.slice(startIndex, byteEnd))
+      const iStr = `<a target="blank" href="${url}" style="${alinkStyle}">${url}</a>`
+      outputStr += iStr
+      // list.push(iStr);
+      startIndex = byteEnd
+    })
+    if (startIndex !== uint8Arr.length) {
+      const iStr = new TextDecoder().decode(
+        uint8Arr.slice(startIndex, uint8Arr.length),
+      )
+      outputStr += iStr
+      // list.push(iStr);
+      startIndex = uint8Arr.length
+    }
+    // console.log('with facet', list);
+  } else {
+    outputStr = rt.unicodeText.toString()
+  }
+
+  console.log('before output', outputStr)
+
+  return outputStr
     .split('\n')
     .map(str => `<p style="${lineStyle}">${str}</p>`)
     .join('')
@@ -95,6 +135,11 @@ export function videoInfoToFile(asset: ImagePickerAsset): File {
 }
 
 const lineStyle = ['margin: 0', 'padding: 0'].join(';')
+
+const alinkStyle = [
+  'color: rgb(16, 131, 254)',
+  'text-decoration-line: none',
+].join(';')
 
 const contentStyle = [
   'padding-top: 16px',

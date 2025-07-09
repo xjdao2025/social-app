@@ -1161,7 +1161,7 @@ function Embeds({
         </View>
       )} */}
 
-      {!embed.media && embed.link && (
+      {/* {!embed.media && embed.link && (
         <View style={[a.relative, a.mt_lg]} key={embed.link.uri}>
           <ExternalEmbedLink
             uri={embed.link.uri}
@@ -1169,7 +1169,7 @@ function Embeds({
             onRemove={() => dispatch({type: 'embed_remove_link'})}
           />
         </View>
-      )}
+      )} */}
 
       <LayoutAnimationConfig skipExiting>
         {video && (
