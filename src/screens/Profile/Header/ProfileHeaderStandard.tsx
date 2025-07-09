@@ -207,7 +207,7 @@ let ProfileHeaderStandard = ({
             )
           ) : !profile.viewer?.blockedBy ? (
             <>
-              {hasSession && <MessageProfileButton profile={profile} />}
+              {/*{hasSession && <MessageProfileButton profile={profile} />}*/}
 
               <Button
                 testID={profile.viewer?.following ? 'unfollowBtn' : 'followBtn'}
