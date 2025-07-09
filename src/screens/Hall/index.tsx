@@ -59,6 +59,8 @@ export default function HallScreen() {
   const isPageFocused = true
   const route = useRoute()
 
+  const [affixLeft, setAffixLeft] = useState(0)
+
   useEffect(() => {
     if (!route) return
     reloadNodeList()
@@ -143,7 +145,12 @@ export default function HallScreen() {
         transparent
         style={[{backgroundColor: `rgba(255, 255, 255, ${headerOpacity})`}]}
       />
-      <Layout.Center>
+      <Layout.Center
+        onLayout={e => {
+          const {layout} = e.nativeEvent
+          const left = layout.width + layout.x + 28
+          setAffixLeft(left)
+        }}>
         <View style={styles.linearBg} />
         <View style={[a.flex_col, a.px_lg, a.flex_0, styles.topInfo]}>
           <View style={[a.flex_row, a.align_baseline, a.justify_between]}>
@@ -347,7 +354,7 @@ export default function HallScreen() {
           </View>
         </View>
       </Layout.Center>
-      <ProposalFormModal />
+      <ProposalFormModal affixLeft={affixLeft} />
       {/* <View style={[a.flex_col, a.h_full, { paddingTop: 52 + 20, zIndex: 1, gap: 25, paddingBottom: 58 }]}>
         <View style={[styles.card, a.flex_1]}>
           <Text>sdfagjlasjfal</Text>

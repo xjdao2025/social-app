@@ -21,7 +21,7 @@ import ProposalForm, {useProposalFormRef} from './ProposalForm'
 
 const BOTTOM_BAR_HEIGHT = 61
 
-export default function ProposalFormModal() {
+export default function ProposalFormModal(props: {affixLeft: number}) {
   const {currentAccount} = useSession()
   const [active, setActive] = useState(false)
   const {data: currentUserProfile} = useRequest(
@@ -35,7 +35,10 @@ export default function ProposalFormModal() {
   }
   return (
     <>
-      <ProposalAffixTrigger onPress={() => setActive(true)} />
+      <ProposalAffixTrigger
+        onPress={() => setActive(true)}
+        affixLeft={props.affixLeft}
+      />
       {active && <ProposalFormModalInner onClose={() => setActive(false)} />}
     </>
   )

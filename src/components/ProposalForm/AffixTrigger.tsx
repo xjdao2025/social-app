@@ -12,13 +12,14 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
 import {gradients} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Text} from '../Typography'
 
 export type ProposalAffixTriggerProps = ComponentProps<
   typeof TouchableWithoutFeedback
 > & {
   testID?: string
+  affixLeft?: number
 }
 
 export default function ProposalAffixTrigger(props: ProposalAffixTriggerProps) {
@@ -27,13 +28,17 @@ export default function ProposalAffixTrigger(props: ProposalAffixTriggerProps) {
   // const { isMobile, isTablet } = useWebMediaQueries()
   const playHaptic = useHaptics()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
+  const {gtMobile} = useBreakpoints()
 
   const size = styles.sizeRegular //  isTablet ? styles.sizeLarge : styles.sizeRegular
 
   // const tabletSpacing = isTablet
   //   ? { right: 50, bottom: 50 }
   //   : { right: 24, bottom: clamp(insets.bottom, 15, 60) + 15 }
-  const tabletSpacing = {right: 24, bottom: clamp(insets.bottom, 15, 60) + 15}
+  const tabletSpacing = {
+    right: 24,
+    bottom: clamp(insets.bottom, 15, 60) + 15,
+  }
 
   return (
     <Animated.View
@@ -42,6 +47,7 @@ export default function ProposalAffixTrigger(props: ProposalAffixTriggerProps) {
         size,
         tabletSpacing,
         fabMinimalShellTransform, // isMobile &&
+        gtMobile && {left: props.affixLeft},
       ]}>
       <PressableScale
         accessibilityIgnoresInvertColors
