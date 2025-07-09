@@ -23,7 +23,11 @@ export default function HallDocListScreen() {
           accessibilityRole="button"
           accessibilityIgnoresInvertColors
           style={{position: 'absolute', left: 16, top: 18, zIndex: 1}}
-          onPress={() => navigation.goBack()}>
+          onPress={() =>
+            !navigation.canGoBack()
+              ? navigation.push('Hall')
+              : navigation.goBack()
+          }>
           <Image
             accessibilityIgnoresInvertColors
             style={{width: 14, height: 12}}
