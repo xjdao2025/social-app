@@ -20,22 +20,27 @@ import {
   embedViewRecordToPostView,
   getEmbeddedPost,
 } from './util'
+import proxyRequest from "#/lib/proxyRequest";
+import { structPostInfos } from "#/lib/api/feed/posts";
 
 const searchPostsQueryKeyRoot = 'search-posts'
-const searchPostsQueryKey = ({query, sort}: {query: string; sort?: string}) => [
+const searchPostsQueryKey = ({query, sort, author}: {query: string; sort?: string, author?: string}) => [
   searchPostsQueryKeyRoot,
   query,
   sort,
+  author
 ]
 
 export function useSearchPostsQuery({
   query,
   sort,
   enabled,
+  author
 }: {
   query: string
   sort?: 'top' | 'latest'
   enabled?: boolean
+  author?: string
 }) {
   const agent = useAgent()
   const moderationOpts = useModerationOpts()
@@ -59,15 +64,31 @@ export function useSearchPostsQuery({
     QueryKey,
     string | undefined
   >({
-    queryKey: searchPostsQueryKey({query, sort}),
+    queryKey: searchPostsQueryKey({query, sort, author}),
     queryFn: async ({pageParam}) => {
-      const res = await agent.app.bsky.feed.searchPosts({
+      const res = await proxyRequest('/post/api/posts/search','POST',{
         q: query,
         limit: 25,
         cursor: pageParam,
         sort,
+        author
       })
-      return res.data
+
+      return {
+        ...res,
+        posts: res?.posts.map(post => {
+          structPostInfos(post)
+          return post
+        }),
+      }
+      // const res = await agent.app.bsky.feed.searchPosts({
+      //   q: query,
+      //   limit: 25,
+      //   cursor: pageParam,
+      //   sort,
+      // })
+      // console.log('res>>>', res)
+      // return res.data
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
@@ -186,11 +207,11 @@ export function* findAllProfilesInQueryData(
     }
     for (const page of queryData?.pages) {
       for (const post of page.posts) {
-        if (post.author.did === did) {
+        if (post?.author?.did === did) {
           yield post.author
         }
         const quotedPost = getEmbeddedPost(post.embed)
-        if (quotedPost?.author.did === did) {
+        if (quotedPost?.author?.did === did) {
           yield quotedPost.author
         }
       }

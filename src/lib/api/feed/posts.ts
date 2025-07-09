@@ -99,6 +99,14 @@ function structImageBlobRef(imgList: any[]) {
   })
 }
 
+export function structPostInfos(post: AppBskyFeedDefs.PostView) {
+  if (post.record.text.length > 300) {
+    post.record.realText = post.record.text
+    post.record.text = post.record.text.substring(0, 300)
+  }
+  structPostImages(post)
+}
+
 function structPostImages(post: AppBskyFeedDefs.PostView) {
   if (post.record?.embed?.images) {
     structImageBlobRef(post.record.embed?.images)
@@ -129,10 +137,7 @@ function restructFeedItem(
   const newItem = {...item}
   const post = {...newItem.post}
   const reply = newItem.reply
-  if (post.record.text.length > 300) {
-    post.record.realText = post.record.text
-    post.record.text = post.record.text.substring(0, 300)
-  }
+
   if (reply) {
     reply.parent.$type = 'app.bsky.feed.defs#postView'
     reply.root.$type = 'app.bsky.feed.defs#postView'
@@ -148,32 +153,17 @@ function restructFeedItem(
     }
 
     if (reply.parent) {
-      structPostImages(reply.parent)
+      structPostInfos(reply.parent)
     }
 
     if (reply.root) {
-      structPostImages(reply.root)
+      structPostInfos(reply.root)
     }
 
     newItem.reply = reply
   }
 
-  // if (post.record.embed?.images) {
-  //   structImageBlobRef(post.record.embed?.images)
-  // }
-  //
-  // if (post.record?.embed?.media?.images) {
-  //   structImageBlobRef(post.record?.embed?.media?.images)
-  // }
-  //
-  // if (post.embed?.record?.value?.embed?.images) {
-  //   structImageBlobRef(post.embed?.record?.value?.embed?.images)
-  // }
-  //
-  // if (post.embed?.record?.record?.value?.embed?.images) {
-  //   structImageBlobRef(post.embed?.record?.record?.value?.embed?.images)
-  // }
-  structPostImages(post)
+  structPostInfos(post)
 
   newItem.post = post
   return newItem

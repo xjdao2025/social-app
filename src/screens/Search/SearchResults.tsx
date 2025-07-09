@@ -18,6 +18,7 @@ import {atoms as a, useTheme, web} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import { useRoute } from "@react-navigation/native";
 
 let SearchResults = ({
   query,
@@ -161,6 +162,7 @@ let SearchScreenPostResults = ({
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const [isPTR, setIsPTR] = useState(false)
+  const route = useRoute()
 
   const augmentedQuery = useMemo(() => {
     return augmentSearchQuery(query || '', {did: currentAccount?.did})
@@ -175,7 +177,11 @@ let SearchScreenPostResults = ({
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = useSearchPostsQuery({query: augmentedQuery, sort, enabled: active})
+  } = useSearchPostsQuery({query: augmentedQuery,
+    sort,
+    enabled: active,
+    author: route.params?.name
+  })
 
   const onPullToRefresh = useCallback(async () => {
     setIsPTR(true)

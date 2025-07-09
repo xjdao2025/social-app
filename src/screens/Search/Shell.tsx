@@ -90,10 +90,10 @@ export function SearchScreenShell({
     'searchAccountHistory',
   ])
 
-  const {data: accountHistoryProfiles} = useProfilesQuery({
-    handles: accountHistory,
-    maintainData: true,
-  })
+  // const {data: accountHistoryProfiles} = useProfilesQuery({
+  //   handles: accountHistory,
+  //   maintainData: true,
+  // })
 
   const updateSearchHistory = useCallback(
     async (item: string) => {

@@ -22,7 +22,7 @@ export const ProfileSearchScreen = ({route}: Props) => {
 
   const fixedParams = useMemo(
     () => ({
-      from: profile?.handle ?? name,
+      // from: profile?.handle ?? name,
     }),
     [profile?.handle, name],
   )
