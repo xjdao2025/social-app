@@ -4,6 +4,7 @@ import Carousel from 'react-native-reanimated-carousel'
 import {useNavigation} from '@react-navigation/native'
 import {useRequest} from 'ahooks'
 
+import {extractAssetUrl} from '#/lib/extractAssetUrl'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useSession} from '#/state/session'
 import {type RenderTabBarFnProps} from '#/view/com/pager/Pager'
@@ -70,7 +71,7 @@ export function HomeHeader(
         {!gtMobile && <View style={{height: 52}} />}
         <Carousel
           testID={'banner'}
-          loop={false}
+          loop={true}
           width={screenWidth}
           height={carouselHeight}
           snapEnabled={true}
@@ -87,16 +88,17 @@ export function HomeHeader(
             return (
               <TouchableWithoutFeedback
                 accessibilityRole={'link'}
-                onPress={() => {
+                onPressOut={() => {
                   if (!item.linkAddress) return
                   const url = /https?:\/\/(.*)/.test(item.linkAddress)
                     ? item.linkAddress
                     : `//${item.linkAddress}`
                   Linking.openURL(url)
                 }}>
-                <OssImage
-                  attachId={item.bannerFileId}
+                <img
+                  src={extractAssetUrl(item.bannerFileId)}
                   style={{height: '100%'}}
+                  draggable={false}
                 />
               </TouchableWithoutFeedback>
             )
