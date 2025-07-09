@@ -1,10 +1,10 @@
 import React from 'react'
-import {StyleProp, Text as RNText, TextStyle} from 'react-native'
+import {type StyleProp, Text as RNText, type TextStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {isNative, isWeb} from '#/platform/detection'
 import {
@@ -135,25 +135,25 @@ export function RichTextTag({
             </Menu.Item>
           )}
         </Menu.Group>
-        <Menu.Divider />
-        <Menu.Item
-          label={isMuted ? _(msg`Unmute ${tag}`) : _(msg`Mute ${tag}`)}
-          onPress={() => {
-            if (isMuted) {
-              resetUpsert()
-              removeMutedWords(removeableMuteWords)
-            } else {
-              resetRemove()
-              upsertMutedWord([
-                {value: tag, targets: ['tag'], actorTarget: 'all'},
-              ])
-            }
-          }}>
-          <Menu.ItemText>
-            {isMuted ? _(msg`Unmute ${tag}`) : _(msg`Mute ${tag}`)}
-          </Menu.ItemText>
-          <Menu.ItemIcon icon={isPreferencesLoading ? Loader : Mute} />
-        </Menu.Item>
+        {/*<Menu.Divider />*/}
+        {/*<Menu.Item*/}
+        {/*  label={isMuted ? _(msg`Unmute ${tag}`) : _(msg`Mute ${tag}`)}*/}
+        {/*  onPress={() => {*/}
+        {/*    if (isMuted) {*/}
+        {/*      resetUpsert()*/}
+        {/*      removeMutedWords(removeableMuteWords)*/}
+        {/*    } else {*/}
+        {/*      resetRemove()*/}
+        {/*      upsertMutedWord([*/}
+        {/*        {value: tag, targets: ['tag'], actorTarget: 'all'},*/}
+        {/*      ])*/}
+        {/*    }*/}
+        {/*  }}>*/}
+        {/*  <Menu.ItemText>*/}
+        {/*    {isMuted ? _(msg`Unmute ${tag}`) : _(msg`Mute ${tag}`)}*/}
+        {/*  </Menu.ItemText>*/}
+        {/*  <Menu.ItemIcon icon={isPreferencesLoading ? Loader : Mute} />*/}
+        {/*</Menu.Item>*/}
       </Menu.Outer>
     </Menu.Root>
   )
