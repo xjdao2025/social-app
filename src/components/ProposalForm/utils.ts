@@ -28,12 +28,23 @@ export function renderBlockToHTML(
   }
 
   if (block.type === 'content') {
-    return `<p style="${pStyle}">${block.richtext.unicodeText}</p>${mediaDom}`
+    return `<div class="proposal-content" style="${contentStyle}">${mapMultilineTextToHtml(
+      block.richtext.unicodeText.toString(),
+    )}</div>${mediaDom}`
   }
   if (block.type === 'module-title') {
-    return `<h2 style="${h2Style}">${block.richtext.unicodeText}</h2>`
+    return `<div class="proposal-module-title" style="${h2Style}">${mapMultilineTextToHtml(
+      block.richtext.unicodeText.toString(),
+    )}</div>`
   }
   return `<p>unknwon block type: ${block.type}</p>`
+}
+
+function mapMultilineTextToHtml(text: string) {
+  return text
+    .split('\n')
+    .map(str => `<p style="${lineStyle}">${str}</p>`)
+    .join('')
 }
 
 export async function uploadEmbeds(block: ProposalBlockType) {
@@ -83,7 +94,9 @@ export function videoInfoToFile(asset: ImagePickerAsset): File {
   return new File([u8arr], 'video.mp4', {type: mime})
 }
 
-const pStyle = [
+const lineStyle = ['margin: 0', 'padding: 0'].join(';')
+
+const contentStyle = [
   'padding-top: 16px',
   'color: rgb(11, 15, 20)',
   'font-size: 14px',

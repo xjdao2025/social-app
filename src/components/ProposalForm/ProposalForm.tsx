@@ -477,7 +477,6 @@ export default function ProposalForm(
       const title = blocks[0].richtext.unicodeText.toString()
       const endDate = proposalState.endDate
       const contentBlocks = blocks.slice(1)
-
       const blocksHtml = await Promise.all(
         contentBlocks.map(async block => {
           const resolveEmbed = await uploadEmbeds(block)

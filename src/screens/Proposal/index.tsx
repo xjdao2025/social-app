@@ -243,9 +243,8 @@ export default function ProposalDetailScreen({route}: Props) {
               )
             }
             return (
-              <pre
+              <div
                 key={index}
-                style={{margin: 0}}
                 dangerouslySetInnerHTML={{__html: block.content}}
               />
             )
