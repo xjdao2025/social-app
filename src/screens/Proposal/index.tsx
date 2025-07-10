@@ -51,7 +51,7 @@ import ProposalEmbeds from './ProposalEmbeds'
 import parserHTMLFile, {type HTMLBlock} from './util'
 import VoteConfirm, {type VoteConfirmRef} from './VoteConfirm'
 const {Header} = Layout
-import {CENTER_COLUMN_OFFSET,SCROLLBAR_OFFSET} from '#/components/Layout/const'
+import {CENTER_COLUMN_OFFSET, SCROLLBAR_OFFSET} from '#/components/Layout/const'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProposalDetail'>
 
@@ -267,6 +267,7 @@ export default function ProposalDetailScreen({route}: Props) {
           }
           return (
             <div
+              style={{wordBreak: 'break-all'}}
               key={index}
               dangerouslySetInnerHTML={{__html: block.content}}
             />

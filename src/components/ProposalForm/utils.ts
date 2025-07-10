@@ -156,6 +156,7 @@ const contentStyle = [
   'font-size: 14px',
   'line-height: 17px',
   'white-space:normal',
+  'word-break:break-all',
   'margin: 0',
 ].join(';')
 
@@ -168,6 +169,7 @@ const h2Style = [
   'line-height: 20px',
   'color: rgb(11, 15, 20)',
   'white-space:normal',
+  'word-break:break-all',
   'margin-bottom: 0',
 ].join(';')
 
