@@ -1,6 +1,7 @@
 import {
   type PropsWithChildren,
   ReactNode,
+  useCallback,
   useContext,
   useMemo,
   useRef,
@@ -9,7 +10,7 @@ import {Pressable, StyleSheet, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {moderatePost, RichText as RichTextAPI} from '@atproto/api'
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useRequest} from 'ahooks'
 import {format} from 'date-fns'
 import {isNil} from 'lodash'
@@ -51,6 +52,7 @@ import ProposalEmbeds from './ProposalEmbeds'
 import parserHTMLFile, {type HTMLBlock} from './util'
 import VoteConfirm, {type VoteConfirmRef} from './VoteConfirm'
 const {Header} = Layout
+import {useSetMinimalShellMode} from '#/state/shell'
 import {CENTER_COLUMN_OFFSET, SCROLLBAR_OFFSET} from '#/components/Layout/const'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProposalDetail'>
@@ -65,6 +67,7 @@ export default function ProposalDetailScreen({route}: Props) {
   const voteConfirmRef = useRef<VoteConfirmRef>(null)
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
   const {centerColumnOffset} = useLayoutBreakpoints()
+
   const {data: currentUserInfo} = useRequest(
     async () => {
       const res = await server.dao('POST /user/login-user-detail')
@@ -127,6 +130,13 @@ export default function ProposalDetailScreen({route}: Props) {
     reloadVoteInfo()
     reloadProposalInfo()
   }
+
+  const setMinimalShellMode = useSetMinimalShellMode()
+  useFocusEffect(
+    useCallback(() => {
+      setMinimalShellMode(false)
+    }, [setMinimalShellMode]),
+  )
 
   // const mockEmbed = {
   //   $type: 'app.bsky.embed.images#view',
