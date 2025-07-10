@@ -356,11 +356,11 @@ let DrawerFooter = ({
             source={require('#/assets/envelope.svg')}
             style={{width: 14, height: 14}}
           />
-          <a
-            href={`mailto:${CONTACT_EMAIL}`}
-            style={{...a.text_sm, lineHeight: '18px', color: '#6F869F'}}>
+          <InlineLinkText
+            to={`mailto:${CONTACT_EMAIL}`}
+            style={[a.text_sm, {lineHeight: '18px', color: '#6F869F'}]}>
             {CONTACT_EMAIL}
-          </a>
+          </InlineLinkText>
         </View>
       </View>
       {/*<Button*/}
