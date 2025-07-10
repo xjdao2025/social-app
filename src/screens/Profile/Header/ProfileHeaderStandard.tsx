@@ -256,15 +256,15 @@ let ProfileHeaderStandard = ({
                 profile.displayName || sanitizeHandle(profile.handle),
                 moderation.ui('displayName'),
               )}
-              <View
-                style={[
-                  a.pl_xs,
-                  {
-                    marginTop: platform({ios: 2}),
-                  },
-                ]}>
-                <VerificationCheckButton profile={profile} size="lg" />
-              </View>
+              {/*<View*/}
+              {/*  style={[*/}
+              {/*    a.pl_xs,*/}
+              {/*    {*/}
+              {/*      marginTop: platform({ios: 2}),*/}
+              {/*    },*/}
+              {/*  ]}>*/}
+              {/*  <VerificationCheckButton profile={profile} size="lg" />*/}
+              {/*</View>*/}
             </Text>
           </View>
           <View style={[a.flex_row, a.align_center, a.gap_xs]}>
