@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   scan: {
     position: 'absolute',
     right: 0,
-    top: 21,
+    top: 23,
     zIndex: 10,
     padding: 10,
   },

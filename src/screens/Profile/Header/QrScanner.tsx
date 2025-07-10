@@ -1,9 +1,11 @@
 import React, { useEffect, useImperativeHandle, useRef, useState } from "react";
-import { Pressable, StyleSheet, View } from 'react-native'
+import { Dimensions, Pressable, StyleSheet, View } from 'react-native'
 import { Image } from "expo-image";
 import {Portal} from '#/components/Portal'
 import { useBoolean } from "ahooks";
 import useScanWebQr from "#/lib/qr-code-scanner/useScanWebQr";
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export type QrScannerRefProps = {
   scan: () => Promise<string>
@@ -16,8 +18,16 @@ const QrScanner =  React.forwardRef<
 >(function QrScanner(props, ref){
   const videoRef = useRef<HTMLVideoElement>(null);
   const [show, { setTrue, setFalse }] = useBoolean(false)
+  const screenHeight = Dimensions.get("window").height
 
   const { scanQR, destroy } = useScanWebQr()
+
+  const offset = useSharedValue(30);
+
+  // 配置动画样式
+  const animatedStyles = useAnimatedStyle(() => ({
+    transform: [{ translateY: offset.value }],
+  }));
 
   useImperativeHandle(ref, () => ({
     scan: async () => {
@@ -31,9 +41,18 @@ const QrScanner =  React.forwardRef<
 
   useEffect(() => {
     if (!show) {
+      offset.value = 0
       destroy()
       return
     }
+    offset.value = withRepeat(
+      withTiming(screenHeight, {
+        duration: 2500,       // 单程动画时长（毫秒）
+        easing: Easing.inOut(Easing.ease), // 缓动函数
+      }),
+      -1,                    // 无限循环
+      false                   // 反向播放（形成往返效果）
+    );
   }, [show]);
 
   return <Portal>
@@ -42,10 +61,11 @@ const QrScanner =  React.forwardRef<
         <Pressable
           accessibilityRole="button"
           accessibilityIgnoresInvertColors
-          onPress={setFalse}>
+          onPress={setFalse}
+        >
           <Image
             accessibilityIgnoresInvertColors
-            style={{width: 14, height: 12}}
+            style={{ width: 14, height: 12 }}
             source={require('#/assets/arrow-left-white.svg')}
           />
         </Pressable>
@@ -57,6 +77,9 @@ const QrScanner =  React.forwardRef<
           height: '100%',
           background: 'black',
         }}
+      />
+      <Animated.View
+        style={[styles.scanLine, animatedStyles]}
       />
     </View>
   </Portal>
@@ -80,5 +103,15 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     paddingTop: 18,
     zIndex: 10
-  }
+  },
+  scanLine: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 100,
+    backgroundImage: 'linear-gradient(180deg, rgba(0, 255, 51, 0) 43%, #00ff33 211%)',
+    borderBottom: '3px solid #00ff33',
+    zIndex: 2,
+}
 })
