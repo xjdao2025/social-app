@@ -151,7 +151,7 @@ const contentStyle = [
   'padding-top: 16px',
   'color: rgb(11, 15, 20)',
   'font-size: 14px',
-  'line-height: 17px',
+  'line-height: 22px',
   'white-space:normal',
   'word-break:break-all',
   'margin: 0',
