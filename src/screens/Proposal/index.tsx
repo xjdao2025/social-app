@@ -231,6 +231,7 @@ export default function ProposalDetailScreen({route}: Props) {
               {translateX: web(SCROLLBAR_OFFSET) ?? 0},
             ],
           },
+          gtMobile ? {minHeight: 'calc(100% - 52px - 61px)'} : {},
         ]}>
         <View style={[a.pt_lg]}>
           {mockAuthor && <ProposalAuthor author={mockAuthor} />}
