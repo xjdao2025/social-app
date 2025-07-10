@@ -952,6 +952,8 @@ let ProposalBlock = React.memo(function ProposalBlock({
           setRichText={rt => {
             dispatchPost({type: 'update_richtext', richtext: rt})
           }}
+          enableMention={false}
+          enableTag={false}
           onFocus={() => {
             dispatch({
               type: 'focus_block',

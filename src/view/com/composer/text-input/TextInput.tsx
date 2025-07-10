@@ -54,6 +54,8 @@ interface TextInputProps {
   onNewLink: (uri: string) => void
   onError: (err: string) => void
   onFocus: () => void
+  enableMention?: boolean
+  enableTag?: boolean
 }
 
 export const TextInput = React.forwardRef(function TextInputImpl(
@@ -71,6 +73,8 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     onPressPublish,
     onNewLink,
     onFocus,
+    enableMention = true,
+    enableTag = true,
   }: // onError, TODO
   TextInputProps,
   ref,
@@ -86,13 +90,17 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     () => [
       Document,
       LinkDecorator,
-      TagDecorator,
-      Mention.configure({
-        HTMLAttributes: {
-          class: 'mention',
-        },
-        suggestion: createSuggestion({autocomplete}),
-      }),
+      ...(enableTag ? [TagDecorator] : []),
+      ...(enableMention
+        ? [
+            Mention.configure({
+              HTMLAttributes: {
+                class: 'mention',
+              },
+              suggestion: createSuggestion({autocomplete}),
+            }),
+          ]
+        : []),
       Paragraph,
       Placeholder.configure({
         placeholder,
@@ -101,7 +109,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       History,
       Hardbreak,
     ],
-    [autocomplete, placeholder],
+    [autocomplete, placeholder, enableMention, enableTag],
   )
 
   React.useEffect(() => {
