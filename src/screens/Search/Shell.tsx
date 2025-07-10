@@ -475,7 +475,7 @@ let SearchScreenInner = ({
             style={t.atoms.text_contrast_medium as StyleProp<ViewStyle>}
           />
           <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
-            <Trans>Find posts, users, and feeds on Bluesky</Trans>
+            寻找感兴趣的帖文或用户
           </Text>
         </View>
       </View>
