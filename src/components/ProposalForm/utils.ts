@@ -66,7 +66,7 @@ function mapMultilineTextToHtml(rt: RichText) {
       const {did, uri} = item.features[0]
       const url = new TextDecoder().decode(uint8Arr.slice(startIndex, byteEnd))
       const iStr = `<a target="blank" href="${
-        isMention ? `/profile/${did}` : uri
+        isMention ? `${window.location.origin}/profile/${did}` : uri
       }" style="${alinkStyle}">${url}</a>`
       outputStr += iStr
       // list.push(iStr);
