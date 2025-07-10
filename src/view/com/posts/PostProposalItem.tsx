@@ -488,7 +488,7 @@ let PostContent = ({
               <View
                 style={[
                   a.p_xs,
-                  {borderColor: '#6F869F', borderWidth: 1, borderRadius: 2},
+                  {borderColor: '#6F869F', borderWidth: 1, borderRadius: 4},
                 ]}>
                 <Text style={[a.text_xs, {color: '#6F869F'}]}>已投票</Text>
               </View>
