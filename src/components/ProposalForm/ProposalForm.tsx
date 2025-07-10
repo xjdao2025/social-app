@@ -1439,7 +1439,7 @@ function Footer({
           <Image
             accessibilityIgnoresInvertColors
             style={{width: 20, height: 20}}
-            source={require('#/assets/hall/block-title.svg')}
+            source={require('#/assets/hall/block-content.svg')}
           />
           <NewText>添加内容</NewText>
         </Button>
