@@ -440,7 +440,7 @@ export default function ProposalForm(
     !missingAltError &&
     blocks.every(
       block =>
-        block.shortenedGraphemeLength <= MAX_GRAPHEME_LENGTH &&
+        // block.shortenedGraphemeLength <= MAX_GRAPHEME_LENGTH &&
         !isEmptyBlock(block) &&
         !(
           block.embed.media?.type === 'video' &&
