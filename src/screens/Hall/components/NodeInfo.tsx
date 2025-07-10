@@ -40,7 +40,7 @@ function MobilePopup({trigger, node}: NodeInfoProps) {
           <Text style={[a.text_2xl]}>{node.name}</Text>
         </View>
         <View style={[a.my_xl, styles.spliter]} />
-        <Text style={[a.text_md]}>{node.description}</Text>
+        <Text style={[a.text_md, {lineHeight: 1.5}]}>{node.description}</Text>
       </View>
     </Popup>
   )
@@ -74,7 +74,7 @@ function TabletModal({trigger, node}: NodeInfoProps) {
             />
             <Text style={[a.text_2xl]}>{node.name}</Text>
           </View>
-          <Text style={[a.text_md]}>{node.description}</Text>
+          <Text style={[a.text_md, {lineHeight: 1.5}]}>{node.description}</Text>
         </Dialog.ScrollableInner>
       </Dialog.Outer>
     </>
