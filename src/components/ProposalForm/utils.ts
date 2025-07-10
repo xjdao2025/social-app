@@ -50,7 +50,8 @@ function mapMultilineTextToHtml(rt: RichText) {
       const isUrl = item.features[0].$type === 'app.bsky.richtext.facet#link'
       const isMention =
         item.features[0].$type === 'app.bsky.richtext.facet#mention'
-      if (!isUrl && !isMention) {
+      if (!isUrl) {
+        //  && !isMention
         console.log('unknown richtext feature:', rt)
         return
       }
