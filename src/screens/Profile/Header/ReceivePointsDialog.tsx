@@ -108,6 +108,7 @@ function DialogInner({
               value={qrLink}
               logo={require('#/assets/logo.png')}
               logoSize={25}
+              logoBorderRadius={4}
               logoBackgroundColor="transparent"
             />
           </View>

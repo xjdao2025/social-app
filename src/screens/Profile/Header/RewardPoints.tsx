@@ -70,7 +70,7 @@ export function ProfileHeaderRewardPoints() {
               <TouchableWithoutFeedback
                 accessibilityRole="button"
                 onPress={() => navigation.push('PointsRecord')}>
-                <Text style={[{opacity: 0.7}, [t.atoms.text_inverted]]}>
+                <Text style={[styles.textStyle, t.atoms.text_inverted]}>
                   明细
                 </Text>
               </TouchableWithoutFeedback>
@@ -93,8 +93,9 @@ export function ProfileHeaderRewardPoints() {
             </View>
             <Text
               style={[
-                {opacity: 0.7},
-                [t.atoms.text_inverted, a.user_select_none],
+                styles.textStyle,
+                t.atoms.text_inverted,
+                a.user_select_none,
               ]}>
               发送积分
             </Text>
@@ -108,7 +109,7 @@ export function ProfileHeaderRewardPoints() {
             <View style={[styles.circle, a.mb_sm]}>
               <QrCode_Icon size={'md'} />
             </View>
-            <Text style={[{opacity: 0.7}, [t.atoms.text_inverted]]}>
+            <Text style={[styles.textStyle, t.atoms.text_inverted]}>
               接收积分
             </Text>
           </View>
@@ -137,5 +138,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  textStyle: {
+    opacity: 0.7,
+    cursor: 'pointer',
   },
 })
