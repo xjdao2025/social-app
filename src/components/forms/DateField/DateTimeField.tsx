@@ -67,6 +67,7 @@ export function DateTimeField({
         accessibilityHint={accessibilityHint}
         // @ts-expect-error not typed as <input type="date"> even though it is one
         max={maximumDate ? toSimpleDateTimeString(maximumDate) : undefined}
+        step="1"
       />
     </TextField.Root>
   )
