@@ -28,6 +28,5 @@ export default function parserHTMLFile(htmlContent: string): HTMLBlock[] {
   if (iLine) {
     mergedLines.push({type: 'html', content: iLine})
   }
-  debugger
   return mergedLines
 }
