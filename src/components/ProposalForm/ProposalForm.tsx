@@ -939,7 +939,10 @@ let ProposalBlock = React.memo(function ProposalBlock({
             a.text_sm,
             isProposalTitle && a.text_2xl,
             isModuleTitle && a.text_md,
-            {minHeight: isProposalTitle || isModuleTitle ? undefined : 50},
+            {
+              minHeight: isProposalTitle || isModuleTitle ? undefined : 50,
+              lineHeight: 22,
+            },
           ]}
           richtext={richtext}
           placeholder={selectTextInputPlaceholder}
