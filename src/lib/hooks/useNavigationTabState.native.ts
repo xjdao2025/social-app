@@ -4,7 +4,6 @@ import {getTabState, TabState} from '#/lib/routes/helpers'
 
 export function useNavigationTabState() {
   return useNavigationState(state => {
-    debugger
     const res = {
       isAtHome: getTabState(state, 'Home') !== TabState.Outside,
       isAtHall: getTabState(state, 'Hall') !== TabState.Outside,

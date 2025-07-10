@@ -42,9 +42,6 @@ export function renderBlockToHTML(
 
 function mapMultilineTextToHtml(rt: RichText) {
   let outputStr = ''
-
-  console.log(rt)
-  debugger
   if (rt.facets?.length) {
     // const list = [];
     let startIndex = 0

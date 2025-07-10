@@ -78,7 +78,6 @@ export function IS_TEST_USER(handle?: string) {
 }
 
 export function IS_PROD_SERVICE(url?: string) {
-  debugger
   return url && url !== STAGING_SERVICE && !url.startsWith(LOCAL_DEV_SERVICE)
 }
 
