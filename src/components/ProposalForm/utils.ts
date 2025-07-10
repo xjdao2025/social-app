@@ -42,12 +42,19 @@ export function renderBlockToHTML(
 
 function mapMultilineTextToHtml(rt: RichText) {
   let outputStr = ''
+
+  console.log(rt)
+  debugger
   if (rt.facets?.length) {
     // const list = [];
     let startIndex = 0
     const uint8Arr = rt.unicodeText.utf8
     rt.facets.forEach(item => {
-      if (item.features[0].$type !== 'app.bsky.richtext.facet#link') {
+      const isUrl = item.features[0].$type === 'app.bsky.richtext.facet#link'
+      const isMention =
+        item.features[0].$type === 'app.bsky.richtext.facet#mention'
+      if (!isUrl && !isMention) {
+        console.log('unknown richtext feature:', rt)
         return
       }
       const {byteStart, byteEnd} = item.index
@@ -59,8 +66,11 @@ function mapMultilineTextToHtml(rt: RichText) {
         // list.push(iStr);
         startIndex = byteStart
       }
+      const {did, uri} = item.features[0]
       const url = new TextDecoder().decode(uint8Arr.slice(startIndex, byteEnd))
-      const iStr = `<a target="blank" href="${url}" style="${alinkStyle}">${url}</a>`
+      const iStr = `<a target="blank" href="${
+        isMention ? `/profile/${did}` : uri
+      }" style="${alinkStyle}">${url}</a>`
       outputStr += iStr
       // list.push(iStr);
       startIndex = byteEnd
