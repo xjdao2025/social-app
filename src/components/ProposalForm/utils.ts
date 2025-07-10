@@ -65,7 +65,7 @@ function mapMultilineTextToHtml(rt: RichText) {
       }
       const {did, uri} = item.features[0]
       const url = new TextDecoder().decode(uint8Arr.slice(startIndex, byteEnd))
-      const iStr = `<a target="blank" href="${
+      const iStr = `<a target="_blank" href="${
         isMention ? `${window.location.origin}/profile/${did}` : uri
       }" style="${alinkStyle}">${url}</a>`
       outputStr += iStr
@@ -88,9 +88,6 @@ function mapMultilineTextToHtml(rt: RichText) {
   console.log('before output', outputStr)
 
   return outputStr
-    .split('\n')
-    .map(str => `<p style="${lineStyle}">${str}</p>`)
-    .join('')
 }
 
 export async function uploadEmbeds(block: ProposalBlockType) {
@@ -140,7 +137,7 @@ export function videoInfoToFile(asset: ImagePickerAsset): File {
   return new File([u8arr], 'video.mp4', {type: mime})
 }
 
-const lineStyle = ['margin: 0', 'padding: 0'].join(';')
+// const lineStyle = ['margin: 0', 'padding: 0'].join(';')
 
 const alinkStyle = [
   'color: rgb(16, 131, 254)',
@@ -152,7 +149,7 @@ const contentStyle = [
   'color: rgb(11, 15, 20)',
   'font-size: 14px',
   'line-height: 22px',
-  'white-space:normal',
+  'white-space:pre-wrap',
   'word-break:break-all',
   'margin: 0',
 ].join(';')
@@ -165,7 +162,7 @@ const h2Style = [
   'font-size: 16px',
   'line-height: 20px',
   'color: rgb(11, 15, 20)',
-  'white-space:normal',
+  'white-space:pre-wrap',
   'word-break:break-all',
   'margin-bottom: 0',
 ].join(';')

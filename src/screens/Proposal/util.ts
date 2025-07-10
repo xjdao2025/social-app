@@ -4,16 +4,30 @@ export type HTMLBlock =
 
 export default function parserHTMLFile(htmlContent: string): HTMLBlock[] {
   const lines = htmlContent.split('\n')
-  return lines.map(line => {
+  const mergedLines: HTMLBlock[] = []
+  let iLine = ''
+  lines.forEach(line => {
     // get multiple imgs src link
     if (line.startsWith('<div') && line.includes('<img')) {
+      mergedLines.push({type: 'html', content: iLine})
+      iLine = ''
+
       const imgSrcs = line.match(/src="([^"]+)"/g)
       const list = imgSrcs!.map(src => src.replace(/src="([^"]+)"/, '$1'))
-      return {
+      mergedLines.push({
         type: 'images',
         srcs: list,
-      }
+      })
+      return
     }
-    return {type: 'html', content: line}
+    iLine += line + '\n'
+    return
+    // return {type: 'html', content: line}
   })
+
+  if (iLine) {
+    mergedLines.push({type: 'html', content: iLine})
+  }
+  debugger
+  return mergedLines
 }
