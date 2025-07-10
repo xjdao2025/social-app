@@ -1,13 +1,19 @@
 import {type Insets, Platform} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 
+import {IS_INTERNAL} from './app-info'
+
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
 export const STAGING_SERVICE = 'https://staging.bsky.dev'
-export const BSKY_SERVICE = 'https://xiangjiandao.rivtower.cc/pds'
+
+const APIdomain = IS_INTERNAL
+  ? 'https://xiangjiandao.rivtower.cc'
+  : window.location.origin
+export const BSKY_SERVICE = `${APIdomain}/pds` // 'https://xiangjiandao.rivtower.cc/pds'
 // export const BSKY_SERVICE = 'https://web5.rivtower.cc'
-export const DAO_SERVICE = 'https://xiangjiandao.rivtower.cc'
-export const PUBLIC_BSKY_SERVICE = 'https://xiangjiandao.rivtower.cc/bsky'
+export const DAO_SERVICE = APIdomain
+export const PUBLIC_BSKY_SERVICE = `${APIdomain}/bsky` // 'https://xiangjiandao.rivtower.cc/bsky'
 export const DEFAULT_SERVICE = BSKY_SERVICE
 const HELP_DESK_LANG = 'en-us'
 export const HELP_DESK_URL = `https://blueskyweb.zendesk.com/hc/${HELP_DESK_LANG}`
