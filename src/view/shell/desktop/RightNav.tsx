@@ -144,6 +144,12 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           </InlineLinkText>
         </View>
       </View>
+      <View style={{height: 1, backgroundColor: '#D4DBE2', width: '100%'}} />
+      <View style={[a.flex_1]}>
+        <Text style={[a.text_xs, {lineHeight: '18px', color: '#6F869F'}]}>
+          Powered by Web5
+        </Text>
+      </View>
 
       {/* {!hasSession && leftNavMinimal && (
         <View style={[a.w_full, { height: 32 }]}>

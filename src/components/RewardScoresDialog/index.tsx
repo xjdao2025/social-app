@@ -47,7 +47,7 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
       }
 
       if (score > (userInfo?.score ?? 0)) {
-        throw new Error('输入的积分不能超过当前积分')
+        throw new Error('输入的稻米不能超过当前稻米')
       }
 
       dispatch({
@@ -91,7 +91,7 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
     <Dialog.Outer control={control}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
-        label="打赏积分"
+        label="打赏稻米"
         style={web({maxWidth: 400, marginTop: '25vh'})}>
         <Dialog.Close />
 
@@ -102,7 +102,7 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
               {/* <TextField.Icon icon={Shield} /> */}
               <TextField.Input
                 label="captcha code"
-                placeholder="请输入打赏积分"
+                placeholder="请输入打赏稻米"
                 defaultValue=""
                 onChangeText={
                   false
@@ -114,11 +114,11 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
                 autoCapitalize="none"
               />
             </TextField.Root>
-            <Text>当前积分: {userInfo?.score}</Text>
+            <Text>当前稻米: {userInfo?.score}</Text>
             {state.error && <Admonition type="error">{state.error}</Admonition>}
           </View>
           <Button
-            label="打赏积分"
+            label="打赏稻米"
             size="large"
             variant="solid"
             color="primary"

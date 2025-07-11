@@ -423,7 +423,10 @@ export function PostThread({uri}: {uri: string | undefined}) {
       return (
         <View>
           {!isMobile && (
-            <PostThreadComposePrompt onPressCompose={onPressReply} />
+            <PostThreadComposePrompt
+              onPressCompose={onPressReply}
+              thread={thread}
+            />
           )}
         </View>
       )

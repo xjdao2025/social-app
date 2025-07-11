@@ -502,7 +502,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="PointsRecord"
         getComponent={() => PointsRecordScreen}
         options={{
-          title: '积分', // title(msg`Video Feed`),
+          title: '稻米', // title(msg`Video Feed`),
           requireAuth: false,
         }}
       />

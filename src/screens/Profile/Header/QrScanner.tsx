@@ -22,7 +22,7 @@ const QrScanner =  React.forwardRef<
 
   const { scanQR, destroy } = useScanWebQr()
 
-  const offset = useSharedValue(30);
+  const offset = useSharedValue(0);
 
   // 配置动画样式
   const animatedStyles = useAnimatedStyle(() => ({
@@ -109,9 +109,9 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     top: 0,
-    height: 100,
-    backgroundImage: 'linear-gradient(180deg, rgba(0, 255, 51, 0) 43%, #00ff33 211%)',
-    borderBottom: '3px solid #00ff33',
+    height: 60,
+    backgroundImage: 'linear-gradient(180deg, rgba(0, 255, 51, 0) 23%, #00ff33 200%)',
+    borderBottom: '1px solid #00ff33',
     zIndex: 2,
 }
 })

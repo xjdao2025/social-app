@@ -91,7 +91,7 @@ function DialogInner({
         <Dialog.Header
           renderRight={cancelButton}
           style={[a.border_transparent]}>
-          <Dialog.HeaderText>接收积分</Dialog.HeaderText>
+          <Dialog.HeaderText>接收稻米</Dialog.HeaderText>
         </Dialog.Header>
       }>
       <View style={[a.flex_row, a.justify_center]}>

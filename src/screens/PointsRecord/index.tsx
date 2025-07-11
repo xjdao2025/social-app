@@ -84,7 +84,7 @@ const PointsRecordScreen = () => {
           </View>
           <View style={[styles.headPlaceholder, a.mb_lg]} />
           <View style={[a.px_lg]}>
-            <Text style={[t.atoms.text_contrast_low, a.text_sm]}>我的积分</Text>
+            <Text style={[t.atoms.text_contrast_low, a.text_sm]}>我的稻米</Text>
           </View>
           <View style={[a.px_lg, a.mt_md]}>
             <Text
