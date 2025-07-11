@@ -271,9 +271,9 @@ export function BottomBarWeb() {
             }}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 12}}>
               <Logo width={32} />
-              <View style={{paddingTop: 4}}>
-                <Logotype width={80} fill={t.atoms.text.color} />
-              </View>
+              {/*<View style={{paddingTop: 4}}>*/}
+              {/*  <Logotype width={80} fill={t.atoms.text.color} />*/}
+              {/*</View>*/}
             </View>
 
             <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
