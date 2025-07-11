@@ -54,7 +54,7 @@ export function ProfileHeaderRewardPoints() {
         contentFit={'fill'}
       />
       <View>
-        <Text style={[t.atoms.text_inverted]}>积分</Text>
+        <Text style={[t.atoms.text_inverted]}>稻米</Text>
         <View style={[a.mt_md, a.flex_row, a.align_center]}>
           <Text
             style={[
@@ -97,7 +97,7 @@ export function ProfileHeaderRewardPoints() {
                 t.atoms.text_inverted,
                 a.user_select_none,
               ]}>
-              发送积分
+              发送稻米
             </Text>
           </View>
         </TouchableWithoutFeedback>
@@ -110,7 +110,7 @@ export function ProfileHeaderRewardPoints() {
               <QrCode_Icon size={'md'} />
             </View>
             <Text style={[styles.textStyle, t.atoms.text_inverted]}>
-              接收积分
+              接收稻米
             </Text>
           </View>
         </TouchableWithoutFeedback>

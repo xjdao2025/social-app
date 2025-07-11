@@ -166,7 +166,7 @@ function DialogInner({
           <Dialog.Header
             renderRight={cancelButton}
             style={[a.border_transparent]}>
-            <Dialog.HeaderText>发送积分</Dialog.HeaderText>
+            <Dialog.HeaderText>发送稻米</Dialog.HeaderText>
           </Dialog.Header>
         }>
         <View style={[a.gap_xl]}>
@@ -202,13 +202,13 @@ function DialogInner({
           </View>
 
           <View>
-            <TextField.LabelText>积分</TextField.LabelText>
+            <TextField.LabelText>稻米</TextField.LabelText>
             <TextField.Root isInvalid={giftPointsInvalid}>
               <Dialog.Input
                 defaultValue={giftPoints}
                 onChangeText={setGiftPoints}
                 label={_(msg`Display name`)}
-                placeholder={'请输入赠送积分'}
+                placeholder={'请输入赠送稻米'}
                 testID="editProfileDescriptionInput"
                 inputMode={'numeric'}
               />
@@ -227,7 +227,7 @@ function DialogInner({
             )}
           </View>
           <View style={[a.flex_row]}>
-            <Text style={styles.cur_pints_label}>当前积分：</Text>
+            <Text style={styles.cur_pints_label}>当前稻米：</Text>
             <Text style={styles.cur_pints_value}>{userDetail?.score}</Text>
           </View>
           <Button

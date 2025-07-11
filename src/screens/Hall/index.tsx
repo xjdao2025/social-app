@@ -154,7 +154,9 @@ export default function HallScreen() {
         <View style={styles.linearBg} />
         <View style={[a.flex_col, a.px_lg, a.flex_0, styles.topInfo]}>
           <View style={[a.flex_row, a.align_baseline, a.justify_between]}>
-            <Text style={[t.atoms.text, a.text_2xl, a.font_bold]}>基金会</Text>
+            <Text style={[t.atoms.text, a.text_2xl, a.font_bold]}>
+              乡建DAO金库
+            </Text>
             <Link
               label="文档列表"
               // accessibilityRole="button"
@@ -183,7 +185,7 @@ export default function HallScreen() {
                 style={[styles.foundScaleBG]}
                 source={require('#/assets/hall.cash.svg')}
               />
-              <Text style={[t.atoms.text_inverted, a.text_md]}>基金规模</Text>
+              <Text style={[t.atoms.text_inverted, a.text_md]}>金库规模</Text>
               <View style={[a.flex_row, a.gap_sm, a.align_baseline]}>
                 <Text style={[t.atoms.text_inverted, a.text_2xl]}>¥</Text>
                 <Text
@@ -203,7 +205,7 @@ export default function HallScreen() {
                 style={[styles.foundTokenBG]}
                 source={require('#/assets/hall.token.svg')}
               />
-              <Text style={[t.atoms.text_inverted, a.text_md]}>已发行积分</Text>
+              <Text style={[t.atoms.text_inverted, a.text_md]}>已发行稻米</Text>
               <Text
                 style={[
                   t.atoms.text_inverted,

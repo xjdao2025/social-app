@@ -363,6 +363,12 @@ let DrawerFooter = ({
           </InlineLinkText>
         </View>
       </View>
+      <View style={{height: 1, backgroundColor: '#D4DBE2', width: '100%'}} />
+      <View style={[a.flex_1]}>
+        <Text style={[a.text_xs, {lineHeight: '18px', color: '#6F869F'}]}>
+          Powered by Web5
+        </Text>
+      </View>
       {/*<Button*/}
       {/*  label={_(msg`Send feedback`)}*/}
       {/*  size="small"*/}

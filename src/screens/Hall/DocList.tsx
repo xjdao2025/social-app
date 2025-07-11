@@ -47,7 +47,7 @@ export default function HallDocListScreen() {
           <View style={[styles.headPlaceholder, a.mb_lg]} />
           <View style={[a.px_lg]}>
             <Text style={[t.atoms.text, a.text_2xl, a.font_bold]}>
-              基金会信息公开
+              乡建DAO金库信息公开
             </Text>
           </View>
           <View style={[a.px_lg, a.mt_md]}>
@@ -82,7 +82,11 @@ export default function HallDocListScreen() {
                 <View style={[a.flex_1]}>
                   <Text style={[a.text_md]}>{fileInfo.fileName}</Text>
                 </View>
-                <a style={styles.link} target="_blank" href={fileInfo.url} rel="noreferrer">
+                <a
+                  style={styles.link}
+                  target="_blank"
+                  href={fileInfo.url}
+                  rel="noreferrer">
                   <Pressable
                     accessibilityRole="button"
                     style={[styles.button]}
