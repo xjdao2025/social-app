@@ -45,7 +45,10 @@ export const SetNewPasswordForm = ({
   const onPressNext = async () => {
     // Check that the code is correct. We do this again just incase the user enters the code after their pw and we
     // don't get to call onBlur first
-    const formattedCode = checkAndFormatResetCode(resetCode)
+    const formattedCode = checkAndFormatResetCode(
+      resetCode,
+      isEmail(account) ? 'email' : 'phone',
+    )
 
     if (!formattedCode) {
       setError(
@@ -121,13 +124,12 @@ export const SetNewPasswordForm = ({
   }
 
   const onBlur = () => {
-    const formattedCode = checkAndFormatResetCode(resetCode)
+    const formattedCode = checkAndFormatResetCode(
+      resetCode,
+      isEmail(account) ? 'email' : 'phone',
+    )
     if (!formattedCode) {
-      setError(
-        _(
-          msg`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
-        ),
-      )
+      setError('你输入的验证码无效。')
       return
     }
     setResetCode(formattedCode)

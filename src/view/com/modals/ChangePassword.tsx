@@ -80,7 +80,7 @@ export function Component() {
   }
 
   const onChangePassword = async () => {
-    const formattedCode = checkAndFormatResetCode(resetCode)
+    const formattedCode = checkAndFormatResetCode(resetCode, 'email')
     if (!formattedCode) {
       setError(
         _(
@@ -126,7 +126,7 @@ export function Component() {
   }
 
   const onBlur = () => {
-    const formattedCode = checkAndFormatResetCode(resetCode)
+    const formattedCode = checkAndFormatResetCode(resetCode, 'email')
     if (!formattedCode) {
       setError(
         _(
