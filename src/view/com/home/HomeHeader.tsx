@@ -76,7 +76,7 @@ export function HomeHeader(
           height={carouselHeight}
           snapEnabled={true}
           pagingEnabled={true}
-          autoPlayInterval={1000}
+          autoPlayInterval={3000}
           autoPlay
           data={bannerList || []}
           style={{width: screenWidth}}
@@ -88,7 +88,7 @@ export function HomeHeader(
             return (
               <TouchableWithoutFeedback
                 accessibilityRole={'link'}
-                onPressOut={() => {
+                onPress={() => {
                   if (!item.linkAddress) return
                   const url = /https?:\/\/(.*)/.test(item.linkAddress)
                     ? item.linkAddress
