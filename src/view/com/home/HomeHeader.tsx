@@ -88,7 +88,7 @@ export function HomeHeader(
             return (
               <TouchableWithoutFeedback
                 accessibilityRole={'link'}
-                onPressOut={() => {
+                onPress={() => {
                   if (!item.linkAddress) return
                   const url = /https?:\/\/(.*)/.test(item.linkAddress)
                     ? item.linkAddress
