@@ -74,15 +74,9 @@ const MedalsWallScreen = ({route}: Props) => {
             maxWidth: 600,
           },
           !isWithinOffsetView && {
-            transform: [
-              {
-                translateX:
-                  centerColumnOffset && !isWithinDialog
-                    ? CENTER_COLUMN_OFFSET
-                    : 0,
-              },
-              {translateX: web(SCROLLBAR_OFFSET) ?? 0},
-            ],
+            position: 'relative',
+            left:
+              centerColumnOffset && !isWithinDialog ? CENTER_COLUMN_OFFSET : 0,
           },
         ]}>
         <View
