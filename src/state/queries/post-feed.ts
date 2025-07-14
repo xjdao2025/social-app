@@ -24,7 +24,7 @@ import {HomeFeedAPI} from '#/lib/api/feed/home'
 import {LikesFeedAPI} from '#/lib/api/feed/likes'
 import {ListFeedAPI} from '#/lib/api/feed/list'
 import {MergeFeedAPI} from '#/lib/api/feed/merge'
-import {PostsFeedAPI} from '#/lib/api/feed/posts'
+import {PostsFeedAPI,reFillRecordText} from '#/lib/api/feed/posts'
 import {ProposalFeedAPI} from '#/lib/api/feed/proposal'
 import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
@@ -371,9 +371,7 @@ export function usePostFeedQuery(
                     feedPostUri: slice.feedPostUri,
                     items: slice.items.map((item, i) => {
                       const newPost = item.post
-                      if (newPost.record.realText) {
-                        newPost.record.text = newPost.record.realText
-                      }
+                      reFillRecordText(newPost)
                       const feedPostSliceItem: FeedPostSliceItem = {
                         _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
                         uri: item.post.uri,

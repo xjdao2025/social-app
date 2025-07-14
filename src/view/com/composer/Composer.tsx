@@ -614,7 +614,7 @@ export const ComposePost = ({
 
   const footer = (
     <>
-      <SuggestedLanguage text={activePost.richtext.text} />
+      {/* <SuggestedLanguage text={activePost.richtext.text} /> */}
       {/*<ComposerPills*/}
       {/*  isReply={!!replyTo}*/}
       {/*  post={activePost}*/}

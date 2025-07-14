@@ -100,11 +100,17 @@ function structImageBlobRef(imgList: any[]) {
 }
 
 export function structPostInfos(post: AppBskyFeedDefs.PostView) {
-  if (post.record.text.length > 300) {
-    post.record.realText = post.record.text
-    post.record.text = post.record.text.substring(0, 300)
-  }
+  structRecordText(post.record)
+  structRecordText(post.embed?.record?.value)
+  structRecordText(post.embed?.record?.record?.value)
   structPostImages(post)
+}
+
+function structRecordText(record: any) {
+  if (record?.text && record?.text.length > 300) {
+    record.realText = record.text
+    record.text = record.text.substring(0, 300)
+  }
 }
 
 function structPostImages(post: AppBskyFeedDefs.PostView) {
@@ -128,6 +134,25 @@ function structPostImages(post: AppBskyFeedDefs.PostView) {
   }
   if (post.embed?.record?.record?.value?.embed?.media?.images) {
     structImageBlobRef(post.embed?.record?.record?.value?.embed?.media?.images)
+  }
+}
+
+export function reFillRecordText(post: AppBskyFeedDefs.PostView) {
+  if (post.record.realText) {
+    post.record.text = post.record.realText
+  }
+  if (post.reply?.parent?.record?.realText) {
+    post.reply.parent.record.text = post.reply?.parent?.record.realText
+  }
+  if (post.reply?.root?.record?.realText) {
+    post.reply.root.record.text = post.reply?.root?.record.realText
+  }
+  if (post.embed?.record?.value?.realText) {
+    post.embed.record.value.text = post.embed?.record?.value.realText
+  }
+  if (post.embed?.record?.record?.value.realText) {
+    post.embed.record.record.value.text =
+      post.embed?.record?.record?.value.realText
   }
 }
 
