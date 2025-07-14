@@ -107,7 +107,7 @@ const MedalsWallScreen = ({route}: Props) => {
               {isEmpty ? (
                 <MedalEmpty />
               ) : (
-                <>
+                <View style={[styles.inner_grid]}>
                   {userMedals?.medals?.map(md => {
                     return (
                       <View style={styles.medal_item} key={md.medalId}>
@@ -141,7 +141,7 @@ const MedalsWallScreen = ({route}: Props) => {
                       </View>
                     )
                   })}
-                </>
+                </View>
               )}
             </View>
             {!isEmpty && <BottomView />}
@@ -191,8 +191,12 @@ const styles = StyleSheet.create({
     gap: 20,
     minHeight: 'calc(100% - 50px)',
   },
+  inner_grid: {
+    width: '100%',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+  },
   medal_item: {
-    width: 90,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
