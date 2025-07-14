@@ -195,6 +195,7 @@ const styles = StyleSheet.create({
     width: '100%',
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: 20,
   },
   medal_item: {
     display: 'flex',
