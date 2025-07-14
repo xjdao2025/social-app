@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
   wrap: {
     paddingBlock: 13,
     paddingInline: 16,
+    backgroundColor: '#fff',
   },
   header: {
     color: '#6F869F',
