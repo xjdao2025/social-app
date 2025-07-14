@@ -76,7 +76,7 @@ export function HomeHeader(
           height={carouselHeight}
           snapEnabled={true}
           pagingEnabled={true}
-          autoPlayInterval={1000}
+          autoPlayInterval={3000}
           autoPlay
           data={bannerList || []}
           style={{width: screenWidth}}
