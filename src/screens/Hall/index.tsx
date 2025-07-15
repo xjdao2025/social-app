@@ -390,7 +390,8 @@ const styles = StyleSheet.create({
     gap: 19,
     borderRadius: 16,
     paddingTop: 30,
-    paddingBottom: 40,
+    paddingBottom: 20,
+    minHeight: 130,
     paddingInline: 16,
   },
   foundScale: {
