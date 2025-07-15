@@ -237,7 +237,7 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         continue
     }
   }
-  return AppLanguage.en
+  return AppLanguage.zh_CN
 }
 
 /**
