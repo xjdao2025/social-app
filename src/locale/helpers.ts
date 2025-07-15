@@ -1,4 +1,4 @@
-import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
+import {type AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import * as bcp47Match from 'bcp-47-match'
 import lande from 'lande'
 
@@ -276,5 +276,5 @@ export function findSupportedAppLanguage(languageTags: (string | undefined)[]) {
       return tag
     }
   }
-  return AppLanguage.en
+  return AppLanguage.zh_CN
 }

@@ -1,8 +1,8 @@
 import {Platform} from 'react-native'
-import {getLocales} from 'expo-localization'
 import {keepPreviousData, useInfiniteQuery} from '@tanstack/react-query'
 
 import {GIF_FEATURED, GIF_SEARCH} from '#/lib/constants'
+import {deviceLocales} from '#/locale/deviceLocales'
 
 export const RQKEY_ROOT = 'gif-service'
 export const RQKEY_FEATURED = [RQKEY_ROOT, 'featured']
@@ -61,7 +61,7 @@ function createTenorApi<Input extends object>(
       (['preview', 'gif', 'tinygif'] satisfies ContentFormats[]).join(','),
     )
 
-    const locale = getLocales?.()?.[0]
+    const locale = deviceLocales[0]
 
     if (locale) {
       params.set('locale', locale.languageTag.replace('-', '_'))

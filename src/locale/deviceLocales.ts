@@ -1,9 +1,26 @@
-import {getLocales as defaultGetLocales, Locale} from 'expo-localization'
+import {getLocales as defaultGetLocales, type Locale} from 'expo-localization'
 
 import {dedupArray} from '#/lib/functions'
 
 type LocalWithLanguageCode = Locale & {
   languageCode: string
+}
+
+const defaultZh = {
+  currencyCode: null,
+  currencySymbol: null,
+  decimalSeparator: '.',
+  digitGroupingSeparator: ',',
+  languageCode: 'zh',
+  languageCurrencyCode: null,
+  languageCurrencySymbol: null,
+  languageRegionCode: null,
+  languageScriptCode: null,
+  languageTag: 'zh',
+  measurementSystem: null,
+  regionCode: null,
+  temperatureUnit: null,
+  textDirection: 'ltr',
 }
 
 /**
@@ -23,7 +40,6 @@ type LocalWithLanguageCode = Locale & {
 export function getLocales() {
   const locales = defaultGetLocales?.() ?? []
   const output: LocalWithLanguageCode[] = []
-
   for (const locale of locales) {
     if (typeof locale.languageCode === 'string') {
       if (locale.languageCode === 'in') {
@@ -60,8 +76,12 @@ export function getLocales() {
     // @ts-ignore checked above
     output.push(locale)
   }
-
-  return output
+  const zh = output.find(opt => opt.languageCode === 'zh')
+  if (!zh) {
+    console.log('未找到中文语言配置', output)
+  }
+  // return output
+  return zh ? [zh] : [defaultZh]
 }
 
 export const deviceLocales = getLocales()
