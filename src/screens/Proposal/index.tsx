@@ -95,7 +95,7 @@ export default function ProposalDetailScreen({route}: Props) {
     async () => {
       const res = (await server.dao('POST /proposal/detail', {proposalId})) as
         | null
-        | (APIDao.WebEndPointsProposalProposalDetailVo & {
+        | (APIDao.WebEndpointsProposalProposalDetailVo & {
             content: string
             blocks: HTMLBlock[]
           })
@@ -442,7 +442,7 @@ type VoteResultProps = {
   disagree: number | undefined
   status: ProposalStatus | undefined
   endDate: string | undefined
-  votedInfo: APIDao.WebEndPointsProposalMyProposalChoiceVo | null | undefined
+  votedInfo: APIDao.WebEndpointsProposalMyProposalChoiceVo | null | undefined
 }
 
 function VoteResult(props: VoteResultProps) {
