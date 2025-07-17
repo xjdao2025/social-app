@@ -11,7 +11,7 @@ type RequestParams = {
 }
 
 async function fetchMyProposal(
-  type: APIDao.WebEndPointsProposalMyProposalReq['type'],
+  type: APIDao.WebEndpointsProposalMyProposalReq['type'],
 ) {
   const items = await server.dao('POST /proposal/my-proposal-list', {type})
   return items?.map(restructFeedItem)
@@ -82,7 +82,7 @@ export class ProposalFeedAPI implements FeedAPI {
 }
 
 function restructFeedItem(
-  item: APIDao.WebEndPointsProposalProposalPageVo,
+  item: APIDao.WebEndpointsProposalProposalPageVo,
 ): AppBskyFeedDefs.FeedViewPost {
   return {
     post: {

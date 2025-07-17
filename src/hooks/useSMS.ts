@@ -6,7 +6,7 @@ import server from '#/server'
 
 const parseReceiver = (
   receiver: string,
-): APIDao.WebEndPointsUserRegisterType => {
+): APIDao.WebEndpointsUserRegisterType => {
   if (isPhoneNumber(receiver)) return 2
   if (isEmail(receiver)) return 1
   return 0

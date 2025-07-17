@@ -22,7 +22,7 @@ export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
 export const STARTER_PACK_MAX_SIZE = 150
 // 服务条款
-export const SERVICE_PROTOCOL_FILE_URL = `${window.location.origin}/doc/乡建DAO-隐私政策.pdf`
+export const SERVICE_PROTOCOL_FILE_URL = `${window.location.origin}/doc/乡建DAO-用户服务协议.pdf`
 // 隐私政策
 export const PRIVACY_PROTOCOL_FILE_URL = `${window.location.origin}/doc/乡建DAO-隐私政策.pdf`
 // 官方联系邮箱

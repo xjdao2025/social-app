@@ -29,7 +29,6 @@ import {
 } from '#/state/queries/post-thread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import * as Toast from '#/view/com/util/Toast'
 import {
   atoms as a,
@@ -95,7 +94,7 @@ export default function ProposalDetailScreen({route}: Props) {
     async () => {
       const res = (await server.dao('POST /proposal/detail', {proposalId})) as
         | null
-        | (APIDao.WebEndPointsProposalProposalDetailVo & {
+        | (APIDao.WebEndpointsProposalProposalDetailVo & {
             content: string
             blocks: HTMLBlock[]
           })
@@ -442,7 +441,7 @@ type VoteResultProps = {
   disagree: number | undefined
   status: ProposalStatus | undefined
   endDate: string | undefined
-  votedInfo: APIDao.WebEndPointsProposalMyProposalChoiceVo | null | undefined
+  votedInfo: APIDao.WebEndpointsProposalMyProposalChoiceVo | null | undefined
 }
 
 function VoteResult(props: VoteResultProps) {

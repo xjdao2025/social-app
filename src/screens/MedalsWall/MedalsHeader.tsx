@@ -19,7 +19,7 @@ const SCROLL_OFFSET_RATIO = 465 / 750
 const SCREEN_WIDTH = Math.min(600, Dimensions.get('window').width)
 
 const MedalsHeader = (props: {
-  list?: APIDao.WebEndPointsUserMedalUserMedalPageVo[]
+  list?: APIDao.WebEndpointsUserMedalUserMedalPageVo[]
   total?: number
 }) => {
   const {list = [], total = 0} = props

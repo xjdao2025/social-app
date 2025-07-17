@@ -174,7 +174,7 @@ let FeedItemInner = ({
   onShowLess,
 }: FeedItemProps & {
   richText: RichTextAPI
-  post: APIDao.WebEndPointsProposalProposalPageVo & AppBskyFeedDefs.PostView
+  post: APIDao.WebEndpointsProposalProposalPageVo & AppBskyFeedDefs.PostView
   rootPost: AppBskyFeedDefs.PostView
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
 }): React.ReactNode => {

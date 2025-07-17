@@ -13,7 +13,7 @@ import {Text} from '#/components/Typography'
 import server from '#/server'
 
 type InfiniteScrollType = {
-  list: APIDao.WebEndPointsScoreUserScoreRecordPageVo[]
+  list: APIDao.WebEndpointsScoreUserScoreRecordPageVo[]
   total: number
   curPage: number
 }
