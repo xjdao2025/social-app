@@ -277,7 +277,7 @@ export default function HallScreen() {
                           width: 64,
                           height: 64,
                           borderRadius: '50%',
-                          backgroundColor: '#ff0',
+                          backgroundColor: 'rgb(241, 243, 245)',
                         },
                       ]}
                     />

@@ -29,7 +29,6 @@ import {
 } from '#/state/queries/post-thread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import * as Toast from '#/view/com/util/Toast'
 import {
   atoms as a,
