@@ -1,5 +1,6 @@
-import React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
+import {Image} from 'expo-image'
+import type React from 'react'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
@@ -52,6 +53,10 @@ export const LoggedOutLayout = ({
   return (
     <View style={styles.container}>
       <View style={[styles.side, sideBg]}>
+        <Image
+          source={require('#/assets/login.title.png')}
+          style={[styles.logo, isTabletOrMobile && styles.logoSmall]}
+        />
         <Text
           style={[
             pal.textLight,
@@ -71,6 +76,12 @@ export const LoggedOutLayout = ({
         <Text type="2xl-medium" style={[pal.textLight, styles.descriptionText]}>
           {description}
         </Text>
+        <View
+          style={[
+            styles.placeholder,
+            isTabletOrMobile && styles.placeholderSmall,
+          ]}
+        />
       </View>
       {scrollable ? (
         <View style={[styles.scrollableContent, contentBg]}>
@@ -94,6 +105,22 @@ export const LoggedOutLayout = ({
 }
 
 const styles = StyleSheet.create({
+  logo: {
+    alignSelf: 'flex-end',
+    width: 280,
+    height: 140,
+  },
+  logoSmall: {
+    width: 200,
+    height: 100,
+  },
+  placeholder: {
+    width: 280,
+    height: 180,
+  },
+  placeholderSmall: {
+    height: 160,
+  },
   container: {
     flexDirection: 'row',
     // @ts-ignore web only

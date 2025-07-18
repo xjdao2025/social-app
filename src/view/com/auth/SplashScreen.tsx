@@ -89,8 +89,8 @@ export const SplashScreen = ({
             <View style={[a.justify_center, a.align_center]}>
               {/* <Logo width={kawaii ? 300 : 92} fill="sky" /> */}
               <Image
-                source={require('#/assets/logo.png')}
-                style={{width: 96, height: 96}}
+                source={require('#/assets/login.title.png')}
+                style={{width: 280, height: 140}}
               />
 
               {/* {!kawaii && (
@@ -104,7 +104,7 @@ export const SplashScreen = ({
                   a.text_md,
                   a.font_bold,
                   t.atoms.text_contrast_medium,
-                  a.pt_5xl,
+                  a.pt_xl,
                 ]}>
                 <Trans>What's up?</Trans>
               </Text>
