@@ -26,7 +26,7 @@ export const SERVICE_PROTOCOL_FILE_URL = `${window.location.origin}/doc/乡建DA
 // 隐私政策
 export const PRIVACY_PROTOCOL_FILE_URL = `${window.location.origin}/doc/乡建DAO-隐私政策.pdf`
 // 官方联系邮箱
-export const CONTACT_EMAIL = 'xxxx@xiangjiandao.com'
+export const CONTACT_EMAIL = 'xjdaos@126.com'
 
 // HACK
 // Yes, this is exactly what it looks like. It's a hard-coded constant
