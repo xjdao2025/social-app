@@ -1,6 +1,7 @@
 import {useEffect, useReducer, useState} from 'react'
 import {AppState, type AppStateStatus, View} from 'react-native'
 import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
+import {Image} from 'expo-image'
 import {AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'

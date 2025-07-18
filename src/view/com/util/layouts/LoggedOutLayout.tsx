@@ -52,11 +52,13 @@ export const LoggedOutLayout = ({
   }
   return (
     <View style={styles.container}>
-      <View style={[styles.side, sideBg]}>
+      <View style={styles.header}>
         <Image
           source={require('#/assets/login.title.png')}
-          style={[styles.logo, isTabletOrMobile && styles.logoSmall]}
+          style={styles.logo}
         />
+      </View>
+      <View style={[styles.side, sideBg]}>
         <Text
           style={[
             pal.textLight,
@@ -76,12 +78,6 @@ export const LoggedOutLayout = ({
         <Text type="2xl-medium" style={[pal.textLight, styles.descriptionText]}>
           {description}
         </Text>
-        <View
-          style={[
-            styles.placeholder,
-            isTabletOrMobile && styles.placeholderSmall,
-          ]}
-        />
       </View>
       {scrollable ? (
         <View style={[styles.scrollableContent, contentBg]}>
@@ -106,25 +102,26 @@ export const LoggedOutLayout = ({
 
 const styles = StyleSheet.create({
   logo: {
-    alignSelf: 'flex-end',
-    width: 280,
-    height: 140,
-  },
-  logoSmall: {
-    width: 200,
-    height: 100,
-  },
-  placeholder: {
-    width: 280,
-    height: 180,
-  },
-  placeholderSmall: {
-    height: 160,
+    width: 131 * 1,
+    height: 40 * 1,
   },
   container: {
     flexDirection: 'row',
     // @ts-ignore web only
     height: '100vh',
+  },
+  header: {
+    // @ts-ignore web only
+    position: 'fixed',
+    top: 0,
+    width: '100%',
+    alignItems: 'center',
+    flexDirection: 'row',
+    // height: 80,
+    zIndex: 2,
+    backgroundColor: '#333',
+    paddingBlock: 8,
+    paddingInline: 20,
   },
   side: {
     flex: 1,
