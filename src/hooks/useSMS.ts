@@ -15,9 +15,10 @@ const parseReceiver = (
 // const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export default function useSMS() {
-  const [leftTime, setLeftTime] = useState<number | undefined>()
-  const [countdown, formattedRes] = useCountDown({leftTime})
+  const [targetDate, setTargetDate] = useState<number | undefined>()
+  const [countdown, formattedRes] = useCountDown({targetDate})
   const [executing, setExecuting] = useState(false)
+
   return {
     ticking: executing || !!countdown,
     countdownText: countdown ? `${formattedRes.seconds}s` : '', // 发送验证码 ｜ 60s
@@ -43,7 +44,7 @@ export default function useSMS() {
         if (!flag) {
           throw new Error(flagRes.message)
         }
-        setLeftTime(60 * 1000)
+        setTargetDate(Date.now() + 60 * 1000)
       } finally {
         setExecuting(false)
       }
