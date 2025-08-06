@@ -35,7 +35,7 @@ ingress:
   className: 'rivdap'
   annotations: {}
   hosts:
-    - host: "xiangjiandao.rivtower.xyz"
+    - host: "xjdao.xyz"
       paths:
         - path: "/"
           pathType: Prefix
