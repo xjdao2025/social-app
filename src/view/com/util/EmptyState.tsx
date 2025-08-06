@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
     borderRadius: 80,
-    marginTop: 30,
+    marginTop: 60,
   },
   iconContainerBig: {
     width: 100,
