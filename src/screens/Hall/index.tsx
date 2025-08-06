@@ -333,6 +333,7 @@ export default function HallScreen() {
               </View>
             </View>
             <ProfileFeedSection
+              emptyMessage="目前还没有提案"
               ref={postsSectionRef}
               // feed={`author|did:plc:pc5gxd5my6uooild5drcixdm|posts_and_author_threads`}
               feed={`proposal|${currentTabKey}`}

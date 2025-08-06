@@ -26,6 +26,7 @@ export interface FeedSectionProps {
   setScrollViewTag: (tag: number | null) => void
   contentContainerStyle?: PostFeedProps['contentContainerStyle']
   desktopFixedHeight?: PostFeedProps['desktopFixedHeight']
+  emptyMessage?: string
 }
 export const ProfileFeedSection = React.forwardRef<
   SectionRef,
@@ -40,6 +41,7 @@ export const ProfileFeedSection = React.forwardRef<
     setScrollViewTag,
     contentContainerStyle,
     desktopFixedHeight,
+    emptyMessage,
   },
   ref,
 ) {
@@ -67,7 +69,7 @@ export const ProfileFeedSection = React.forwardRef<
   }))
 
   const renderPostsEmpty = React.useCallback(() => {
-    return <EmptyState icon="growth" message={_(msg`No posts yet.`)} />
+    return <EmptyState icon="growth" message={emptyMessage || _(msg`No posts yet.`)} />
   }, [_])
 
   React.useEffect(() => {
