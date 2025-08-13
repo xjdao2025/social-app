@@ -86,7 +86,7 @@ declare namespace APIDao {
     /** DID */
     did: string
 
-    /** 积分 */
+    /** 稻米 */
     score: number
 
     /** 是否是节点用户 */
@@ -236,7 +236,7 @@ declare namespace APIDao {
     /** 接收用户的Did */
     toUserDid: string
 
-    /** 积分 */
+    /** 稻米 */
     score: number
 
     /** 扩展信息（帖子的标题等相关信息） */
@@ -248,7 +248,7 @@ declare namespace APIDao {
     /** 接收用户的手机号或邮箱 */
     userPhoneOrEmail: string
 
-    /** 积分 */
+    /** 稻米 */
     score: number
   }
 
@@ -438,6 +438,12 @@ declare namespace APIDao {
     /** 节点 Id */
     nodeId: string
 
+    /** 节点用户 Id */
+    userId: string
+
+    /** 节点用户 Did */
+    userDid: string
+
     /** 节点 Logo */
     logo: string
 
@@ -448,12 +454,53 @@ declare namespace APIDao {
     description: string
   }
 
+  /** POST /information/detail */
+  interface WebEndpointsInformationInformationDetailReq {
+    /** 公告 Id */
+    informationId: string
+  }
+
+  /** POST /information/detail */
+  interface WebEndpointsInformationInformationDetailVo {
+    /** 公告 Id */
+    informationId: string
+
+    /** 公告标题 */
+    name: string
+
+    /** 公告附件 Id */
+    attachId: string
+
+    /** 创建时间 {"format":"date-time"} */
+    createAt: string
+  }
+
+  /** POST /information/page */
+  interface WebEndpointsInformationInformationPageReq {
+    /** 页码 */
+    pageNum: number
+
+    /** 页大小 */
+    pageSize: number
+  }
+
+  /** POST /information/page */
+  interface NetCorePalExtensionsDtoPagedDataOfInformationPageVo {
+    items: Array<WebEndpointsInformationInformationPageVo>
+
+    total: number
+
+    pageIndex: number
+
+    pageSize: number
+  }
+
   /** POST /global-config/foundation-info */
   interface WebEndpointsGlobalConfigFoundationInfoVo {
     /** 基金规模 */
     fundScale: number
 
-    /** 发行积分规模 */
+    /** 发行稻米规模 */
     issuePointsScale: number
 
     /** 基金会公开信息文件 */
@@ -523,14 +570,14 @@ declare namespace APIDao {
   /** 登录类型 {"x-enumNames":["Unknown","DomainName","Email","Phone"]} */
   type WebEndpointsUserLoginType = 0 | 1 | 2 | 3
 
-  /** 验证码类型 0-未知 1-登录 2-重置密码 3-注册 4-修改邮箱 5-更换手机号 6-后台用户登录 7-后台用户重置密码 8-后台积分发放 9-注销账户 {"x-enumNames":["Unknown","Login","ResetPassword","Register","ChangeEmail","ChangePhone","AdminUserLogin","AdminUserResetPassword","AdminUserScoreDistribution","DeleteAccount"]} */
+  /** 验证码类型 0-未知 1-登录 2-重置密码 3-注册 4-修改邮箱 5-更换手机号 6-后台用户登录 7-后台用户重置密码 8-后台稻米发放 9-注销账户 {"x-enumNames":["Unknown","Login","ResetPassword","Register","ChangeEmail","ChangePhone","AdminUserLogin","AdminUserResetPassword","AdminUserScoreDistribution","DeleteAccount"]} */
   type WebUtilsCodeType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
   /** {"x-enumNames":["Unknown","Email","Phone"]} */
   type WebEndpointsUserRegisterType = 0 | 1 | 2
 
   interface WebEndpointsScoreUserScoreRecordPageVo {
-    /** 积分明细主键Id */
+    /** 稻米明细主键Id */
     id: string
 
     type: DomainEnumsScoreSourceType
@@ -538,7 +585,7 @@ declare namespace APIDao {
     /** 获得原因 */
     reason: string
 
-    /** 积分数量 */
+    /** 稻米数量 */
     score: number
 
     /** 创建时间 {"format":"date-time"} */
@@ -590,6 +637,20 @@ declare namespace APIDao {
     choice: DomainEnumsVoteType
   }
 
-  /** 积分来源类型 0-未知 1-打赏 2-赠送 3-后台发放 {"x-enumNames":["Unknown","Reward","Send","AdminDistribution"]} */
+  interface WebEndpointsInformationInformationPageVo {
+    /** 公告 Id */
+    id: string
+
+    /** 公告名称 */
+    name: string
+
+    /** 附件 Id */
+    attachId: string
+
+    /** 创建时间 {"format":"date-time"} */
+    createAt: string
+  }
+
+  /** 稻米来源类型 0-未知 1-打赏 2-赠送 3-后台发放 {"x-enumNames":["Unknown","Reward","Send","AdminDistribution"]} */
   type DomainEnumsScoreSourceType = 0 | 1 | 2 | 3
 }

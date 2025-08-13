@@ -1,11 +1,12 @@
 import React from 'react'
-import {View} from 'react-native'
+import {Text, View} from 'react-native'
 import {Image} from 'expo-image'
 import {type AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type NavigationProp, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
+import {useSetState} from 'ahooks'
 
 import {VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -30,6 +31,11 @@ import {FAB} from '../util/fab/FAB'
 import {type ListMethods} from '../util/List'
 import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '../util/MainScrollProvider'
+import {
+  type ContextState as PostFeedFilterContextState,
+  PostFeedFilterContext,
+} from './post-feed-filter/context'
+import {PostFeedFilter} from './post-feed-filter/Filter'
 
 const POLL_FREQ = 60e3 // 60sec
 
@@ -129,15 +135,34 @@ export function FeedPage({
   }, [scrollToTop, feed, queryClient, setHasNew])
 
   const shouldPrefetch = isNative && isPageAdjacent
+
+  const [filterState, setFilterState] = useSetState<PostFeedFilterContextState>(
+    {},
+  )
+
   return (
     <View testID={testID}>
       {/* <MainScrollProvider> */}
+      <PostFeedFilterContext.Provider value={[filterState, setFilterState]}>
+        <PostFeedFilter feed={feed} />
+      </PostFeedFilterContext.Provider>
       <FeedFeedbackProvider value={feedFeedback}>
         <PostFeed
           testID={testID ? `${testID}-feed` : undefined}
           enabled={isPageFocused || shouldPrefetch}
           feed={feed}
-          feedParams={feedParams}
+          feedParams={{
+            ...feedParams,
+            filter: {
+              repo: filterState.node?.value?.userDid,
+              indexed_at: filterState.date?.value
+                ? [
+                    filterState.date.value[0].format('YYYY-MM-DD 00:00:00'),
+                    filterState.date.value[1].format('YYYY-MM-DD 23:59:59'),
+                  ]
+                : undefined,
+            },
+          }}
           pollInterval={POLL_FREQ}
           disablePoll={hasNew || !isPageFocused}
           scrollElRef={scrollElRef}

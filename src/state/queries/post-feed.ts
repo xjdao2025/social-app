@@ -24,7 +24,7 @@ import {HomeFeedAPI} from '#/lib/api/feed/home'
 import {LikesFeedAPI} from '#/lib/api/feed/likes'
 import {ListFeedAPI} from '#/lib/api/feed/list'
 import {MergeFeedAPI} from '#/lib/api/feed/merge'
-import {PostsFeedAPI,reFillRecordText} from '#/lib/api/feed/posts'
+import {PostsFeedAPI, reFillRecordText} from '#/lib/api/feed/posts'
 import {ProposalFeedAPI} from '#/lib/api/feed/proposal'
 import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
@@ -83,6 +83,7 @@ export interface FeedParams {
   mergeFeedEnabled?: boolean
   mergeFeedSources?: string[]
   feedCacheKey?: 'discover' | 'explore' | undefined
+  filter?: Record<string, any>
 }
 
 type RQPageParam = {cursor: string | undefined; api: FeedAPI} | undefined
@@ -564,7 +565,12 @@ function createApi({
 
     return new PostsFeedAPI({
       agent,
-      params: {tag: PostsHashTagTypeMap[tag], useAuth: hasSession},
+      // TODO: add params here
+      params: {
+        tag: PostsHashTagTypeMap[tag],
+        useAuth: hasSession,
+        ...feedParams.filter,
+      },
     })
   } else {
     // shouldnt happen

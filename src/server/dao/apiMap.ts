@@ -64,17 +64,17 @@ const apiMap = {
     APIDao.WebEndpointsSmsVerifySmsRequest,
     boolean
   >('/sms/verify', 'POST'),
-  /** 打赏积分 */
+  /** 打赏稻米 */
   'POST /score/reward': defineAPI<
     APIDao.WebEndpointsScoreRewardScoreReq,
     boolean
   >('/score/reward', 'POST'),
-  /** 发送积分 */
+  /** 发送稻米 */
   'POST /score/send': defineAPI<APIDao.WebEndpointsScoreSendScoreReq, boolean>(
     '/score/send',
     'POST',
   ),
-  /** 用户积分明细 */
+  /** 用户稻米明细 */
   'POST /score/user-sore-record-page': defineAPI<
     APIDao.WebEndpointsScoreUserScoreRecordPageReq,
     APIDao.NetCorePalExtensionsDtoPagedDataOfUserScoreRecordPageVo
@@ -119,6 +119,16 @@ const apiMap = {
     '/node/list',
     'POST',
   ),
+  /** 公告详情 */
+  'POST /information/detail': defineAPI<
+    APIDao.WebEndpointsInformationInformationDetailReq,
+    APIDao.WebEndpointsInformationInformationDetailVo
+  >('/information/detail', 'POST'),
+  /** 公告分页查询 */
+  'POST /information/page': defineAPI<
+    APIDao.WebEndpointsInformationInformationPageReq,
+    APIDao.NetCorePalExtensionsDtoPagedDataOfInformationPageVo
+  >('/information/page', 'POST'),
   /** 基金会信息查询 */
   'POST /global-config/foundation-info': defineAPI<
     null,

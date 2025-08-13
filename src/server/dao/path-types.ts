@@ -68,6 +68,14 @@ export type APITypeTuple = {
   ]
   'POST /proposal/vote': [APIDao.WebEndpointsProposalVoteProposalReq, boolean]
   'POST /node/list': [null, Array<APIDao.WebEndpointsNodeNodeListVo>]
+  'POST /information/detail': [
+    APIDao.WebEndpointsInformationInformationDetailReq,
+    APIDao.WebEndpointsInformationInformationDetailVo,
+  ]
+  'POST /information/page': [
+    APIDao.WebEndpointsInformationInformationPageReq,
+    APIDao.NetCorePalExtensionsDtoPagedDataOfInformationPageVo,
+  ]
   'POST /global-config/foundation-info': [
     null,
     APIDao.WebEndpointsGlobalConfigFoundationInfoVo,

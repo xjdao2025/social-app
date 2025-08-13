@@ -60,5 +60,18 @@ module.exports = async function (env, argv) {
       }),
     )
   }
+
+  if (env.mode === 'development') {
+    config.devServer = {
+      ...config.devServer,
+      proxy: {
+        '/api/v1': {
+          target: 'https://xiangjiandao.rivtower.cc',
+          changeOrigin: true,
+        },
+      },
+    }
+  }
+
   return config
 }
