@@ -452,6 +452,9 @@ declare namespace APIDao {
 
     /** 节点描述 */
     description: string
+
+    /** 稻米数量 */
+    score: number
   }
 
   /** POST /information/detail */
