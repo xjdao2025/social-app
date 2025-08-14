@@ -56,6 +56,8 @@ const hideTabBarRoute: RouteType[] = [
   'HallDocList',
   'HallNodeList',
   'MedalsWall',
+  'HallAnnouncement',
+  'HallAnnouncementList',
 ]
 
 export function BottomBarWeb() {
