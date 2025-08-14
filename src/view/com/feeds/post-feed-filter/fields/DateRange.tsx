@@ -2,7 +2,7 @@ import {useContext, useState} from 'react'
 import {Pressable, StyleSheet, Text, View} from 'react-native'
 import {Image} from 'expo-image'
 import {useBoolean, useLatest} from 'ahooks'
-import {DatePicker,Dropdown} from 'antd'
+import {DatePicker, Dropdown} from 'antd'
 import {Popup} from 'antd-mobile'
 import dayjs from 'dayjs'
 
@@ -60,27 +60,39 @@ export function DateRange(props: Props) {
               key: 'custom',
               label: (
                 <>
-                  <View style={{width: 80}}>
-                    <Text>自定义</Text>
-                  </View>
-                  <View style={{width: 0, height: 0, overflow: 'hidden'}}>
-                    <RangePicker
-                      open={pickerVisible}
-                      onOpenChange={setPickerVisible.set}
-                      onChange={v => {
-                        setPickerVisible.setFalse()
-                        setState({
-                          date: {
-                            label:
-                              v[0].format('YYYY-MM-DD') +
-                              '--' +
-                              v[1].format('YYYY-MM-DD'),
-                            value: [dayjs(v[0]), dayjs(v[1])],
-                          },
-                        })
-                        setTimeout(setVisible.setFalse)
-                      }}
-                    />
+                  <View style={{position: 'relative'}}>
+                    <View style={{width: 80}}>
+                      <Text>自定义</Text>
+                    </View>
+                    <View
+                      style={{
+                        width: 0,
+                        height: 0,
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        zIndex: -1,
+                        opacity: 0,
+                      }}>
+                      <RangePicker
+                        style={{height: 0}}
+                        open={pickerVisible}
+                        onOpenChange={setPickerVisible.set}
+                        onChange={v => {
+                          setPickerVisible.setFalse()
+                          setState({
+                            date: {
+                              label:
+                                v[0].format('YYYY-MM-DD') +
+                                '--' +
+                                v[1].format('YYYY-MM-DD'),
+                              value: [dayjs(v[0]), dayjs(v[1])],
+                            },
+                          })
+                          setTimeout(setVisible.setFalse)
+                        }}
+                      />
+                    </View>
                   </View>
                 </>
               ),
