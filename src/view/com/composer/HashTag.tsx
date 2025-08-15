@@ -18,7 +18,7 @@ export const PostsHashTagType: Tagype[] = [
   {
     tag: '#任务',
     feedDes: 'tasks',
-    requiredRoles: [],
+    requiredRoles: ['nodeUser'],
   },
   {
     tag: '#商品',
@@ -28,7 +28,7 @@ export const PostsHashTagType: Tagype[] = [
   {
     tag: '#活动',
     feedDes: 'activity',
-    requiredRoles: ['nodeUser'],
+    requiredRoles: [],
   },
 ]
 
