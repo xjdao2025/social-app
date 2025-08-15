@@ -37,7 +37,10 @@ function MobilePopup({trigger, node}: NodeInfoProps) {
             }}
             alt=""
           />
-          <Text style={[a.text_2xl]}>{node.name}</Text>
+          <View style={[a.flex, a.flex_col, a.gap_lg]}>
+            <Text style={[a.text_2xl]}>{node.name}</Text>
+            <Text style={[a.text_sm]}>当前稻米: {node.score ?? 0}</Text>
+          </View>
         </View>
         <View style={[a.my_xl, styles.spliter]} />
         <Text style={[a.text_md, {lineHeight: 1.5}]}>{node.description}</Text>
