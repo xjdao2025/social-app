@@ -18,6 +18,7 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {precacheProfile} from '#/state/queries/profile'
 import {atoms as a, platform, useTheme, web} from '#/alf'
 import {WebOnlyInlineLinkText} from '#/components/Link'
+import NodeUserBadge from '#/components/NodeUserBadge'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
@@ -105,6 +106,8 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 ),
               )}
             </WebOnlyInlineLinkText>
+            {/* TODO: 添加节点用户标识 */}
+            <NodeUserBadge did={author.did} size={14} style={{marginLeft: 4}} />
             {verification.showBadge && (
               <View
                 style={[

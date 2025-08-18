@@ -47,7 +47,7 @@ import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, tokens,useTheme} from '#/alf'
 import {colors} from '#/components/Admonition'
 import {Button} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -59,6 +59,7 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {PostHider} from '#/components/moderation/PostHider'
+import NodeUserBadge from '#/components/NodeUserBadge'
 import {type AppModerationCause} from '#/components/Pills'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
@@ -357,6 +358,12 @@ let PostThreadItemLoaded = ({
                     )}
                   </Text>
                 </Link>
+
+                <NodeUserBadge
+                  did={post.author.did}
+                  size={tokens.fontSize.sm}
+                  style={{marginLeft: 4}}
+                />
 
                 <View style={[{paddingLeft: 3, top: -1}]}>
                   <VerificationCheckButton
