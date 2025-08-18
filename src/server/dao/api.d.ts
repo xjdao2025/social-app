@@ -26,6 +26,15 @@ declare namespace APIDao {
     pageSize: number
   }
 
+  /** POST /user/node-user-list */
+  interface WebEndpointsUserNodeUserVo {
+    /** 用户 Id */
+    id: string
+
+    /** DID */
+    did: string
+  }
+
   /** POST /user/reset-password */
   interface WebEndpointsUserResetPasswordReq {
     /** 邮箱 */

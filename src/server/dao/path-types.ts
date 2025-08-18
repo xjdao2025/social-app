@@ -7,6 +7,7 @@ export type APITypeTuple = {
     APIDao.WebEndpointsUserMedalUserMedalPageReq,
     APIDao.NetCorePalExtensionsDtoPagedDataOfUserMedalPageVo,
   ]
+  'POST /user/node-user-list': [null, Array<APIDao.WebEndpointsUserNodeUserVo>]
   'POST /user/reset-password': [
     APIDao.WebEndpointsUserResetPasswordReq,
     boolean,

@@ -9,6 +9,11 @@ const apiMap = {
     APIDao.WebEndpointsUserMedalUserMedalPageReq,
     APIDao.NetCorePalExtensionsDtoPagedDataOfUserMedalPageVo
   >('/user-medal/page', 'POST'),
+  /** 节点用户列表 */
+  'POST /user/node-user-list': defineAPI<
+    null,
+    Array<APIDao.WebEndpointsUserNodeUserVo>
+  >('/user/node-user-list', 'POST'),
   /** 重置用户密码 */
   'POST /user/reset-password': defineAPI<
     APIDao.WebEndpointsUserResetPasswordReq,
