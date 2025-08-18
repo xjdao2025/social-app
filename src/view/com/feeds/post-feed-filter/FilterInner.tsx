@@ -1,32 +1,22 @@
 import 'antd-mobile/es/global'
 import '@ant-design/v5-patch-for-react-19'
 
-import {StyleSheet, View} from 'react-native'
-
 import {isNative} from '#/platform/detection'
-import {DateRange} from './fields/DateRange'
-import {Nodes} from './fields/Nodes'
 
-type Props = {
-  feed: string
-}
+import {StyleSheet, View} from 'react-native'
+import {IndexedAtField} from './fields/indexed-at'
+import {RepoField} from './fields/repo'
 
-const titleMap: Record<string, string> = {
-  tasks: '任务',
-  products: '商品',
-}
+type Props = {}
+
 
 export function PostFeedFilterInner(props: Props) {
   if (isNative) return null
 
-  const {feed} = props
-
-  const title = titleMap[feed.split('|')[1]] ?? ''
-
   return (
     <View style={S.container}>
-      <DateRange title={title} />
-      <Nodes title={title} />
+      <IndexedAtField />
+      <RepoField />
     </View>
   )
 }

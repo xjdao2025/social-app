@@ -1,23 +1,28 @@
+import dayjs from 'dayjs'
 import {createContext} from 'react'
-import type dayjs from 'dayjs'
 
 export type ContextState = {
-  date?: {
-    label?: string
-    value?: [dayjs.Dayjs, dayjs.Dayjs]
-  }
-  node?: {
-    label?: string
-    value?: APIDao.WebEndpointsNodeNodeListVo
+  tabName: string
+  fields: {
+    repo?: APIDao.WebEndpointsNodeNodeListVo,
+    indexed_at?: {
+      activeKey: string
+      value: [dayjs.Dayjs, dayjs.Dayjs]
+    }
   }
 }
 
-export type PostFeedFilterContext = [
-  ContextState,
-  (state: Partial<ContextState>) => void,
-]
+export type ContextActions = {
+  setField: <F extends keyof ContextState['fields']>(filed: F, value: ContextState['fields'][F]) => void
+}
 
-const defaultState: PostFeedFilterContext = [{}, () => {}]
+export type PostFeedFilterContext = ContextState & ContextActions
+
+const defaultState: PostFeedFilterContext = {
+  tabName: "",
+  fields: {},
+  setField: () => void 0
+}
 
 export const PostFeedFilterContext =
   createContext<PostFeedFilterContext>(defaultState)

@@ -35,7 +35,10 @@ import {
   type ContextState as PostFeedFilterContextState,
   PostFeedFilterContext,
 } from './post-feed-filter/context'
-import {PostFeedFilter} from './post-feed-filter/Filter'
+import {
+  PostFeedFilter,
+  type Fields as FeedFilterFields,
+} from './post-feed-filter/Filter'
 
 const POLL_FREQ = 60e3 // 60sec
 
@@ -136,16 +139,17 @@ export function FeedPage({
 
   const shouldPrefetch = isNative && isPageAdjacent
 
-  const [filterState, setFilterState] = useSetState<PostFeedFilterContextState>(
-    {},
-  )
+  // 任务/商品 过滤
+  const [filterValue, setFilterValue] = useSetState<FeedFilterFields>({})
 
   return (
     <View testID={testID}>
       {/* <MainScrollProvider> */}
-      <PostFeedFilterContext.Provider value={[filterState, setFilterState]}>
-        <PostFeedFilter feed={feed} />
-      </PostFeedFilterContext.Provider>
+      <PostFeedFilter
+        feed={feed}
+        value={filterValue}
+        onChange={setFilterValue}
+      />
       <FeedFeedbackProvider value={feedFeedback}>
         <PostFeed
           testID={testID ? `${testID}-feed` : undefined}
@@ -153,15 +157,7 @@ export function FeedPage({
           feed={feed}
           feedParams={{
             ...feedParams,
-            filter: {
-              repo: filterState.node?.value?.userDid,
-              indexed_at: filterState.date?.value
-                ? [
-                    filterState.date.value[0].format('YYYY-MM-DD 00:00:00'),
-                    filterState.date.value[1].format('YYYY-MM-DD 23:59:59'),
-                  ]
-                : undefined,
-            },
+            filter: filterValue,
           }}
           pollInterval={POLL_FREQ}
           disablePoll={hasNew || !isPageFocused}
