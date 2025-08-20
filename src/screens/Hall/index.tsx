@@ -222,6 +222,11 @@ export default function HallScreen() {
             </View>
           </View>
           <View style={[a.flex, a.flex_col, a.mt_xl, styles.announcement]}>
+            <Image
+              style={[styles.announcementBgImg]}
+              accessibilityIgnoresInvertColors
+              source={require('#/assets/hall/announcement.bg.svg')}
+            />
             <View
               style={[
                 a.flex,
@@ -271,7 +276,7 @@ export default function HallScreen() {
                     key={item.id}
                     to={`/hall/announcement/${item.id}`}
                     label={item.title}
-                    style={[a.w_full, {display: 'block'}]}>
+                    style={[a.w_full, {display: 'block', color: '#6F869F'}]}>
                     <View style={[styles.announcementItem, a.gap_sm]}>
                       <Image
                         style={[styles.announcementIcon]}
@@ -555,7 +560,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 12,
     marginLeft: 6,
-    fontWeight: '400',
+    fontWeight: '600',
+    opacity: 0.5,
   },
   announcementBox: {
     backgroundColor: 'white',
@@ -566,6 +572,13 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: 'white',
     backgroundImage: 'linear-gradient(180deg, #F1F7FE 0%, #FFF 100%)',
+  },
+  announcementBgImg: {
+    position: 'absolute',
+    top: 0,
+    right: 14,
+    width: 80,
+    height: 66,
   },
   announcementList: {
     display: 'flex',
