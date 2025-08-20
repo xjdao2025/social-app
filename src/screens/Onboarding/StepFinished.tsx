@@ -49,6 +49,7 @@ import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
 import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import server from '#/server'
 import * as bsky from '#/types/bsky'
 
 export function StepFinished() {
@@ -171,6 +172,28 @@ export function StepFinished() {
             next.createdAt = new Date().toISOString()
             return next
           })
+          if (blobPromise) {
+            setTimeout(async () => {
+              try {
+                const {data: updated} = await agent.getProfile({
+                  actor: agent.session?.did!,
+                })
+                if (!updated.avatar) {
+                  throw new Error('avatar data is not detected')
+                }
+                // 转发一个到己方服务
+                await server.dao('POST /user/edit-profile', {
+                  avatar: updated.avatar!,
+                  nickName: updated.displayName || '',
+                  introduction: updated.description || '',
+                })
+              } catch (e) {
+                logger.error(`onboarding failed on finished step`, {
+                  safeMessage: e,
+                })
+              }
+            }, 1000)
+          }
 
           logEvent('onboarding:finished:avatarResult', {
             avatarResult: profileStepResults.isCreatedAvatar
