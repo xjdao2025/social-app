@@ -1,7 +1,8 @@
-import ExpandRightIcon from '#/components/DAO/icons/expand-right'
-import {Image} from 'expo-image'
-import type {ReactNode} from 'react'
+import  {type ReactNode} from 'react'
 import {Pressable, StyleSheet, Text} from 'react-native'
+import {Image} from 'expo-image'
+
+import ExpandRightIcon from '#/components/DAO/icons/expand-right'
 
 type LabelProps = {
   placeholder: string
@@ -38,7 +39,7 @@ export function Label(props: LabelProps) {
         </>
       ) : (
         <>
-          <Text>{placeholder}</Text>
+          <Text style={[S.placeholderText]}>{placeholder}</Text>
           <ExpandRightIcon
             style={{rotate: '90deg'}}
             color="#42576C"
@@ -64,9 +65,11 @@ const S = StyleSheet.create({
     borderRadius: 15,
     cursor: 'pointer',
     gap: 2,
-    cursor: 'pointer',
   },
   valued: {
     backgroundColor: 'rgba(16, 131, 254, 0.10)',
+  },
+  placeholderText: {
+    color: '#42576C',
   },
 })
