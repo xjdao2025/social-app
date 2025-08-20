@@ -31,7 +31,7 @@ export function DateRangePicker(props: Props) {
         color="secondary"
         onPress={setStartTimeVisible.setTrue}>
         <ButtonText>
-          {startTime ? startTime.format('YYYY-MM-DD') : '开始时间'}
+          {startTime ? startTime.format('YYYY/MM/DD') : '开始时间'}
         </ButtonText>
       </Button>
 
@@ -60,7 +60,7 @@ export function DateRangePicker(props: Props) {
         color="secondary"
         onPress={setEndTimeVisible.setTrue}>
         <ButtonText>
-          {endTime ? endTime.format('YYYY-MM-DD') : '结束时间'}
+          {endTime ? endTime.format('YYYY/MM/DD') : '结束时间'}
         </ButtonText>
       </Button>
 

@@ -1,14 +1,15 @@
-import {Button, ButtonText} from '#/components/Button'
-import {DateRangePicker} from './DateRangePicker'
+import {useContext, useState} from 'react'
+import {Pressable, StyleSheet, Text, View} from 'react-native'
+import {Image} from 'expo-image'
 import {useBoolean} from 'ahooks'
 import {Popup} from 'antd-mobile'
 import dayjs from 'dayjs'
-import {Image} from 'expo-image'
-import {useContext, useState} from 'react'
-import {Pressable, StyleSheet, Text, View} from 'react-native'
-import {Label} from '../Label'
+
+import {Button, ButtonText} from '#/components/Button'
 import {PostFeedFilterContext} from '../../context'
+import {Label} from '../Label'
 import {options} from './constant'
+import {DateRangePicker} from './DateRangePicker'
 
 export function IndexedAtFieldMobile() {
   const {tabName, fields, setField} = useContext(PostFeedFilterContext)
@@ -28,7 +29,7 @@ export function IndexedAtFieldMobile() {
       <Label
         label={
           options.find(option => option.key === storeValue?.activeKey)?.label ||
-          storeValue?.value?.map(d => d.format("YYYY-MM-DD")).join('--')
+          storeValue?.value?.map(d => d.format('YYYY/MM/DD')).join('--')
         }
         placeholder="按时间筛选"
         onPress={setVisible.setTrue}

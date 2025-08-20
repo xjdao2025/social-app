@@ -1,10 +1,11 @@
-import {PostFeedFilterContext} from '../../context'
-import {Label} from '#/view/com/feeds/post-feed-filter/fields/Label'
+import {useContext} from 'react'
+import {Text, View} from 'react-native'
 import {useBoolean} from 'ahooks'
 import {DatePicker, Dropdown} from 'antd'
 import dayjs from 'dayjs'
-import {useContext} from 'react'
-import {Text, View} from 'react-native'
+
+import {Label} from '#/view/com/feeds/post-feed-filter/fields/Label'
+import {PostFeedFilterContext} from '../../context'
 import {options} from './constant'
 
 const {RangePicker} = DatePicker
@@ -88,7 +89,7 @@ export function IndexedAtFieldPC() {
           label={
             options.find(option => option.key === storeValue?.activeKey)
               ?.label ||
-            storeValue?.value?.map(d => d.format('YYYY-MM-DD')).join('--')
+            storeValue?.value?.map(d => d.format('YYYY/MM/DD')).join('--')
           }
           placeholder="按时间筛选"
           onPress={setVisible.setTrue}
