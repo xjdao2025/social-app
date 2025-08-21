@@ -415,19 +415,25 @@ export const ComposePost = ({
     setError('')
     setIsPublishing(true)
 
-    thread.posts.forEach(post => {
-      if (!post.hashTag) return
-      const richText = post.richtext.text.toString()
-      const newTxt = new RichText({text: richText + '\n' + post.hashTag})
-      newTxt.detectFacetsWithoutResolution()
-      post.richtext = newTxt
+    // 这里不能直接修改 thread.posts, 会导致失败后二次发布的数据被污染
+    const handledPosts = thread.posts.map(post => {
+      const _post = {...post}
+
+      if (post.hashTag) {
+        const richText = post.richtext.text.toString()
+        const newTxt = new RichText({text: richText + '\n' + post.hashTag})
+        newTxt.detectFacetsWithoutResolution()
+        _post.richtext = newTxt
+      }
+
+      return _post
     })
 
     let postUri
     try {
       postUri = (
         await apilib.post(agent, queryClient, {
-          thread,
+          thread: {...thread, posts: handledPosts},
           replyTo: replyTo?.uri,
           onStateChange: setPublishingStage,
           langs: toPostLanguages(langPrefs.postLanguage),

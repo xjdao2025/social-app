@@ -10,6 +10,7 @@ import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {Link} from '#/view/com/util/Link'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
+import NodeUserBadge from '#/components/NodeUserBadge'
 import {Text} from '#/components/Typography'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 
@@ -46,7 +47,7 @@ export default function ProposalAuthor({
               )}
             </Text>
           </Link>
-
+          <NodeUserBadge did={author.did} size={14} style={{marginLeft: 4}} />
           <View style={[{paddingLeft: 3, top: -1}]}>
             <VerificationCheckButton profile={shadowedPostAuthor} size="md" />
           </View>

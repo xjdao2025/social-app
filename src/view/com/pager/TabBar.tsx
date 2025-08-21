@@ -22,6 +22,7 @@ export interface TabBarProps {
 
   onSelect?: (index: number) => void
   onPressSelected?: (index: number) => void
+  border?: boolean
 }
 
 // How much of the previous/next item we're showing
@@ -35,6 +36,7 @@ export function TabBar({
   onSelect,
   onPressSelected,
   style: propsStyle,
+  border = true,
 }: TabBarProps) {
   const t = useTheme()
   const scrollElRef = useRef<ScrollView>(null)
@@ -145,7 +147,7 @@ export function TabBar({
           )
         })}
       </DraggableScrollView>
-      <View style={[styles.outerBottomBorder]} />
+      {border && <View style={[styles.outerBottomBorder]} />}
     </View>
   )
 }

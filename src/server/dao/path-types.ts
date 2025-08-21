@@ -7,6 +7,7 @@ export type APITypeTuple = {
     APIDao.WebEndpointsUserMedalUserMedalPageReq,
     APIDao.NetCorePalExtensionsDtoPagedDataOfUserMedalPageVo,
   ]
+  'POST /user/node-user-list': [null, Array<APIDao.WebEndpointsUserNodeUserVo>]
   'POST /user/reset-password': [
     APIDao.WebEndpointsUserResetPasswordReq,
     boolean,
@@ -68,6 +69,14 @@ export type APITypeTuple = {
   ]
   'POST /proposal/vote': [APIDao.WebEndpointsProposalVoteProposalReq, boolean]
   'POST /node/list': [null, Array<APIDao.WebEndpointsNodeNodeListVo>]
+  'POST /information/detail': [
+    APIDao.WebEndpointsInformationInformationDetailReq,
+    APIDao.WebEndpointsInformationInformationDetailVo,
+  ]
+  'POST /information/page': [
+    APIDao.WebEndpointsInformationInformationPageReq,
+    APIDao.NetCorePalExtensionsDtoPagedDataOfInformationPageVo,
+  ]
   'POST /global-config/foundation-info': [
     null,
     APIDao.WebEndpointsGlobalConfigFoundationInfoVo,

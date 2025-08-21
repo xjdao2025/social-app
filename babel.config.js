@@ -19,6 +19,14 @@ module.exports = function (api) {
       'macros',
       ['babel-plugin-react-compiler', {target: '19'}],
       [
+        'import',
+        {
+          libraryName: 'antd-mobile',
+          libraryDirectory: 'es/components',
+          style: false,
+        },
+      ],
+      [
         'module:react-native-dotenv',
         {
           envName: 'APP_ENV',

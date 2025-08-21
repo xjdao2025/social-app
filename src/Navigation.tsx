@@ -113,6 +113,8 @@ import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import ApplicationsScreen from './screens/Applications'
 import HallScreen from './screens/Hall'
+import HallAnnouncementScreen from './screens/Hall/Announcement'
+import HallAnnouncementListScreen from './screens/Hall/AnnouncementList'
 import HallDocListScreen from './screens/Hall/DocList'
 import HallNodeListScreen from './screens/Hall/NodeList'
 import MedalsWallScreen from './screens/MedalsWall'
@@ -495,6 +497,22 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => HallDocListScreen}
         options={{
           title: 'Hall Doc List', // title(msg`Video Feed`),
+          requireAuth: false,
+        }}
+      />
+      <Stack.Screen
+        name="HallAnnouncementList"
+        getComponent={() => HallAnnouncementListScreen}
+        options={{
+          title: '公告栏', // title(msg`Video Feed`),
+          requireAuth: false,
+        }}
+      />
+      <Stack.Screen
+        name="HallAnnouncement"
+        getComponent={() => HallAnnouncementScreen}
+        options={{
+          title: '公告', // title(msg`Video Feed`),
           requireAuth: false,
         }}
       />

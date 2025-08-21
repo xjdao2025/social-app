@@ -25,8 +25,8 @@ export function useUpdateProfileVerificationCache() {
         // 转发一个到己方服务
         server.dao('POST /user/edit-profile', {
           avatar: updated.avatar!,
-          nickName: updated.displayName!,
-          introduction: updated.description!,
+          nickName: updated.displayName || '',
+          introduction: updated.description || '',
         })
         updateProfileShadow(qc, profile.did, {
           verification: updated.verification,

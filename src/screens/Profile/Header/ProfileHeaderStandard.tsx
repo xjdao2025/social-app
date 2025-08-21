@@ -27,7 +27,7 @@ import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
 import {ProfileHeaderMedal} from '#/screens/Profile/Header/Medal'
 import {ProfileHeaderRewardPoints} from '#/screens/Profile/Header/RewardPoints'
-import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, platform, tokens,useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
@@ -37,6 +37,7 @@ import {
   KnownFollowers,
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
+import NodeUserBadge from '#/components/NodeUserBadge'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
@@ -245,6 +246,7 @@ let ProfileHeaderStandard = ({
             <Text
               emoji
               testID="profileHeaderDisplayName"
+              numberOfLines={1}
               style={[
                 t.atoms.text,
                 gtMobile ? a.text_4xl : a.text_3xl,
@@ -266,6 +268,10 @@ let ProfileHeaderStandard = ({
               {/*  <VerificationCheckButton profile={profile} size="lg" />*/}
               {/*</View>*/}
             </Text>
+            <NodeUserBadge
+              did={profile.did}
+              size={gtMobile ? tokens.fontSize._2xl : tokens.fontSize.xl}
+            />
           </View>
           <View style={[a.flex_row, a.align_center, a.gap_xs]}>
             <Text

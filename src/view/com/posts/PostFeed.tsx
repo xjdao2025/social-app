@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useRef } from 'react'
+import React, {memo, useCallback, useEffect, useRef} from 'react'
 import {
   ActivityIndicator,
   AppState,
@@ -263,7 +263,7 @@ let PostFeed = ({
 
   useEffect(() => {
     refetch()
-  }, [feed, refetch]);
+  }, [feed, feedParams?.filter, refetch])
 
   const isEmpty = React.useMemo(
     () => !isFetching && !data?.pages?.some(page => page.slices.length),
@@ -308,9 +308,10 @@ let PostFeed = ({
     // more than 1 page can trigger some UI freakouts on iOS and android
     // -prf
     if (
-      data?.pages.length === 1 &&
-      (feed === 'following' ||
-        feed === `author|${myDid}|posts_and_author_threads`) || feed.startsWith('square-posts')
+      (data?.pages.length === 1 &&
+        (feed === 'following' ||
+          feed === `author|${myDid}|posts_and_author_threads`)) ||
+      feed.startsWith('square-posts')
     ) {
       queryClient.invalidateQueries({queryKey: RQKEY(feed)})
     }

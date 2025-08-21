@@ -61,6 +61,10 @@ export default function HallScreen() {
 
   const [affixLeft, setAffixLeft] = useState(0)
 
+  const {data: announcements} = useRequest(async () =>
+    server.dao('POST /information/page', {pageNum: 1, pageSize: 3}),
+  )
+
   useEffect(() => {
     if (!route) return
     reloadNodeList()
@@ -215,6 +219,82 @@ export default function HallScreen() {
                 ]}>
                 {displayNumber(foundInfo?.issuePointsScale)}
               </Text>
+            </View>
+          </View>
+          <View style={[a.flex, a.flex_col, a.mt_xl, styles.announcement]}>
+            <Image
+              style={[styles.announcementBgImg]}
+              accessibilityIgnoresInvertColors
+              source={require('#/assets/hall/announcement.bg.svg')}
+            />
+            <View
+              style={[
+                a.flex,
+                a.flex_row,
+                a.align_center,
+                a.justify_between,
+                a.px_md,
+                a.pt_xs,
+              ]}>
+              <View style={[a.flex, a.flex_row, a.align_end]}>
+                <Image
+                  style={[styles.announcementTitle]}
+                  accessibilityIgnoresInvertColors
+                  source={require('#/assets/hall/announcement.title.svg')}
+                />
+                <Text style={[styles.announcementInfo]}>INFORMATION</Text>
+              </View>
+
+              <Link
+                label="公告列表"
+                to="/hall/announcements"
+                style={{color: 'white'}}>
+                <Text
+                  style={[
+                    t.atoms.text_contrast_medium,
+                    a.text_sm,
+                    a.font_bold,
+                    {color: 'inherit'},
+                  ]}>
+                  更多
+                </Text>
+                <ExpandRightIcon size={14} />
+              </Link>
+            </View>
+
+            <View style={styles.announcementBox}>
+              <View style={styles.announcementList}>
+                {announcements?.items?.length === 0 && (
+                  <View style={[a.flex, a.justify_center, a.align_center]}>
+                    <Text style={[a.text_md, {color: '#42576C'}]}>
+                      暂无公告
+                    </Text>
+                  </View>
+                )}
+                {announcements?.items?.map(item => (
+                  <Link
+                    key={item.id}
+                    to={`/hall/announcement/${item.id}`}
+                    label={item.title}
+                    style={[a.w_full, {display: 'block', color: '#6F869F'}]}>
+                    <View style={[styles.announcementItem, a.gap_sm]}>
+                      <Image
+                        style={[styles.announcementIcon]}
+                        accessibilityIgnoresInvertColors
+                        source={require('#/assets/hall/announcement.icon.svg')}
+                      />
+                      <View style={[a.flex_1]}>
+                        <Text
+                          style={[a.text_md, a.font_bold, {color: '#0B0F14'}]}
+                          numberOfLines={1}>
+                          {item.name}
+                        </Text>
+                      </View>
+                      <ExpandRightIcon size={14} />
+                    </View>
+                  </Link>
+                ))}
+              </View>
             </View>
           </View>
         </View>
@@ -373,14 +453,14 @@ const styles = StyleSheet.create({
     zIndex: 0,
     width: '100%',
     // height: '100%',
-    paddingBottom: '78.8%',
+    paddingBottom: '100%',
 
     opacity: 0.6,
     backgroundImage:
       'linear-gradient(71deg, #DEF2FE 10.27%, #B5D3FF 28.82%, #D9D7FA 96.02%)',
   },
   topInfo: {
-    position: 'fixed',
+    position: 'relative',
     zIndex: 1,
     width: '100%',
     top: 52 + 20,
@@ -417,13 +497,13 @@ const styles = StyleSheet.create({
   },
   cardWrapper: {
     position: 'relative',
-    marginTop: 52,
+    marginTop: 90,
     bottom: 0,
     // left: '50%',
     // transform: 'translateX(-50%)',
     width: '100%',
     // height: '100%',
-    paddingTop: 220,
+    // paddingTop: 220,
     paddingBottom: 58,
     zIndex: 2,
     pointerEvents: 'none',
@@ -462,4 +542,59 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   activeTabText: {color: '#fff'},
+  // 公告栏
+  announcement: {
+    position: 'relative',
+    width: '100%',
+    padding: 6,
+    borderWidth: 1,
+    borderColor: 'white',
+    borderRadius: 16,
+    backgroundImage: 'linear-gradient(80deg, #9DCBFF 1.37%, #DCCDFF 98.09%)',
+  },
+  announcementTitle: {
+    width: 48,
+    height: 15,
+  },
+  announcementInfo: {
+    color: 'white',
+    fontSize: 12,
+    marginLeft: 6,
+    fontWeight: '600',
+    opacity: 0.5,
+  },
+  announcementBox: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    marginTop: 8,
+    borderWidth: 2,
+    borderColor: 'white',
+    backgroundImage: 'linear-gradient(180deg, #F1F7FE 0%, #FFF 100%)',
+  },
+  announcementBgImg: {
+    position: 'absolute',
+    top: 0,
+    right: 14,
+    width: 80,
+    height: 66,
+  },
+  announcementList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 12,
+  },
+  announcementItem: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    cursor: 'pointer',
+    height: 20,
+  },
+  announcementIcon: {
+    width: 16,
+    height: 16,
+  },
 })

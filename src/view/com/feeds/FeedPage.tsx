@@ -1,11 +1,12 @@
 import React from 'react'
-import {View} from 'react-native'
+import {Text, View} from 'react-native'
 import {Image} from 'expo-image'
 import {type AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type NavigationProp, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
+import {useSetState} from 'ahooks'
 
 import {VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -30,6 +31,14 @@ import {FAB} from '../util/fab/FAB'
 import {type ListMethods} from '../util/List'
 import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '../util/MainScrollProvider'
+import {
+  type ContextState as PostFeedFilterContextState,
+  PostFeedFilterContext,
+} from './post-feed-filter/context'
+import {
+  PostFeedFilter,
+  type Fields as FeedFilterFields,
+} from './post-feed-filter/Filter'
 
 const POLL_FREQ = 60e3 // 60sec
 
@@ -129,15 +138,27 @@ export function FeedPage({
   }, [scrollToTop, feed, queryClient, setHasNew])
 
   const shouldPrefetch = isNative && isPageAdjacent
+
+  // 任务/商品 过滤
+  const [filterValue, setFilterValue] = useSetState<FeedFilterFields>({})
+
   return (
     <View testID={testID}>
       {/* <MainScrollProvider> */}
+      <PostFeedFilter
+        feed={feed}
+        value={filterValue}
+        onChange={setFilterValue}
+      />
       <FeedFeedbackProvider value={feedFeedback}>
         <PostFeed
           testID={testID ? `${testID}-feed` : undefined}
           enabled={isPageFocused || shouldPrefetch}
           feed={feed}
-          feedParams={feedParams}
+          feedParams={{
+            ...feedParams,
+            filter: filterValue,
+          }}
           pollInterval={POLL_FREQ}
           disablePoll={hasNew || !isPageFocused}
           scrollElRef={scrollElRef}

@@ -116,6 +116,7 @@ export function HomeHeader(
           items={items}
           dragProgress={props.dragProgress}
           dragState={props.dragState}
+          border={false}
         />
       </Layout.Center>
     </>

@@ -1,10 +1,11 @@
 import {View} from 'react-native'
-import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
+import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {Shadow} from '#/state/cache/types'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {type Shadow} from '#/state/cache/types'
+import {atoms as a, tokens,useBreakpoints, useTheme} from '#/alf'
+import NodeUserBadge from '#/components/NodeUserBadge'
 import {Text} from '#/components/Typography'
 
 export function ProfileHeaderDisplayName({
@@ -18,10 +19,18 @@ export function ProfileHeaderDisplayName({
   const {gtMobile} = useBreakpoints()
 
   return (
-    <View pointerEvents="none">
+    <View
+      pointerEvents="none"
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4,
+      }}>
       <Text
         emoji
         testID="profileHeaderDisplayName"
+        numberOfLines={1}
         style={[
           t.atoms.text,
           gtMobile ? a.text_4xl : a.text_3xl,
@@ -33,6 +42,10 @@ export function ProfileHeaderDisplayName({
           moderation.ui('displayName'),
         )}
       </Text>
+      <NodeUserBadge
+        did={profile.did}
+        size={gtMobile ? tokens.fontSize._2xl : tokens.fontSize.xl}
+      />
     </View>
   )
 }

@@ -11,3 +11,8 @@ export const isMobileWeb =
   // @ts-ignore we know window exists -prf
   global.window.matchMedia(isMobileWebMediaQuery)?.matches
 export const isIPhoneWeb = isWeb && /iPhone/.test(navigator.userAgent)
+
+export const isRealMobileWeb =
+  isWeb &&
+  ('ontouchstart' in global.window.document.documentElement ||
+    /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent))

@@ -1,19 +1,34 @@
+import {useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
+import {useRequest} from 'ahooks'
 
+import {useSession} from '#/state/session'
 import {Text} from '#/components/Typography'
+import server from '#/server'
 
-export const PostsHashTagType = [
+type Role = 'nodeUser'
+
+type Tagype = {
+  tag: string
+  feedDes: string
+  requiredRoles: Role[]
+}
+
+export const PostsHashTagType: Tagype[] = [
   {
     tag: '#任务',
     feedDes: 'tasks',
+    requiredRoles: ['nodeUser'],
   },
   {
     tag: '#商品',
     feedDes: 'products',
+    requiredRoles: ['nodeUser'],
   },
   {
     tag: '#活动',
     feedDes: 'activity',
+    requiredRoles: [],
   },
 ]
 
@@ -30,11 +45,24 @@ const HashTag = (props: {
 }) => {
   const {setHashTag, active = ''} = props
 
+  const {currentAccount} = useSession()
+  const {data: currentUserProfile} = useRequest(
+    async () => server.dao('POST /user/login-user-detail'),
+    {ready: !!currentAccount?.did},
+  )
+
+  const userRoles: Record<Role, boolean> = {
+    nodeUser: currentUserProfile?.nodeUser === true,
+  }
+
   return (
     <View style={styles.wrap}>
       <Text style={styles.header}>请选择类型:</Text>
       <View style={styles.container}>
-        {PostsHashTagType.map(({tag}) => {
+        {PostsHashTagType.map(({tag, requiredRoles}) => {
+          const hasAuth = requiredRoles.every(role => userRoles[role])
+          if (!hasAuth) return null
+
           const isActive = tag === active
 
           return (
