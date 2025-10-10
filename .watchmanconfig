@@ -1,1 +1,17 @@
-{}
+{
+  "ignore_dirs": [
+    "node_modules",
+    ".git",
+    ".yarn",
+    "ios/Pods",
+    "android/build",
+    "android/.gradle",
+    ".expo",
+    "dist",
+    "build",
+    "bskyweb",
+    "bskylink",
+    "bskyogcard",
+    "bskyembed"
+  ]
+}
