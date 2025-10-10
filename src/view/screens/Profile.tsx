@@ -330,8 +330,8 @@ function ProfileScreenLoaded({
                 label: '贴文',
               },
               {key: `author|${profile.did}|reply`, label: '回复'},
-              {key: `author|${profile.did}|media`, label: '媒体'},
-              {key: `likes|${profile.did}`, label: '喜欢'},
+              {key: `author|${profile.did}|media`, label: '图文'},
+              {key: `likes|${profile.did}`, label: '点赞'},
             ]}>
             <ProfileFeedSection
               ref={postsSectionRef}
@@ -352,8 +352,8 @@ function ProfileScreenLoaded({
                 label: '贴文',
               },
               {key: `author-tasks|${profile.did}|reply`, label: '回复'},
-              {key: `author-tasks|${profile.did}|media`, label: '媒体'},
-              {key: `likes|${profile.did}|tasks`, label: '喜欢'},
+              {key: `author-tasks|${profile.did}|media`, label: '图文'},
+              {key: `likes|${profile.did}|tasks`, label: '点赞'},
             ]}>
             <ProfileFeedSection
               ref={taskSectionRef}
@@ -374,8 +374,8 @@ function ProfileScreenLoaded({
                 label: '贴文',
               },
               {key: `author-products|${profile.did}|reply`, label: '回复'},
-              {key: `author-products|${profile.did}|media`, label: '媒体'},
-              {key: `likes|${profile.did}|products`, label: '喜欢'},
+              {key: `author-products|${profile.did}|media`, label: '图文'},
+              {key: `likes|${profile.did}|products`, label: '点赞'},
             ]}>
             <ProfileFeedSection
               ref={productSectionRef}
@@ -396,8 +396,8 @@ function ProfileScreenLoaded({
                 label: '贴文',
               },
               {key: `author-activity|${profile.did}|reply`, label: '回复'},
-              {key: `author-activity|${profile.did}|media`, label: '媒体'},
-              {key: `likes|${profile.did}|activity`, label: '喜欢'},
+              {key: `author-activity|${profile.did}|media`, label: '图文'},
+              {key: `likes|${profile.did}|activity`, label: '点赞'},
             ]}>
             <ProfileFeedSection
               ref={activitySectionRef}
