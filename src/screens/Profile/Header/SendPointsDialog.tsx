@@ -150,7 +150,9 @@ function DialogInner({
   )
 
   const scan = async () => {
-    const qrResult = await videoRef?.current?.scan()
+    const qrResult = await videoRef?.current?.scan().catch(error => {
+      Toast.show(String(error), 'xmark')
+    })
     if (!qrResult) return
     const url = new URL(qrResult)
     setGiftAccount(url.searchParams.get('receiveUser') || '')

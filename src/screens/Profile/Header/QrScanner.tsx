@@ -32,9 +32,12 @@ const QrScanner =  React.forwardRef<
   useImperativeHandle(ref, () => ({
     scan: async () => {
       setTrue()
-      const result = await scanQR(videoRef.current)
-      setFalse()
-      return result
+      return scanQR(videoRef.current)
+        .then(result => result)
+        .catch(error => {
+          throw error
+        })
+        .finally(() => setFalse())
     },
     close: setFalse,
   }))

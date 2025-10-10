@@ -31,11 +31,35 @@ export default function useScanWebQr() {
       throw new Error('您的浏览器不支持摄像头访问功能。请升级到最新版浏览器！')
     }
 
-    mediaStream = await navigator.mediaDevices.getUserMedia({
-      video: {facingMode: 'environment'},
-    })
+    if (navigator.permissions?.query) {
+      const status = await navigator.permissions.query({
+        name: 'camera' as PermissionName,
+      })
+
+      if (status.state === 'denied') {
+        throw new Error('您已拒绝摄像头权限，请在浏览器设置中手动开启。')
+      }
+    }
+
+    try {
+      mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: {facingMode: 'environment'},
+      })
+    } catch (error) {
+      if (error instanceof DOMException) {
+        if (error.name === 'NotAllowedError') {
+          throw new Error('获取摄像头权限失败，请在浏览器地址栏允许摄像头访问后重新尝试。')
+        }
+
+        if (error.name === 'NotFoundError') {
+          throw new Error('未检测到可用摄像头，请确认设备已连接摄像头后重试。')
+        }
+      }
+
+      throw error
+    }
     video.srcObject = mediaStream
-    video.setAttribute('playsinline', true) // for iOS
+    video.setAttribute('playsinline', "true") // for iOS
     video.play()
     // document.body.appendChild(video)
 
