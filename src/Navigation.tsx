@@ -723,7 +723,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Home"
         getComponent={() => HomeScreen}
-        options={{title: '主页'}}
+        options={{title: '广场'}}
       />
       <Flat.Screen
         name="Search"
@@ -748,7 +748,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Start"
         getComponent={() => HomeScreen}
-        options={{title: '主页'}}
+        options={{title: '广场'}}
       />
       {commonScreens(Flat as typeof HomeTab, numUnread)}
     </Flat.Navigator>
