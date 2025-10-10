@@ -52,7 +52,7 @@ export default function HallDocListScreen() {
           </View>
           <View style={[a.px_lg, a.mt_md]}>
             <Text style={[t.atoms.text_contrast_low, a.text_sm]}>
-              查案更多信息，了解内容
+              查看更多信息，了解内容
             </Text>
           </View>
         </View>
