@@ -31,6 +31,10 @@ import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import useAliyunCaptcha, {
+  ALIYUN_CAPTCHA_ERROR,
+  ALIYUN_CAPTCHA_SCENE_ID,
+} from '#/hooks/useAliyunCaptcha'
 import {FormContainer} from './FormContainer'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
@@ -80,6 +84,8 @@ export const LoginForm = ({
   //   Keyboard.dismiss()
   // }, [])
 
+  const {showCaptcha} = useAliyunCaptcha()
+
   const onPressNext = async () => {
     if (isProcessing) return
     Keyboard.dismiss()
@@ -125,6 +131,9 @@ export const LoginForm = ({
       //   }
       // }
 
+      const sceneId = ALIYUN_CAPTCHA_SCENE_ID.REGISTER
+      const captchaVerifyParam = await showCaptcha(sceneId)
+
       // TODO remove double login
       await login(
         {
@@ -132,6 +141,8 @@ export const LoginForm = ({
           identifier: fullIdent,
           password,
           authFactorToken: authFactorToken.trim(),
+          sceneId,
+          captchaVerifyParam,
         },
         'LoginForm',
       )
@@ -143,6 +154,9 @@ export const LoginForm = ({
       const errMsg = e.toString()
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       setIsProcessing(false)
+
+      if (e === ALIYUN_CAPTCHA_ERROR.USER_CANCELED) return
+
       if (
         e instanceof ComAtprotoServerCreateSession.AuthFactorTokenRequiredError
       ) {

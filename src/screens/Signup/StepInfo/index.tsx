@@ -2,14 +2,12 @@ import React, {useRef} from 'react'
 import {type TextInput, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import * as EmailValidator from 'email-validator'
 import type tldts from 'tldts'
 
 import {
   PRIVACY_PROTOCOL_FILE_URL,
   SERVICE_PROTOCOL_FILE_URL,
 } from '#/lib/constants'
-import {isEmailMaybeInvalid} from '#/lib/strings/email'
 import {isPhoneNumber, validateAccount} from '#/lib/validator'
 import {logger} from '#/logger'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
@@ -17,17 +15,19 @@ import {useSignupContext} from '#/screens/Signup/state'
 import {Policies} from '#/screens/Signup/StepInfo/Policies'
 import {atoms as a, native} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import * as DateField from '#/components/forms/DateField'
 import {type DateFieldRef} from '#/components/forms/DateField/types'
 import {FormError} from '#/components/forms/FormError'
 // import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
-import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {ShieldCheck_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
 import {Loader} from '#/components/Loader'
+import useAliyunCaptcha, {
+  ALIYUN_CAPTCHA_ERROR,
+  ALIYUN_CAPTCHA_SCENE_ID,
+} from '#/hooks/useAliyunCaptcha'
 import useSMS from '#/hooks/useSMS'
 import server from '#/server'
 import {BackNextButtons} from '../BackNextButtons'
@@ -81,6 +81,8 @@ export function StepInfo({
     // @ts-expect-error - valid path
     import('react-native-view-shot/src/index')
   }, [])
+
+  const {showCaptcha} = useAliyunCaptcha()
 
   const onNextPress = async () => {
     const inviteCode = inviteCodeValueRef.current
@@ -155,6 +157,21 @@ export function StepInfo({
     }
     const isPhone = isPhoneNumber(email)
     // dispatch({ type: 'setIsLoading', value: true })
+
+    let captchaVerifyParam!: string
+    const sceneId = ALIYUN_CAPTCHA_SCENE_ID.REGISTER
+
+    try {
+      captchaVerifyParam = await showCaptcha(sceneId)
+    } catch (e: any) {
+      if (e === ALIYUN_CAPTCHA_ERROR.USER_CANCELED) return
+
+      return dispatch({
+        type: 'setError',
+        value: e.message || '验证失败',
+      })
+    }
+
     setPresubmitLoading(true)
     const resData = await server.dao(
       'POST /user/pre-register',
@@ -164,6 +181,9 @@ export function StepInfo({
         email: !isPhone ? email : '',
         phoneRegion: '86',
         verifyCode: captchaCode,
+        // @ts-ignore
+        sceneId,
+        captchaVerifyParam,
       },
       {getWholeBizData: true},
     )
