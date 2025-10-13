@@ -1,7 +1,9 @@
 import React, {useRef} from 'react'
-import {type TextInput, View} from 'react-native'
+import {Pressable, type TextInput, View} from 'react-native'
+import {EyeInvisibleOutlined, EyeOutlined} from '@ant-design/icons'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useBoolean} from 'ahooks'
 import type tldts from 'tldts'
 
 import {
@@ -214,6 +216,8 @@ export function StepInfo({
     )
   }
 
+  const [showPassword, setShowPassword] = useBoolean(false)
+
   return (
     <ScreenTransition>
       <View style={[a.gap_md]}>
@@ -366,7 +370,7 @@ export function StepInfo({
                   }}
                   label={_(msg`Choose your password`)}
                   defaultValue={state.password}
-                  secureTextEntry
+                  secureTextEntry={!showPassword}
                   autoComplete="new-password"
                   autoCapitalize="none"
                   returnKeyType="next"
@@ -376,6 +380,12 @@ export function StepInfo({
                   )}
                   passwordRules="minlength: 8;"
                 />
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={setShowPassword.toggle}
+                  style={[a.z_10]}>
+                  {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                </Pressable>
               </TextField.Root>
             </View>
             {/* <View>

@@ -3,15 +3,18 @@ import {
   ActivityIndicator,
   Keyboard,
   LayoutAnimation,
+  Pressable,
   type TextInput,
   View,
 } from 'react-native'
+import {EyeInvisibleOutlined,EyeOutlined} from '@ant-design/icons'
 import {
   ComAtprotoServerCreateSession,
   type ComAtprotoServerDescribeServer,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useBoolean} from 'ahooks'
 
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {isNetworkError} from '#/lib/strings/errors'
@@ -191,6 +194,8 @@ export const LoginForm = ({
     }
   }
 
+  const [showPassword, setShowPassword] = useBoolean(false)
+
   return (
     <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
       {/* <View>
@@ -245,7 +250,7 @@ export const LoginForm = ({
               autoComplete="password"
               returnKeyType="done"
               enablesReturnKeyAutomatically={true}
-              secureTextEntry={true}
+              secureTextEntry={!showPassword}
               textContentType="password"
               clearButtonMode="while-editing"
               onChangeText={v => {
@@ -256,6 +261,12 @@ export const LoginForm = ({
               editable={!isProcessing}
               accessibilityHint={_(msg`Enter your password`)}
             />
+            <Pressable
+              accessibilityRole="button"
+              onPress={setShowPassword.toggle}
+              style={[a.z_10]}>
+              {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+            </Pressable>
             <Button
               testID="forgotPasswordButton"
               onPress={onPressForgotPassword}
