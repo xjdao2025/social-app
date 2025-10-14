@@ -1,7 +1,7 @@
-import jsQR from "jsqr";
+import {useEffect} from 'react'
+import jsQR from 'jsqr'
 
-import promiseWithResolver from "#/lib/promiseWithResolver";
-import { useEffect } from "react";
+import promiseWithResolver from '#/lib/promiseWithResolver'
 
 function createVideoEl() {
   const video = document.createElement('video')
@@ -15,14 +15,11 @@ function createVideoEl() {
   return video
 }
 
-let animationId: number;
-let mediaStream: MediaStream;
+let animationId: number
+let mediaStream: MediaStream
 
 export default function useScanWebQr() {
-
-  async function scanQR(
-    video: HTMLVideoElement = createVideoEl(),
-  ) {
+  async function scanQR(video: HTMLVideoElement = createVideoEl()) {
     if (
       typeof navigator === 'undefined' ||
       !navigator.mediaDevices ||
@@ -48,7 +45,9 @@ export default function useScanWebQr() {
     } catch (error) {
       if (error instanceof DOMException) {
         if (error.name === 'NotAllowedError') {
-          throw new Error('获取摄像头权限失败，请在浏览器地址栏允许摄像头访问后重新尝试。')
+          throw new Error(
+            '获取摄像头权限失败，请在浏览器中允许摄像头访问后重新尝试。',
+          )
         }
 
         if (error.name === 'NotFoundError') {
@@ -59,7 +58,7 @@ export default function useScanWebQr() {
       throw error
     }
     video.srcObject = mediaStream
-    video.setAttribute('playsinline', "true") // for iOS
+    video.setAttribute('playsinline', 'true') // for iOS
     video.play()
     // document.body.appendChild(video)
 
@@ -74,7 +73,6 @@ export default function useScanWebQr() {
           animationId = requestAnimationFrame(scan)
           return
         }
-
 
         canvas.width = video.videoWidth
         canvas.height = video.videoHeight
@@ -105,7 +103,7 @@ export default function useScanWebQr() {
     return () => {
       destroy()
     }
-  }, []);
+  }, [])
 
   const destroy = () => {
     if (mediaStream) {
@@ -118,8 +116,6 @@ export default function useScanWebQr() {
 
   return {
     scanQR,
-    destroy
+    destroy,
   }
-
-
 }
