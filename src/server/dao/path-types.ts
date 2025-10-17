@@ -93,6 +93,8 @@ export type APITypeTuple = {
     APIDao.WebEndpointsFileFileUploadForm,
     APIDao.WebApplicationVoFileUploadSuccessVo,
   ]
+  'GET /external/image/{imageId}': [{imageId: string}, null]
   'POST /email/send': [APIDao.WebEndpointsEmailSendEmailRequest, boolean]
   'POST /banner/list': [null, Array<APIDao.WebApplicationVoBannerVo>]
+  'POST /app/list': [null, Array<APIDao.WebEndpointsAppAppListVo>]
 }

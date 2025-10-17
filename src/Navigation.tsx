@@ -543,7 +543,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="Applications"
         getComponent={() => ApplicationsScreen}
         options={({route}) => ({
-          title: '提案详情', // title(msg`Post by @${route.params.name}`),
+          title: '应用中心', // title(msg`Post by @${route.params.name}`),
         })}
       />
       <Stack.Screen
