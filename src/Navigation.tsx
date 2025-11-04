@@ -543,7 +543,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="Applications"
         getComponent={() => ApplicationsScreen}
         options={({route}) => ({
-          title: '提案详情', // title(msg`Post by @${route.params.name}`),
+          title: '应用中心', // title(msg`Post by @${route.params.name}`),
         })}
       />
       <Stack.Screen
@@ -723,7 +723,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Home"
         getComponent={() => HomeScreen}
-        options={{title: '主页'}}
+        options={{title: '广场'}}
       />
       <Flat.Screen
         name="Search"
@@ -748,7 +748,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Start"
         getComponent={() => HomeScreen}
-        options={{title: '主页'}}
+        options={{title: '广场'}}
       />
       {commonScreens(Flat as typeof HomeTab, numUnread)}
     </Flat.Navigator>

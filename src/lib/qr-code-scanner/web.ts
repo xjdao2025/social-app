@@ -33,7 +33,7 @@ export default async function scanQR(
     video: {facingMode: 'environment'},
   })
   video.srcObject = mediaStream
-  video.setAttribute('playsinline', true) // for iOS
+  video.setAttribute('playsinline', "true") // for iOS
   video.play()
   document.body.appendChild(video)
 

@@ -368,6 +368,13 @@ let DrawerFooter = ({
         <Text style={[a.text_xs, {lineHeight: '18px', color: '#6F869F'}]}>
           Powered by Web5
         </Text>
+        <InlineLinkText
+          to="https://beian.miit.gov.cn/"
+          label="ICP"
+          onPress={() => false}
+          style={[a.text_xs, {lineHeight: '18px', color: '#6F869F'}]}>
+          京ICP备2025136647号
+        </InlineLinkText>
       </View>
       {/*<Button*/}
       {/*  label={_(msg`Send feedback`)}*/}

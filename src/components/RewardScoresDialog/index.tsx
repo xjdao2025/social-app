@@ -96,7 +96,7 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
         <Dialog.Close />
 
         <View style={[a.gap_lg]}>
-          <Text style={[a.text_xl, a.font_heavy]}>打赏</Text>
+          <Text style={[a.text_xl, a.font_heavy]}>赞赏</Text>
           <View style={[a.gap_md]}>
             <TextField.Root>
               {/* <TextField.Icon icon={Shield} /> */}

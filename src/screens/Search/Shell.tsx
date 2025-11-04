@@ -372,31 +372,31 @@ export function SearchScreenShell({
         </Layout.Center>
       </View>
 
-      {/*<View*/}
-      {/*  style={{*/}
-      {/*    display: showAutocomplete && !fixedParams ? 'flex' : 'none',*/}
-      {/*    flex: 1,*/}
-      {/*  }}>*/}
-      {/*  {searchText.length > 0 ? (*/}
-      {/*    <AutocompleteResults*/}
-      {/*      isAutocompleteFetching={isAutocompleteFetching}*/}
-      {/*      autocompleteData={autocompleteData}*/}
-      {/*      searchText={searchText}*/}
-      {/*      onSubmit={onSubmit}*/}
-      {/*      onResultPress={onAutocompleteResultPress}*/}
-      {/*      onProfileClick={handleProfileClick}*/}
-      {/*    />*/}
-      {/*  ) : (*/}
-      {/*    <SearchHistory*/}
-      {/*      searchHistory={termHistory}*/}
-      {/*      selectedProfiles={accountHistoryProfiles?.profiles || []}*/}
-      {/*      onItemClick={handleHistoryItemClick}*/}
-      {/*      onProfileClick={handleProfileClick}*/}
-      {/*      onRemoveItemClick={deleteSearchHistoryItem}*/}
-      {/*      onRemoveProfileClick={deleteProfileHistoryItem}*/}
-      {/*    />*/}
-      {/*  )}*/}
-      {/*</View>*/}
+      <View
+        style={{
+          display: showAutocomplete && !fixedParams ? 'flex' : 'none',
+          flex: 1,
+        }}>
+        {searchText.length > 0 ? (
+          <AutocompleteResults
+            isAutocompleteFetching={isAutocompleteFetching}
+            autocompleteData={autocompleteData}
+            searchText={searchText}
+            onSubmit={onSubmit}
+            onResultPress={onAutocompleteResultPress}
+            onProfileClick={handleProfileClick}
+          />
+        ) : (
+          <SearchHistory
+            searchHistory={termHistory}
+            selectedProfiles={[]}
+            onItemClick={handleHistoryItemClick}
+            onProfileClick={handleProfileClick}
+            onRemoveItemClick={deleteSearchHistoryItem}
+            onRemoveProfileClick={deleteProfileHistoryItem}
+          />
+        )}
+      </View>
       <View
         style={{
           display: showAutocomplete ? 'none' : 'flex',

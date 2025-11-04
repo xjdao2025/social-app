@@ -1,5 +1,5 @@
-import {LogEvents} from '#/lib/statsig/statsig'
-import {PersistedAccount} from '#/state/persisted'
+import {type LogEvents} from '#/lib/statsig/statsig'
+import {type PersistedAccount} from '#/state/persisted'
 
 export type SessionAccount = PersistedAccount
 
@@ -29,6 +29,8 @@ export type SessionApiContext = {
       identifier: string
       password: string
       authFactorToken?: string | undefined
+      sceneId: string
+      captchaVerifyParam: string
     },
     logContext: LogEvents['account:loggedIn']['logContext'],
   ) => Promise<void>

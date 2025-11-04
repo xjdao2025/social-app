@@ -28,12 +28,14 @@ import {Text} from '#/components/Typography'
 export function HomeHeaderLayoutMobile({
   children,
   transparent,
+  noBottomBorder = true,
   style,
 }: {
   children?: React.ReactNode
   tabBarAnchor: JSX.Element | null | undefined
   transparent?: boolean
   style?: StyleProp<AnimatedStyle<StyleProp<ViewStyle>>>
+  noBottomBorder?: boolean
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -59,7 +61,9 @@ export function HomeHeaderLayoutMobile({
       onLayout={e => {
         headerHeight.set(e.nativeEvent.layout.height)
       }}>
-      <Layout.Header.Outer noBottomBorder transparent={transparent}>
+      <Layout.Header.Outer
+        noBottomBorder={noBottomBorder}
+        transparent={transparent}>
         <Layout.Header.Slot>
           <Layout.Header.MenuButton transparent={transparent} />
         </Layout.Header.Slot>

@@ -53,14 +53,16 @@ export function PostThreadComposePrompt({
       ]}>
       {showReward && (
         <>
-          <Pressable accessibilityRole="button" onPress={() => rewardDialogControl.open()}>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => rewardDialogControl.open()}>
             <View style={{gap: 8, alignItems: 'center'}}>
               <Image
                 source={require('#/assets/gift.svg')}
                 alt="reward poster"
                 style={{width: 24, height: 24}}
               />
-              <Text style={[a.text_xs]}>打赏</Text>
+              <Text style={[a.text_xs]}>赞赏</Text>
             </View>
           </Pressable>
           <RewardScoresDialog

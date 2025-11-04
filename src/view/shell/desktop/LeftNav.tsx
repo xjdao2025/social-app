@@ -640,7 +640,7 @@ export function DesktopLeftNav() {
                 inactiveColor="#0B0F14"
               />
             }
-            label="主页"
+            label="广场"
           />
           <NavItem
             href="/notifications"

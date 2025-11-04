@@ -49,7 +49,7 @@ const apiMap = {
     APIDao.WebEndpointsUserUserModifyPhoneReq,
     boolean
   >('/user/modify-phone', 'POST'),
-  /** 用户预注册, 返回一个用户 Id, 使用该 id 完成后续注册流程 */
+  /** 用户预注册, 返回一个 Guid, 使用该 Guid 完成后续注册流程 */
   'POST /user/pre-register': defineAPI<
     APIDao.WebEndpointsUserPreRegisterReq,
     string
@@ -153,6 +153,12 @@ const apiMap = {
     APIDao.WebEndpointsFileFileUploadForm,
     APIDao.WebApplicationVoFileUploadSuccessVo
   >('/file/upload', 'POST', {divider: {formData: ['file', 'fileType']}}),
+  /** 拉取图片接口 */
+  'GET /external/image/{imageId}': defineAPI<{imageId: string}, null>(
+    '/external/image/{imageId}',
+    'GET',
+    {divider: {path: ['imageId']}},
+  ),
   /** 发送邮件 */
   'POST /email/send': defineAPI<
     APIDao.WebEndpointsEmailSendEmailRequest,
@@ -161,6 +167,11 @@ const apiMap = {
   /** 查询banner列表 */
   'POST /banner/list': defineAPI<null, Array<APIDao.WebApplicationVoBannerVo>>(
     '/banner/list',
+    'POST',
+  ),
+  /** 节点列表 */
+  'POST /app/list': defineAPI<null, Array<APIDao.WebEndpointsAppAppListVo>>(
+    '/app/list',
     'POST',
   ),
 }

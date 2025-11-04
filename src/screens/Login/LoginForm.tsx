@@ -3,15 +3,18 @@ import {
   ActivityIndicator,
   Keyboard,
   LayoutAnimation,
+  Pressable,
   type TextInput,
   View,
 } from 'react-native'
+import {EyeInvisibleOutlined,EyeOutlined} from '@ant-design/icons'
 import {
   ComAtprotoServerCreateSession,
   type ComAtprotoServerDescribeServer,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useBoolean} from 'ahooks'
 
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {isNetworkError} from '#/lib/strings/errors'
@@ -31,6 +34,10 @@ import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import useAliyunCaptcha, {
+  ALIYUN_CAPTCHA_ERROR,
+  ALIYUN_CAPTCHA_SCENE_ID,
+} from '#/hooks/useAliyunCaptcha'
 import {FormContainer} from './FormContainer'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
@@ -80,6 +87,8 @@ export const LoginForm = ({
   //   Keyboard.dismiss()
   // }, [])
 
+  const {showCaptcha} = useAliyunCaptcha()
+
   const onPressNext = async () => {
     if (isProcessing) return
     Keyboard.dismiss()
@@ -125,6 +134,9 @@ export const LoginForm = ({
       //   }
       // }
 
+      const sceneId = ALIYUN_CAPTCHA_SCENE_ID.REGISTER
+      const captchaVerifyParam = await showCaptcha(sceneId)
+
       // TODO remove double login
       await login(
         {
@@ -132,6 +144,8 @@ export const LoginForm = ({
           identifier: fullIdent,
           password,
           authFactorToken: authFactorToken.trim(),
+          sceneId,
+          captchaVerifyParam,
         },
         'LoginForm',
       )
@@ -143,6 +157,9 @@ export const LoginForm = ({
       const errMsg = e.toString()
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       setIsProcessing(false)
+
+      if (e === ALIYUN_CAPTCHA_ERROR.USER_CANCELED) return
+
       if (
         e instanceof ComAtprotoServerCreateSession.AuthFactorTokenRequiredError
       ) {
@@ -176,6 +193,8 @@ export const LoginForm = ({
       }
     }
   }
+
+  const [showPassword, setShowPassword] = useBoolean(false)
 
   return (
     <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
@@ -231,7 +250,7 @@ export const LoginForm = ({
               autoComplete="password"
               returnKeyType="done"
               enablesReturnKeyAutomatically={true}
-              secureTextEntry={true}
+              secureTextEntry={!showPassword}
               textContentType="password"
               clearButtonMode="while-editing"
               onChangeText={v => {
@@ -242,6 +261,12 @@ export const LoginForm = ({
               editable={!isProcessing}
               accessibilityHint={_(msg`Enter your password`)}
             />
+            <Pressable
+              accessibilityRole="button"
+              onPress={setShowPassword.toggle}
+              style={[a.z_10]}>
+              {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+            </Pressable>
             <Button
               testID="forgotPasswordButton"
               onPress={onPressForgotPassword}

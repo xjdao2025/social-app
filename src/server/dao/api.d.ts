@@ -135,6 +135,12 @@ declare namespace APIDao {
     password: string
 
     loginType: WebEndpointsUserLoginType
+
+    /** SceneId */
+    sceneId: string
+
+    /** CaptchaVerifyCode */
+    captchaVerifyParam: string
   }
 
   /** POST /user/login */
@@ -189,6 +195,12 @@ declare namespace APIDao {
 
     /** 验证码 */
     verifyCode: string
+
+    /** SceneId */
+    sceneId: string
+
+    /** CaptchaVerifyCode */
+    captchaVerifyParam: string
   }
 
   /** POST /user/register */
@@ -557,6 +569,24 @@ declare namespace APIDao {
 
     /** 链接地址 */
     linkAddress: string
+  }
+
+  /** POST /app/list */
+  interface WebEndpointsAppAppListVo {
+    /** 应用名称 */
+    appId: string
+
+    /** 应用名称 */
+    name: string
+
+    /** 应用描述 */
+    desc: string
+
+    /** 应用图标 */
+    logo: string
+
+    /** 应用链接 */
+    link: string
   }
 
   interface WebEndpointsUserMedalUserMedalPageVo {

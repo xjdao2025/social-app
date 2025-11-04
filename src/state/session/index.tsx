@@ -136,6 +136,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           domainName: accountType === 1 ? identifier : '',
           loginType: accountType,
           phoneRegion: '86',
+          // @ts-ignore
+          sceneId: params.sceneId,
+          captchaVerifyParam: params.captchaVerifyParam,
         },
         {getWholeBizData: true},
       )

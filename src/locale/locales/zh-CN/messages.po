@@ -3668,11 +3668,11 @@ msgstr "返回上一步"
 
 #: src/view/screens/NotFound.tsx:57
 msgid "Go home"
-msgstr "转到主页"
+msgstr "转到广场"
 
 #: src/view/screens/NotFound.tsx:56
 msgid "Go Home"
-msgstr "转到主页"
+msgstr "转到广场"
 
 #: src/view/com/profile/ProfileMenu.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:315
@@ -3913,7 +3913,7 @@ msgstr "请稍等！我们正在逐步开放上传视频的权限。你目前仍
 #: src/view/shell/desktop/LeftNav.tsx:617
 #: src/view/shell/Drawer.tsx:415
 msgid "Home"
-msgstr "主页"
+msgstr "广场"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:417
 msgid "Host:"
@@ -5632,11 +5632,11 @@ msgstr "固定动态源"
 
 #: src/view/screens/ProfileList.tsx:714
 msgid "Pin to home"
-msgstr "固定到主页"
+msgstr "固定到广场"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:332
 msgid "Pin to Home"
-msgstr "固定到主页"
+msgstr "固定到广场"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:463
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:470
@@ -5650,7 +5650,7 @@ msgstr "已固定"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:158
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:170
 msgid "Pinned {0} to Home"
-msgstr "固定 {0} 到主页"
+msgstr "固定 {0} 到广场"
 
 #: src/view/screens/SavedFeeds.tsx:123
 msgid "Pinned Feeds"
@@ -5911,7 +5911,7 @@ msgstr "帖文"
 
 #: src/components/dialogs/MutedWords.tsx:115
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
-msgstr "可以根据文本、标签或结合两者来隐藏帖文。我们建议你尽量避免添加常用字词，因为这可能会导致你的主页不显示任何帖文。"
+msgstr "可以根据文本、标签或结合两者来隐藏帖文。我们建议你尽量避免添加常用字词，因为这可能会导致你的广场不显示任何帖文。"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:68
 msgid "Posts hidden"
@@ -6649,7 +6649,7 @@ msgstr "返回上一页"
 
 #: src/view/screens/NotFound.tsx:61
 msgid "Returns to home page"
-msgstr "返回主页"
+msgstr "返回广场"
 
 #: src/screens/Profile/ProfileFeed/index.tsx:93
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:559
@@ -8506,7 +8506,7 @@ msgstr "取消固定动态源"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:305
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:307
 msgid "Unpin from home"
-msgstr "从主页取消固定"
+msgstr "从广场取消固定"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:462
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:469
@@ -8519,7 +8519,7 @@ msgstr "取消固定限制列表"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:160
 msgid "Unpinned {0} from Home"
-msgstr "从主页取消固定 {0}"
+msgstr "从广场取消固定 {0}"
 
 #: src/view/screens/ProfileList.tsx:362
 msgid "Unpinned from your feeds"
