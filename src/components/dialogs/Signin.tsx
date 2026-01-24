@@ -1,5 +1,6 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {View} from 'react-native'
+import {Image} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -54,10 +55,10 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
             a.gap_sm,
             a.pb_lg,
           ]}>
-          <Logo width={36} />
-          <View style={{paddingTop: 6}}>
-            <Logotype width={120} fill={t.atoms.text.color} />
-          </View>
+          <Image
+            source={require('#/assets/login.title.png')}
+            style={{width: 140, height: 43}}
+          />
         </View>
 
         <Text
