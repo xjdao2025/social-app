@@ -36,7 +36,8 @@ jobs:
         id: version
         run: |
           if [[ "${{ inputs.tag }}" == latest ]]; then
-            VERSION="latest"
+            # Helm chart version must be semver, use 0.0.0-latest format
+            VERSION="0.0.0-latest"
             APP_VERSION="latest"
           elif [[ "${{ inputs.tag }}" == v* ]]; then
             VERSION="${{ inputs.tag }}"

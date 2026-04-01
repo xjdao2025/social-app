@@ -5,12 +5,10 @@
 replicaCount: 1
 
 image:
-  repository: registry.devops.rivtower.com/xiangjiandao/social-app
-
+  repository: ghcr.io/xjdao2025/social-app
   pullPolicy: IfNotPresent
 
-imagePullSecrets:
-  - name: rivtower-docker-registry
+imagePullSecrets: []
 
 nameOverride: ""
 fullnameOverride: ""
@@ -42,8 +40,6 @@ ingress:
         paths:
           - path: /
             pathType: Prefix
-    #- api.rivtower.xyz
-    #- api.rivdap.cn
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:

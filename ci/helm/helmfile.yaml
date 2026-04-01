@@ -5,10 +5,9 @@ environments:
 ---
 
 repositories:
-  - name: xiangjiandao
-    url: https://registry.devops.rivtower.com/chartrepo/xiangjiandao
-    username: {{ requiredEnv "RIVTOWER_REGISTRY_USERNAME" }}
-    password: {{ requiredEnv "RIVTOWER_REGISTRY_PASSWORD" }}
+  - name: xjdao2025
+    url: oci://ghcr.io/xjdao2025/charts
+    oci: true
 
 helmDefaults:
   wait: true
@@ -16,8 +15,8 @@ helmDefaults:
 
 releases:
   - name: social-app
-    namespace: xiangjiandao
-    chart: xiangjiandao/social-app
+    namespace: xjdao2025
+    chart: xjdao2025/social-app
     version: {{ requiredEnv "VERSION_NUMBER" }}
     values:
       - ./values/{{ .Environment.Name }}.yaml
