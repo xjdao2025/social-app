@@ -211,7 +211,7 @@ export default function HallScreen() {
                 style={[styles.foundTokenBG]}
                 source={require('#/assets/hall.token.svg')}
               />
-              <Text style={[t.atoms.text_inverted, a.text_md]}>已发行稻米</Text>
+              <Text style={[t.atoms.text_inverted, a.text_md]}>已发行稻米数</Text>
               <Text
                 style={[
                   t.atoms.text_inverted,
