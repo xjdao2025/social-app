@@ -203,13 +203,15 @@ export default function HallScreen() {
                 </Text>
               </View>
             </View>
-            <View style={[a.flex_1, styles.foundCard, styles.foundToken]}>
+            <Link
+              to="/hall/documents"
+              style={[a.flex_1, styles.foundCard, styles.foundToken]}>
               <Image
                 accessibilityIgnoresInvertColors
                 style={[styles.foundTokenBG]}
                 source={require('#/assets/hall.token.svg')}
               />
-              <Text style={[t.atoms.text_inverted, a.text_md]}>已发行稻米</Text>
+              <Text style={[t.atoms.text_inverted, a.text_md]}>已发行稻米数</Text>
               <Text
                 style={[
                   t.atoms.text_inverted,
@@ -219,7 +221,7 @@ export default function HallScreen() {
                 ]}>
                 {displayNumber(foundInfo?.issuePointsScale)}
               </Text>
-            </View>
+            </Link>
           </View>
           <View style={[a.flex, a.flex_col, a.mt_xl, styles.announcement]}>
             <Image
