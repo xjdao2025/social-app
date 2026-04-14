@@ -266,8 +266,11 @@ declare namespace APIDao {
 
   /** POST /score/send */
   interface WebEndpointsScoreSendScoreReq {
-    /** 接收用户的手机号或邮箱 */
-    userPhoneOrEmail: string
+    /** 接收用户的UserId，优先使用 */
+    toUserId?: string
+
+    /** 接收用户的手机号或邮箱，未传toUserId时必填 */
+    userPhoneOrEmail?: string
 
     /** 稻米 */
     score: number
@@ -635,6 +638,9 @@ declare namespace APIDao {
 
     /** 附言 */
     remark: string
+
+    /** 对方用户Id */
+    participatorId: string
 
     /** 创建时间 {"format":"date-time"} */
     createdAt: string

@@ -23,10 +23,12 @@ const SCREEN_HEIGHT = Dimensions.get('window').height
 
 export function SendPointsDialog({
   defaultReceive,
+  defaultToUserId,
   control,
   onUpdate,
 }: {
   defaultReceive?: string
+  defaultToUserId?: string
   control: Dialog.DialogControlProps
   onUpdate?: () => void
 }) {
@@ -38,13 +40,13 @@ export function SendPointsDialog({
   )
 
   useEffect(() => {
-    if (receiveUser && control) {
+    if ((receiveUser || defaultToUserId) && control) {
       control.open()
       const url = new URL(window.location.href)
       url.search = ''
       window.history.replaceState(null, '', url)
     }
-  }, [receiveUser, control])
+  }, [receiveUser, defaultToUserId, control])
 
   const onPressCancel = useCallback(() => {
     control.close()
@@ -61,6 +63,7 @@ export function SendPointsDialog({
       <DialogInner
         onUpdate={onUpdate}
         defaultReceive={receiveUser}
+        defaultToUserId={defaultToUserId}
         onPressCancel={onPressCancel}
       />
     </Dialog.Outer>
@@ -69,10 +72,12 @@ export function SendPointsDialog({
 
 function DialogInner({
   defaultReceive = '',
+  defaultToUserId,
   onUpdate,
   onPressCancel,
 }: {
   defaultReceive?: string
+  defaultToUserId?: string
   onUpdate?: () => void
   onPressCancel: () => void
 }) {
@@ -85,6 +90,7 @@ function DialogInner({
   const [giftAccount, setGiftAccount] = useState(defaultReceive)
   const [giftPoints, setGiftPoints] = useState('')
   const [giftRemark, setGiftRemark] = useState('')
+  const [toUserId] = useState(defaultToUserId)
 
   const {data: userDetail} = useRequest(() =>
     server.dao('POST /user/login-user-detail'),
@@ -92,15 +98,18 @@ function DialogInner({
 
   const onPressSave = useCallback(async () => {
     try {
-      const flagRes = await server.dao(
-        'POST /score/send',
-        {
-          userPhoneOrEmail: giftAccount,
-          score: Number(giftPoints),
-          remark: giftRemark,
-        },
-        {getWholeBizData: true},
-      )
+      const payload: APIDao.WebEndpointsScoreSendScoreReq = {
+        score: Number(giftPoints),
+        remark: giftRemark,
+      }
+      if (toUserId) {
+        payload.toUserId = toUserId
+      } else {
+        payload.userPhoneOrEmail = giftAccount
+      }
+      const flagRes = await server.dao('POST /score/send', payload, {
+        getWholeBizData: true,
+      })
       if (flagRes.data) {
         onUpdate?.()
         control.close()
@@ -111,9 +120,10 @@ function DialogInner({
     } catch (e: any) {
       logger.error('Failed to update user profile', {message: String(e)})
     }
-  }, [onUpdate, control, giftAccount, giftPoints, giftRemark])
+  }, [onUpdate, control, giftAccount, giftPoints, giftRemark, toUserId])
 
   const displayNameInvalid = useMemo(() => {
+    if (toUserId) return false
     if (!giftAccount) return false
 
     const regs = [emailRegExp, phoneNumberRegExp]
@@ -122,7 +132,7 @@ function DialogInner({
     }
 
     return true
-  }, [giftAccount])
+  }, [giftAccount, toUserId])
 
   const giftPointsInvalid = useMemo(() => {
     if (!giftPoints) return false
@@ -174,36 +184,44 @@ function DialogInner({
           </Dialog.Header>
         }>
         <View style={[a.gap_xl]}>
-          <View style={styles.account}>
-            <TextField.LabelText>手机号/邮箱</TextField.LabelText>
-            <TextField.Root isInvalid={displayNameInvalid}>
-              <Dialog.Input
-                defaultValue={giftAccount}
-                onChangeText={setGiftAccount}
-                label={_(msg`Display name`)}
-                placeholder={'请输入手机号/邮箱'}
-                testID="editProfileDisplayNameInput"
-              />
-            </TextField.Root>
-            <Pressable
-              accessibilityRole={'button'}
-              style={styles.scan}
-              onPress={scan}>
-              <QrCode_Scan fill={'#6F869F'} size={'md'} style={[a.z_10]} />
-            </Pressable>
-            {displayNameInvalid && (
-              <TextField.SuffixText
-                style={[
-                  a.text_sm,
-                  a.mt_xs,
-                  a.font_bold,
-                  {color: t.palette.negative_400},
-                ]}
-                label={'格式'}>
-                请输入正确格式
-              </TextField.SuffixText>
-            )}
-          </View>
+          {toUserId ? (
+            <View>
+              <Text style={[t.atoms.text_contrast_high]}>
+                将向该用户发送稻米
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.account}>
+              <TextField.LabelText>手机号/邮箱</TextField.LabelText>
+              <TextField.Root isInvalid={displayNameInvalid}>
+                <Dialog.Input
+                  defaultValue={giftAccount}
+                  onChangeText={setGiftAccount}
+                  label={_(msg`Display name`)}
+                  placeholder={'请输入手机号/邮箱'}
+                  testID="editProfileDisplayNameInput"
+                />
+              </TextField.Root>
+              <Pressable
+                accessibilityRole={'button'}
+                style={styles.scan}
+                onPress={scan}>
+                <QrCode_Scan fill={'#6F869F'} size={'md'} style={[a.z_10]} />
+              </Pressable>
+              {displayNameInvalid && (
+                <TextField.SuffixText
+                  style={[
+                    a.text_sm,
+                    a.mt_xs,
+                    a.font_bold,
+                    {color: t.palette.negative_400},
+                  ]}
+                  label={'格式'}>
+                  请输入正确格式
+                </TextField.SuffixText>
+              )}
+            </View>
+          )}
 
           <View>
             <TextField.LabelText>稻米</TextField.LabelText>
@@ -252,7 +270,7 @@ function DialogInner({
             label={_(msg`Save`)}
             onPress={onPressSave}
             disabled={
-              !giftAccount ||
+              (!toUserId && !giftAccount) ||
               !giftPoints ||
               displayNameInvalid ||
               giftPointsInvalid
