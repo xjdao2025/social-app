@@ -167,7 +167,7 @@ const PointsRecordScreen = () => {
                               a.text_xs,
                               {color: '#42576C', fontWeight: 500},
                             ]}>
-                            再次发送
+                            {isPositive ? '回赠' : '再次赠送'}
                           </Text>
                         </Pressable>
                       ) : null}
