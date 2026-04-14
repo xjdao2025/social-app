@@ -380,6 +380,7 @@ export default function ProposalDetailScreen({route}: Props) {
                 style={[
                   a.p_md,
                   a.text_sm,
+                  t.atoms.text_contrast_high,
                   {
                     borderWidth: 1,
                     borderColor: '#D4DBE2',
