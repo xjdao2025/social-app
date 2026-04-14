@@ -155,6 +155,20 @@ export default function ProposalDetailScreen({route}: Props) {
     }
   }, [commentText, proposalId])
 
+  const onDeleteComment = useCallback(async (commentId: string) => {
+    try {
+      const flag = await server.dao('POST /proposal/delete-my-comment', {
+        commentId,
+      })
+      if (flag) {
+        Toast.show('删除成功', 'check', 'center')
+        reloadProposalInfo()
+      }
+    } catch (e: any) {
+      Toast.show(e?.message || '删除失败', 'xmark', 'center')
+    }
+  }, [])
+
   const setMinimalShellMode = useSetMinimalShellMode()
   useFocusEffect(
     useCallback(() => {
@@ -350,9 +364,29 @@ export default function ProposalDetailScreen({route}: Props) {
                     a.p_md,
                     {backgroundColor: '#F8F9FA', borderRadius: 8},
                   ]}>
-                  <Text style={[a.text_sm, a.font_bold, a.mb_xs]}>
-                    {comment.userName}
-                  </Text>
+                  <View
+                    style={[
+                      a.flex_row,
+                      a.align_center,
+                      a.justify_between,
+                      a.mb_xs,
+                    ]}>
+                    <Text style={[a.text_sm, a.font_bold]}>
+                      {comment.userName}
+                    </Text>
+                    {comment.userId === currentUserInfo?.id ? (
+                      <Pressable
+                        accessibilityRole="button"
+                        onPress={() => onDeleteComment(comment.commentId)}
+                        hitSlop={8}>
+                        <Image
+                          accessibilityIgnoresInvertColors
+                          style={{width: 16, height: 16}}
+                          source={require('#/assets/dustbin.svg')}
+                        />
+                      </Pressable>
+                    ) : null}
+                  </View>
                   <Text
                     style={[
                       a.text_sm,

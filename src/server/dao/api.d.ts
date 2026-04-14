@@ -383,10 +383,19 @@ declare namespace APIDao {
     content: string
   }
 
+  /** POST /proposal/delete-my-comment */
+  interface WebEndpointsProposalDeleteMyProposalCommentReq {
+    /** 评论 Id */
+    commentId: string
+  }
+
   /** POST /proposal/detail */
   interface WebEndpointsProposalProposalCommentVo {
     /** 评论 Id */
     commentId: string
+
+    /** 评论用户 Id */
+    userId: string
 
     /** 评论用户名称 */
     userName: string

@@ -68,6 +68,10 @@ export type APITypeTuple = {
     APIDao.NetCorePalExtensionsDtoPagedDataOfProposalPageVo,
   ]
   'POST /proposal/vote': [APIDao.WebEndpointsProposalVoteProposalReq, boolean]
+  'POST /proposal/delete-my-comment': [
+    APIDao.WebEndpointsProposalDeleteMyProposalCommentReq,
+    boolean,
+  ]
   'POST /proposal/comment': [
     APIDao.WebEndpointsProposalCreateProposalCommentReq,
     boolean,
