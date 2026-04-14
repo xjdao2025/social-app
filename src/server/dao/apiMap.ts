@@ -119,6 +119,11 @@ const apiMap = {
     APIDao.WebEndpointsProposalVoteProposalReq,
     boolean
   >('/proposal/vote', 'POST'),
+  /** 创建提案评论 */
+  'POST /proposal/comment': defineAPI<
+    APIDao.WebEndpointsProposalCreateProposalCommentReq,
+    boolean
+  >('/proposal/comment', 'POST'),
   /** 节点列表 */
   'POST /node/list': defineAPI<null, Array<APIDao.WebEndpointsNodeNodeListVo>>(
     '/node/list',

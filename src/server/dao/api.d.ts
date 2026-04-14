@@ -374,6 +374,30 @@ declare namespace APIDao {
     choice: DomainEnumsVoteType
   }
 
+  /** POST /proposal/comment */
+  interface WebEndpointsProposalCreateProposalCommentReq {
+    /** 提案 Id */
+    proposalId: string
+
+    /** 评论内容 */
+    content: string
+  }
+
+  /** POST /proposal/detail */
+  interface WebEndpointsProposalProposalCommentVo {
+    /** 评论 Id */
+    commentId: string
+
+    /** 评论用户名称 */
+    userName: string
+
+    /** 评论内容 */
+    content: string
+
+    /** 创建时间 {"format":"date-time"} */
+    createdAt: string
+  }
+
   /** POST /proposal/detail */
   interface WebEndpointsProposalProposalDetailReq {
     /** 提案 Id */
@@ -425,6 +449,9 @@ declare namespace APIDao {
 
     /** 创建时间 {"format":"date-time"} */
     createdAt: string
+
+    /** 评论列表 */
+    comments: Array<APIDao.WebEndpointsProposalProposalCommentVo>
   }
 
   /** POST /proposal/page */
