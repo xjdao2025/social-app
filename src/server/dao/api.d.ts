@@ -271,6 +271,9 @@ declare namespace APIDao {
 
     /** 稻米 */
     score: number
+
+    /** 附言 */
+    remark?: string
   }
 
   /** POST /score/user-sore-record-page */
@@ -629,6 +632,9 @@ declare namespace APIDao {
 
     /** 稻米数量 */
     score: number
+
+    /** 附言 */
+    remark: string
 
     /** 创建时间 {"format":"date-time"} */
     createdAt: string

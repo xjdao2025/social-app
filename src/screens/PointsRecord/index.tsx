@@ -127,16 +127,15 @@ const PointsRecordScreen = () => {
                         ]}>
                         {p.reason}
                       </Text>
-                      <Text style={[t.atoms.text_contrast_high]}>
-                        {
-                          {
-                            0: '',
-                            1: '打赏',
-                            2: '赠送',
-                            3: '后台发放',
-                          }[p.type]
-                        }
-                      </Text>
+                      {p.remark ? (
+                        <Text
+                          style={[
+                            t.atoms.text_contrast_high,
+                            {color: '#F66455'},
+                          ]}>
+                          附言：{p.remark}
+                        </Text>
+                      ) : null}
                       <Text style={[t.atoms.text_contrast_low]}>
                         {format(new Date(p.createdAt), 'yyyy-MM-dd HH:mm:ss')}
                       </Text>

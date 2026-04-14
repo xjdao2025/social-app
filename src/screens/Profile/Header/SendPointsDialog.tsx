@@ -84,6 +84,7 @@ function DialogInner({
 
   const [giftAccount, setGiftAccount] = useState(defaultReceive)
   const [giftPoints, setGiftPoints] = useState('')
+  const [giftRemark, setGiftRemark] = useState('')
 
   const {data: userDetail} = useRequest(() =>
     server.dao('POST /user/login-user-detail'),
@@ -96,6 +97,7 @@ function DialogInner({
         {
           userPhoneOrEmail: giftAccount,
           score: Number(giftPoints),
+          remark: giftRemark,
         },
         {getWholeBizData: true},
       )
@@ -109,7 +111,7 @@ function DialogInner({
     } catch (e: any) {
       logger.error('Failed to update user profile', {message: String(e)})
     }
-  }, [onUpdate, control, giftAccount, giftPoints])
+  }, [onUpdate, control, giftAccount, giftPoints, giftRemark])
 
   const displayNameInvalid = useMemo(() => {
     if (!giftAccount) return false
@@ -227,6 +229,20 @@ function DialogInner({
                 请输入正确格式
               </TextField.SuffixText>
             )}
+          </View>
+
+          <View>
+            <TextField.LabelText>附言</TextField.LabelText>
+            <TextField.Root>
+              <Dialog.Input
+                defaultValue={giftRemark}
+                onChangeText={setGiftRemark}
+                label={_(msg`Remark`)}
+                placeholder={'请输入附言（最多20字）'}
+                testID="editProfileRemarkInput"
+                maxLength={20}
+              />
+            </TextField.Root>
           </View>
           <View style={[a.flex_row]}>
             <Text style={styles.cur_pints_label}>当前稻米：</Text>
