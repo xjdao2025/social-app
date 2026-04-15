@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
-import Animated, {useAnimatedRef} from 'react-native-reanimated'
+import {type ImageStyle, StyleSheet, View} from 'react-native'
+import {useAnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {
   type NavigationProp,
@@ -15,13 +15,13 @@ import displayNumber from '#/lib/displayNumber'
 import {extractAssetUrl} from '#/lib/extractAssetUrl'
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
 import {type AllNavigatorParams} from '#/lib/routes/types'
-import {listenProposalCreated, listenSoftReset} from '#/state/events'
+import {listenSoftReset} from '#/state/events'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {HomeHeaderLayoutMobile} from '#/view/com/home/HomeHeaderLayoutMobile'
 import {type ListRef} from '#/view/com/util/List'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import ExpandRightIcon from '#/components/DAO/icons/expand-right'
 import * as Layout from '#/components/Layout'
@@ -169,13 +169,12 @@ export default function HallScreen() {
               // onPress={() => {
               //   navigation.push('HallDocList')
               // }}
-              to="/hall/documents"
-              style={{color: '#6F869F'}}>
+              to="/hall/documents">
               <Text
                 style={[
                   t.atoms.text_contrast_medium,
                   a.text_sm,
-                  {color: 'inherit'},
+                  {color: '#6F869F'},
                 ]}>
                 更多
               </Text>
@@ -184,10 +183,12 @@ export default function HallScreen() {
           </View>
           <View style={[a.flex_row, a.gap_md, a.mt_xl]}>
             <Link
-              to="/hall/documents" style={[a.flex_1, styles.foundCard, styles.foundScale]}>
+              label="金库规模"
+              to="/hall/documents"
+              style={[a.flex_1, styles.foundCard, styles.foundScale]}>
               <Image
                 accessibilityIgnoresInvertColors
-                style={[styles.foundScaleBG]}
+                style={styles.foundScaleBG as ImageStyle}
                 source={require('#/assets/hall.cash.svg')}
               />
               <Text style={[t.atoms.text_inverted, a.text_md]}>金库规模</Text>
@@ -205,11 +206,12 @@ export default function HallScreen() {
               </View>
             </Link>
             <Link
+              label="已发行稻米数"
               to="/hall/score-distribute-records"
               style={[a.flex_1, styles.foundCard, styles.foundToken]}>
               <Image
                 accessibilityIgnoresInvertColors
-                style={[styles.foundTokenBG]}
+                style={styles.foundTokenBG as ImageStyle}
                 source={require('#/assets/hall.token.svg')}
               />
               <Text style={[t.atoms.text_inverted, a.text_md]}>已发行稻米数</Text>
@@ -226,7 +228,7 @@ export default function HallScreen() {
           </View>
           <View style={[a.flex, a.flex_col, a.mt_xl, styles.announcement]}>
             <Image
-              style={[styles.announcementBgImg]}
+              style={styles.announcementBgImg as ImageStyle}
               accessibilityIgnoresInvertColors
               source={require('#/assets/hall/announcement.bg.svg')}
             />
@@ -250,14 +252,13 @@ export default function HallScreen() {
 
               <Link
                 label="公告列表"
-                to="/hall/announcements"
-                style={{color: 'white'}}>
+                to="/hall/announcements">
                 <Text
                   style={[
                     t.atoms.text_contrast_medium,
                     a.text_sm,
                     a.font_bold,
-                    {color: 'inherit'},
+                    {color: 'white'},
                   ]}>
                   更多
                 </Text>
@@ -278,11 +279,11 @@ export default function HallScreen() {
                   <Link
                     key={item.id}
                     to={`/hall/announcement/${item.id}`}
-                    label={item.title}
-                    style={[a.w_full, {display: 'block', color: '#6F869F'}]}>
+                    label={item.name}
+                    style={[a.w_full]}>
                     <View style={[styles.announcementItem, a.gap_sm]}>
                       <Image
-                        style={[styles.announcementIcon]}
+                        style={styles.announcementIcon as ImageStyle}
                         accessibilityIgnoresInvertColors
                         source={require('#/assets/hall/announcement.icon.svg')}
                       />
@@ -320,13 +321,12 @@ export default function HallScreen() {
                   // onPress={() => {
                   //   navigation.push('HallNodeList')
                   // }}
-                  to="/hall/nodes"
-                  style={{color: '#6F869F'}}>
+                  to="/hall/nodes">
                   <Text
                     style={[
                       t.atoms.text_contrast_medium,
                       a.text_sm,
-                      {color: 'inherit'},
+                      {color: '#6F869F'},
                     ]}>
                     更多
                   </Text>
@@ -382,7 +382,7 @@ export default function HallScreen() {
                 <Text style={[t.atoms.text, a.text_lg, a.font_bold]}>提案</Text>
               </View>
               <View style={[a.flex_row, a.mt_md, a.gap_md]}>
-                {proposalStageOptions.map(({label, key}, idx) => {
+                {proposalStageOptions.map(({label, key}) => {
                   return (
                     <Button
                       label={label}
@@ -393,7 +393,6 @@ export default function HallScreen() {
                         a.align_center,
                         a.justify_center,
                         styles.tab,
-                        {color: '#42576C'},
                         currentTabKey === key ? styles.activeTab : undefined,
                       ]}
                       hoverStyle={[styles.activeTab]}
@@ -405,8 +404,7 @@ export default function HallScreen() {
                         style={[
                           currentTabKey === key
                             ? styles.activeTabText
-                            : undefined,
-                          {color: 'inherit'},
+                            : {color: '#42576C'},
                         ]}>
                         {label}
                       </Text>
@@ -424,7 +422,7 @@ export default function HallScreen() {
               headerHeight={0}
               isFocused={true}
               contentContainerStyle={{
-                minHeight: 'calc(100vh - 52px - 58px - 64px)',
+                minHeight: 480,
               }}
               desktopFixedHeight={false}
               scrollElRef={scrollElRef as ListRef}
@@ -459,8 +457,7 @@ const styles = StyleSheet.create({
     paddingBottom: '100%',
 
     opacity: 0.6,
-    backgroundImage:
-      'linear-gradient(71deg, #DEF2FE 10.27%, #B5D3FF 28.82%, #D9D7FA 96.02%)',
+    backgroundColor: '#DEF2FE',
   },
   topInfo: {
     position: 'relative',
@@ -479,7 +476,7 @@ const styles = StyleSheet.create({
     paddingInline: 16,
   },
   foundScale: {
-    backgroundImage: 'linear-gradient(126deg, #154FFF 16.58%, #68C3FD 93.61%)',
+    backgroundColor: '#2A78FF',
   },
   foundScaleBG: {
     position: 'absolute',
@@ -489,7 +486,7 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   foundToken: {
-    backgroundImage: 'linear-gradient(126deg, #6685FB 16.58%, #B2BEFF 93.61%)',
+    backgroundColor: '#8D9DFF',
   },
   foundTokenBG: {
     position: 'absolute',
@@ -553,7 +550,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'white',
     borderRadius: 16,
-    backgroundImage: 'linear-gradient(80deg, #9DCBFF 1.37%, #DCCDFF 98.09%)',
+    backgroundColor: '#B8CCFF',
   },
   announcementTitle: {
     width: 48,
@@ -567,14 +564,13 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   announcementBox: {
-    backgroundColor: 'white',
     borderRadius: 12,
     paddingVertical: 14,
     paddingHorizontal: 12,
     marginTop: 8,
     borderWidth: 2,
     borderColor: 'white',
-    backgroundImage: 'linear-gradient(180deg, #F1F7FE 0%, #FFF 100%)',
+    backgroundColor: '#F8FBFF',
   },
   announcementBgImg: {
     position: 'absolute',
