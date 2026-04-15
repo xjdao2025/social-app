@@ -1,4 +1,4 @@
-import {useRef} from 'react'
+import {useRef, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
 import {useInfiniteScroll, useRequest} from 'ahooks'
@@ -7,7 +7,9 @@ import {format} from 'date-fns'
 import displayNumber from '#/lib/displayNumber'
 import {useGoBack} from '#/lib/hooks/useGoBack'
 import PointsEmpty from '#/screens/PointsRecord/PointsEmpty'
+import {SendPointsDialog} from '#/screens/Profile/Header/SendPointsDialog'
 import {atoms as a, useTheme} from '#/alf'
+import * as Dialog from '#/components/Dialog'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 import server from '#/server'
@@ -23,8 +25,10 @@ const PAGE_SIZE = 30
 const PointsRecordScreen = () => {
   const t = useTheme()
   const goBack = useGoBack()
+  const sendControl = Dialog.useDialogControl()
 
   const ref = useRef(null)
+  const [selectedToUserId, setSelectedToUserId] = useState<string>()
 
   const {data: userDetail} = useRequest(() =>
     server.dao('POST /user/login-user-detail'),
@@ -127,29 +131,47 @@ const PointsRecordScreen = () => {
                         ]}>
                         {p.reason}
                       </Text>
-                      <Text style={[t.atoms.text_contrast_high]}>
-                        {
-                          {
-                            0: '',
-                            1: '打赏',
-                            2: '赠送',
-                            3: '后台发放',
-                          }[p.type]
-                        }
-                      </Text>
+                      {p.remark ? (
+                        <Text
+                          style={[
+                            t.atoms.text_contrast_high,
+                            {color: '#F66455'},
+                          ]}>
+                          附言：{p.remark}
+                        </Text>
+                      ) : null}
                       <Text style={[t.atoms.text_contrast_low]}>
                         {format(new Date(p.createdAt), 'yyyy-MM-dd HH:mm:ss')}
                       </Text>
                     </View>
-                    <Text
-                      style={[
-                        a.text_md,
-                        a.text_family_ddin,
-                        a.font_bold,
-                        isPositive ? {color: '#F66455'} : {color: '#37D28C'},
-                      ]}>
-                      {isPositive ? `+${p.score}` : p.score}
-                    </Text>
+                    <View style={[a.flex_col, a.align_end, a.gap_sm]}>
+                      <Text
+                        style={[
+                          a.text_md,
+                          a.text_family_ddin,
+                          a.font_bold,
+                          isPositive ? {color: '#F66455'} : {color: '#37D28C'},
+                        ]}>
+                        {isPositive ? `+${p.score}` : p.score}
+                      </Text>
+                      {p.participatorId ? (
+                        <Pressable
+                          accessibilityRole="button"
+                          onPress={() => {
+                            setSelectedToUserId(p.participatorId)
+                            sendControl.open()
+                          }}
+                          style={styles.button}>
+                          <Text
+                            style={[
+                              a.text_xs,
+                              {color: '#42576C', fontWeight: 500},
+                            ]}>
+                            {isPositive ? '回赠' : '再次赠送'}
+                          </Text>
+                        </Pressable>
+                      ) : null}
+                    </View>
                   </View>
                 )
               })
@@ -157,6 +179,11 @@ const PointsRecordScreen = () => {
           </View>
         </View>
       </Layout.Center>
+      <SendPointsDialog
+        control={sendControl}
+        defaultToUserId={selectedToUserId}
+        onUpdate={() => {}}
+      />
     </Layout.Screen>
   )
 }

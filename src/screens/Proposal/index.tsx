@@ -5,8 +5,9 @@ import {
   useContext,
   useMemo,
   useRef,
+  useState,
 } from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, StyleSheet, TextInput, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {moderatePost, RichText as RichTextAPI} from '@atproto/api'
@@ -129,6 +130,44 @@ export default function ProposalDetailScreen({route}: Props) {
     reloadVoteInfo()
     reloadProposalInfo()
   }
+
+  const [commentText, setCommentText] = useState('')
+  const [submittingComment, setSubmittingComment] = useState(false)
+
+  const onSubmitComment = useCallback(async () => {
+    const content = commentText.trim()
+    if (!content) return
+    setSubmittingComment(true)
+    try {
+      const flag = await server.dao('POST /proposal/comment', {
+        proposalId,
+        content,
+      })
+      if (flag) {
+        Toast.show('评论成功', 'check', 'center')
+        setCommentText('')
+        reloadProposalInfo()
+      }
+    } catch (e: any) {
+      Toast.show(e?.message || '评论失败', 'xmark', 'center')
+    } finally {
+      setSubmittingComment(false)
+    }
+  }, [commentText, proposalId])
+
+  const onDeleteComment = useCallback(async (commentId: string) => {
+    try {
+      const flag = await server.dao('POST /proposal/delete-my-comment', {
+        commentId,
+      })
+      if (flag) {
+        Toast.show('删除成功', 'check', 'center')
+        reloadProposalInfo()
+      }
+    } catch (e: any) {
+      Toast.show(e?.message || '删除失败', 'xmark', 'center')
+    }
+  }, [])
 
   const setMinimalShellMode = useSetMinimalShellMode()
   useFocusEffect(
@@ -306,8 +345,111 @@ export default function ProposalDetailScreen({route}: Props) {
           endDate={proposalInfo?.endAt}
           votedInfo={votedInfo}
         />
+
+        {/* 评论区域 */}
+        <View style={[a.mt_xl]}>
+          <Text style={[a.text_md, a.font_bold, a.mb_md]}>
+            评论 ({proposalInfo?.comments?.length || 0})
+          </Text>
+          {proposalInfo?.comments?.length === 0 ? (
+            <Text style={[t.atoms.text_contrast_medium]}>
+              暂无评论，快来发表第一条评论吧
+            </Text>
+          ) : (
+            <View style={[a.gap_md]}>
+              {proposalInfo?.comments?.map(comment => (
+                <View
+                  key={comment.commentId}
+                  style={[
+                    a.p_md,
+                    {backgroundColor: '#F8F9FA', borderRadius: 8},
+                  ]}>
+                  <View
+                    style={[
+                      a.flex_row,
+                      a.align_center,
+                      a.justify_between,
+                      a.mb_xs,
+                    ]}>
+                    <Text style={[a.text_sm, a.font_bold]}>
+                      {comment.userName}
+                    </Text>
+                    {comment.userId === currentUserInfo?.id ? (
+                      <Pressable
+                        accessibilityRole="button"
+                        onPress={() => onDeleteComment(comment.commentId)}
+                        hitSlop={8}>
+                        <Image
+                          accessibilityIgnoresInvertColors
+                          style={{width: 16, height: 16}}
+                          source={require('#/assets/dustbin.svg')}
+                        />
+                      </Pressable>
+                    ) : null}
+                  </View>
+                  <Text
+                    style={[
+                      a.text_sm,
+                      t.atoms.text_contrast_high,
+                      {marginBottom: 6},
+                    ]}>
+                    {comment.content}
+                  </Text>
+                  <Text style={[a.text_xs, t.atoms.text_contrast_low]}>
+                    {format(new Date(comment.createdAt), 'yyyy/MM/dd HH:mm')}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          )}
+
+          {currentAccount?.did ? (
+            <View style={[a.mt_lg, a.gap_sm]}>
+              <TextInput
+                value={commentText}
+                onChangeText={setCommentText}
+                placeholder="发表你的评论..."
+                multiline
+                maxLength={512}
+                style={[
+                  a.p_md,
+                  a.text_sm,
+                  t.atoms.text_contrast_high,
+                  {
+                    borderWidth: 1,
+                    borderColor: '#D4DBE2',
+                    borderRadius: 8,
+                    minHeight: 80,
+                    textAlignVertical: 'top',
+                  },
+                ]}
+              />
+              <Pressable
+                accessibilityRole="button"
+                onPress={onSubmitComment}
+                disabled={!commentText.trim() || submittingComment}
+                style={[
+                  a.align_self_end,
+                  a.px_md,
+                  a.py_sm,
+                  {
+                    backgroundColor:
+                      !commentText.trim() || submittingComment
+                        ? '#D4DBE2'
+                        : '#1083FE',
+                    borderRadius: 6,
+                  },
+                ]}>
+                <Text style={[a.text_sm, {color: '#fff'}]}>
+                  {submittingComment ? '发送中...' : '发送'}
+                </Text>
+              </Pressable>
+            </View>
+          ) : null}
+        </View>
+
         {/* 投票框底部占位 */}
-        <View style={{height: 100}} />
+        <View style={{height: 140}} />
         {/* { canVote ? <View style={{ height: 40 }} /> : null} */}
       </View>
 

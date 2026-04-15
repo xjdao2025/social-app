@@ -266,11 +266,17 @@ declare namespace APIDao {
 
   /** POST /score/send */
   interface WebEndpointsScoreSendScoreReq {
-    /** 接收用户的手机号或邮箱 */
-    userPhoneOrEmail: string
+    /** 接收用户的UserId，优先使用 */
+    toUserId?: string
+
+    /** 接收用户的手机号或邮箱，未传toUserId时必填 */
+    userPhoneOrEmail?: string
 
     /** 稻米 */
     score: number
+
+    /** 附言 */
+    remark?: string
   }
 
   /** POST /score/user-sore-record-page */
@@ -388,6 +394,39 @@ declare namespace APIDao {
     choice: DomainEnumsVoteType
   }
 
+  /** POST /proposal/comment */
+  interface WebEndpointsProposalCreateProposalCommentReq {
+    /** 提案 Id */
+    proposalId: string
+
+    /** 评论内容 */
+    content: string
+  }
+
+  /** POST /proposal/delete-my-comment */
+  interface WebEndpointsProposalDeleteMyProposalCommentReq {
+    /** 评论 Id */
+    commentId: string
+  }
+
+  /** POST /proposal/detail */
+  interface WebEndpointsProposalProposalCommentVo {
+    /** 评论 Id */
+    commentId: string
+
+    /** 评论用户 Id */
+    userId: string
+
+    /** 评论用户名称 */
+    userName: string
+
+    /** 评论内容 */
+    content: string
+
+    /** 创建时间 {"format":"date-time"} */
+    createdAt: string
+  }
+
   /** POST /proposal/detail */
   interface WebEndpointsProposalProposalDetailReq {
     /** 提案 Id */
@@ -439,6 +478,9 @@ declare namespace APIDao {
 
     /** 创建时间 {"format":"date-time"} */
     createdAt: string
+
+    /** 评论列表 */
+    comments: Array<APIDao.WebEndpointsProposalProposalCommentVo>
   }
 
   /** POST /proposal/page */
@@ -649,6 +691,12 @@ declare namespace APIDao {
 
     /** 稻米数量 */
     score: number
+
+    /** 附言 */
+    remark: string
+
+    /** 对方用户Id */
+    participatorId: string
 
     /** 创建时间 {"format":"date-time"} */
     createdAt: string
