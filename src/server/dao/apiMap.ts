@@ -84,6 +84,11 @@ const apiMap = {
     APIDao.WebEndpointsScoreUserScoreRecordPageReq,
     APIDao.NetCorePalExtensionsDtoPagedDataOfUserScoreRecordPageVo
   >('/score/user-sore-record-page', 'POST'),
+  /** 稻米发放记录 */
+  'POST /score-distribute-record/page': defineAPI<
+    APIDao.WebEndpointsScoreScoreDistributeRecordPageReq,
+    APIDao.NetCorePalExtensionsDtoPagedDataOfScoreDistributeRecordPageVo
+  >('/score-distribute-record/page', 'POST'),
   /** 创建提案 */
   'POST /proposal/create': defineAPI<
     APIDao.WebEndpointsProposalCreateProposalReq,

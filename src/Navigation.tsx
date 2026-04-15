@@ -117,6 +117,7 @@ import HallAnnouncementScreen from './screens/Hall/Announcement'
 import HallAnnouncementListScreen from './screens/Hall/AnnouncementList'
 import HallDocListScreen from './screens/Hall/DocList'
 import HallNodeListScreen from './screens/Hall/NodeList'
+import HallScoreDistributeRecordListScreen from './screens/Hall/ScoreDistributeRecordList'
 import MedalsWallScreen from './screens/MedalsWall'
 import PointsRecordScreen from './screens/PointsRecord'
 import ProposalDetailScreen from './screens/Proposal'
@@ -497,6 +498,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => HallDocListScreen}
         options={{
           title: 'Hall Doc List', // title(msg`Video Feed`),
+          requireAuth: false,
+        }}
+      />
+      <Stack.Screen
+        name="HallScoreDistributeRecordList"
+        getComponent={() => HallScoreDistributeRecordListScreen}
+        options={{
+          title: '稻米发放记录',
           requireAuth: false,
         }}
       />

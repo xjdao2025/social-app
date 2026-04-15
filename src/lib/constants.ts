@@ -1,14 +1,14 @@
-import {type Insets, Platform} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
+import { type Insets, Platform } from 'react-native'
+import { type AppBskyActorDefs } from '@atproto/api'
 
-import {IS_INTERNAL} from './app-info'
+import { IS_INTERNAL } from './app-info'
 
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
 export const STAGING_SERVICE = 'https://staging.bsky.dev'
 
 const APIdomain = IS_INTERNAL
-  ? 'https://xiangjiandao.rivtower.cc'
+  ? 'https://xjdao.net'
   : window.location.origin
 export const BSKY_SERVICE = `${APIdomain}/pds` // 'https://xiangjiandao.rivtower.cc/pds'
 // export const BSKY_SERVICE = 'https://web5.rivtower.cc'
@@ -136,8 +136,8 @@ export const createHitslop = (size: number): Insets => ({
 export const HITSLOP_10 = createHitslop(10)
 export const HITSLOP_20 = createHitslop(20)
 export const HITSLOP_30 = createHitslop(30)
-export const POST_CTRL_HITSLOP = {top: 5, bottom: 10, left: 10, right: 10}
-export const LANG_DROPDOWN_HITSLOP = {top: 10, bottom: 10, left: 4, right: 4}
+export const POST_CTRL_HITSLOP = { top: 5, bottom: 10, left: 10, right: 10 }
+export const LANG_DROPDOWN_HITSLOP = { top: 10, bottom: 10, left: 4, right: 4 }
 export const BACK_HITSLOP = HITSLOP_30
 export const MAX_POST_LINES = 25
 
