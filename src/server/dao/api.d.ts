@@ -293,6 +293,26 @@ declare namespace APIDao {
     pageSize: number
   }
 
+  /** POST /score-distribute-record/page */
+  interface WebEndpointsScoreScoreDistributeRecordPageReq {
+    /** 页码 */
+    pageNum: number
+
+    /** 分页大小 */
+    pageSize: number
+  }
+
+  /** POST /score-distribute-record/page */
+  interface NetCorePalExtensionsDtoPagedDataOfScoreDistributeRecordPageVo {
+    items: Array<WebEndpointsScoreScoreDistributeRecordPageVo>
+
+    total: number
+
+    pageIndex: number
+
+    pageSize: number
+  }
+
   /** POST /proposal/create */
   interface WebEndpointsProposalCreateProposalReq {
     /** 提案名称 */
@@ -632,6 +652,20 @@ declare namespace APIDao {
 
     /** 创建时间 {"format":"date-time"} */
     createdAt: string
+  }
+
+  interface WebEndpointsScoreScoreDistributeRecordPageVo {
+    /** 用户Id */
+    user_id: string
+
+    /** 完整用户名，域名 */
+    domain_name: string
+
+    /** 发放稻米数量 */
+    score: number
+
+    /** 获取时间 {"format":"date-time"} */
+    get_time: string
   }
 
   /** 投票选项 {"x-enumNames":["Unknown","Agree","Oppose"]} */

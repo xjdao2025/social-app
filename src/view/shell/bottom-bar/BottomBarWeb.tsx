@@ -54,6 +54,7 @@ type RouteType = keyof AllNavigatorParams
 const hideTabBarRoute: RouteType[] = [
   'PointsRecord',
   'HallDocList',
+  'HallScoreDistributeRecordList',
   'HallNodeList',
   'MedalsWall',
   'HallAnnouncement',

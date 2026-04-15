@@ -60,6 +60,7 @@ export type CommonNavigatorParams = {
   Hall: undefined
   HallNodeList: undefined
   HallDocList: undefined
+  HallScoreDistributeRecordList: undefined
   HallAnnouncement: {id: string}
   HallAnnouncementList: undefined
   ProposalDetail: {proposalId: string}

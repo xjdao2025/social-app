@@ -43,6 +43,10 @@ export type APITypeTuple = {
     APIDao.WebEndpointsScoreUserScoreRecordPageReq,
     APIDao.NetCorePalExtensionsDtoPagedDataOfUserScoreRecordPageVo,
   ]
+  'POST /score-distribute-record/page': [
+    APIDao.WebEndpointsScoreScoreDistributeRecordPageReq,
+    APIDao.NetCorePalExtensionsDtoPagedDataOfScoreDistributeRecordPageVo,
+  ]
   'POST /proposal/create': [
     APIDao.WebEndpointsProposalCreateProposalReq,
     string,

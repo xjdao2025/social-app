@@ -7,6 +7,7 @@ export const router = new Router({
   Hall: '/hall',
   HallNodeList: '/hall/nodes',
   HallDocList: '/hall/documents',
+  HallScoreDistributeRecordList: '/hall/score-distribute-records',
   HallAnnouncementList: '/hall/announcements',
   HallAnnouncement: '/hall/announcement/:id',
 

@@ -183,7 +183,8 @@ export default function HallScreen() {
             </Link>
           </View>
           <View style={[a.flex_row, a.gap_md, a.mt_xl]}>
-            <View style={[a.flex_1, styles.foundCard, styles.foundScale]}>
+            <Link
+              to="/hall/documents" style={[a.flex_1, styles.foundCard, styles.foundScale]}>
               <Image
                 accessibilityIgnoresInvertColors
                 style={[styles.foundScaleBG]}
@@ -202,9 +203,9 @@ export default function HallScreen() {
                   {displayNumber(foundInfo?.fundScale)}
                 </Text>
               </View>
-            </View>
+            </Link>
             <Link
-              to="/hall/documents"
+              to="/hall/score-distribute-records"
               style={[a.flex_1, styles.foundCard, styles.foundToken]}>
               <Image
                 accessibilityIgnoresInvertColors
