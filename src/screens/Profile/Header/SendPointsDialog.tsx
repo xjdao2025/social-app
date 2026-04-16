@@ -25,11 +25,13 @@ const SCREEN_HEIGHT = Dimensions.get('window').height
 export function SendPointsDialog({
   defaultReceive,
   defaultToUserId,
+  defaultToUserDomainName,
   control,
   onUpdate,
 }: {
   defaultReceive?: string
   defaultToUserId?: string
+  defaultToUserDomainName?: string
   control: Dialog.DialogControlProps
   onUpdate?: () => void
 }) {
@@ -65,6 +67,7 @@ export function SendPointsDialog({
         onUpdate={onUpdate}
         defaultReceive={receiveUser}
         defaultToUserId={defaultToUserId}
+        defaultToUserDomainName={defaultToUserDomainName}
         onPressCancel={onPressCancel}
       />
     </Dialog.Outer>
@@ -74,11 +77,13 @@ export function SendPointsDialog({
 function DialogInner({
   defaultReceive = '',
   defaultToUserId,
+  defaultToUserDomainName,
   onUpdate,
   onPressCancel,
 }: {
   defaultReceive?: string
   defaultToUserId?: string
+  defaultToUserDomainName?: string
   onUpdate?: () => void
   onPressCancel: () => void
 }) {
@@ -92,6 +97,9 @@ function DialogInner({
   const [giftPoints, setGiftPoints] = useState('')
   const [giftRemark, setGiftRemark] = useState('')
   const [toUserId] = useState(defaultToUserId)
+  const [toUserDomainName] = useState(defaultToUserDomainName)
+
+  const recipientDisplay = giftAccount || toUserDomainName || toUserId
 
   const confirmPromptControl = Prompt.usePromptControl()
   const resultPromptControl = Prompt.usePromptControl()
@@ -121,15 +129,20 @@ function DialogInner({
         onUpdate?.()
         setIsSuccess(true)
         setResultMessage(
-          `成功向 ${toUserId || giftAccount} 发送了 ${giftPoints} 稻米！`,
+          `成功向 ${recipientDisplay} 发送了 ${giftPoints} 稻米！`,
         )
-        
+
         try {
           const recipient = toUserId || giftAccount
           const amount = Number(giftPoints)
           const historyStr = localStorage.getItem('transfer_history')
           const history = historyStr ? JSON.parse(historyStr) : []
-          history.push({ recipient, amount, timestamp: Date.now() })
+          history.push({
+            recipient,
+            recipientDisplay,
+            amount,
+            timestamp: Date.now(),
+          })
           localStorage.setItem('transfer_history', JSON.stringify(history))
         } catch (e) {
           console.error('Failed to save transfer history', e)
@@ -166,7 +179,7 @@ function DialogInner({
           (tx: any) =>
             tx.recipient === recipient &&
             tx.amount === amount &&
-            now - tx.timestamp < 300000 // 5 mins in ms
+            now - tx.timestamp < 300000, // 5 mins in ms
         )
         if (isDuplicate) {
           duplicatePromptControl.open()
@@ -177,11 +190,17 @@ function DialogInner({
       console.error('Failed to parse transfer history', e)
     }
     confirmPromptControl.open()
-  }, [confirmPromptControl, duplicatePromptControl, toUserId, giftAccount, giftPoints])
+  }, [
+    confirmPromptControl,
+    duplicatePromptControl,
+    toUserId,
+    giftAccount,
+    giftPoints,
+  ])
 
   const onConfirmDuplicate = useCallback(() => {
-    confirmPromptControl.open()
-  }, [confirmPromptControl])
+    handleSend()
+  }, [handleSend])
 
   const handleResultClose = useCallback(() => {
     if (isSuccess) {
@@ -355,7 +374,7 @@ function DialogInner({
       <Prompt.Basic
         control={duplicatePromptControl}
         title="重复操作提醒"
-        description="系统检测到您在5分钟内向该用户发送过同等金额的稻米。您确定要再次发送吗？"
+        description={`系统检测到您在5分钟内向该用户（${recipientDisplay}）发送过同等金额的稻米。您确定要再次发送吗？`}
         onConfirm={onConfirmDuplicate}
         confirmButtonCta="继续发送"
         cancelButtonCta="取消"
@@ -365,9 +384,7 @@ function DialogInner({
       <Prompt.Basic
         control={confirmPromptControl}
         title="确认发送"
-        description={`是否确认向 ${
-          toUserId || giftAccount
-        } 发送 ${giftPoints} 稻米？`}
+        description={`是否确认向 ${recipientDisplay} 发送 ${giftPoints} 稻米？`}
         onConfirm={handleSend}
         confirmButtonCta="确认"
         cancelButtonCta="取消"

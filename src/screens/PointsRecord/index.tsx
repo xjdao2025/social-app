@@ -22,6 +22,19 @@ type InfiniteScrollType = {
 
 const PAGE_SIZE = 30
 
+function getScoreSourceLabel(type: APIDao.DomainEnumsScoreSourceType) {
+  switch (type) {
+    case 1:
+      return '赞赏'
+    case 2:
+      return '赠送'
+    case 3:
+      return '后台发放'
+    default:
+      return '未知'
+  }
+}
+
 const PointsRecordScreen = () => {
   const t = useTheme()
   const goBack = useGoBack()
@@ -29,6 +42,8 @@ const PointsRecordScreen = () => {
 
   const ref = useRef(null)
   const [selectedToUserId, setSelectedToUserId] = useState<string>()
+  const [selectedToUserDomainName, setSelectedToUserDomainName] =
+    useState<string>()
 
   const {data: userDetail} = useRequest(() =>
     server.dao('POST /user/login-user-detail'),
@@ -129,7 +144,7 @@ const PointsRecordScreen = () => {
                           a.font_bold,
                           t.atoms.text_contrast_high,
                         ]}>
-                        {p.reason}
+                        {`${getScoreSourceLabel(p.type)} ${p.reason}`}
                       </Text>
                       {p.remark ? (
                         <Text
@@ -159,6 +174,7 @@ const PointsRecordScreen = () => {
                           accessibilityRole="button"
                           onPress={() => {
                             setSelectedToUserId(p.participatorId)
+                            setSelectedToUserDomainName(p.reason)
                             sendControl.open()
                           }}
                           style={styles.button}>
@@ -182,6 +198,7 @@ const PointsRecordScreen = () => {
       <SendPointsDialog
         control={sendControl}
         defaultToUserId={selectedToUserId}
+        defaultToUserDomainName={selectedToUserDomainName}
         onUpdate={() => {}}
       />
     </Layout.Screen>

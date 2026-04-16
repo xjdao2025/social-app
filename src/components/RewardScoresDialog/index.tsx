@@ -1,19 +1,19 @@
-import { useReducer, useRef, useState } from 'react'
-import { KeyboardAvoidingView, View } from 'react-native'
-import { useRequest } from 'ahooks'
-import { isNaN, isNumber } from 'lodash'
+import {useReducer, useRef, useState} from 'react'
+import {KeyboardAvoidingView, View} from 'react-native'
+import {useRequest} from 'ahooks'
+import {isNaN, isNumber} from 'lodash'
 
-import { colors } from '#/lib/styles'
+import {colors} from '#/lib/styles'
 import * as Toast from '#/view/com/util/Toast'
-import { atoms as a, web } from '#/alf'
+import {atoms as a, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
 import * as TextField from '#/components/forms/TextField'
 import server from '#/server'
-import { Admonition } from '../Admonition'
-import { Button, ButtonIcon, ButtonText } from '../Button'
-import { Loader } from '../Loader'
-import { Text } from '../Typography'
+import {Admonition} from '../Admonition'
+import {Button, ButtonIcon, ButtonText} from '../Button'
+import {Loader} from '../Loader'
+import {Text} from '../Typography'
 
 type RewardScoresDialogProps = {
   toUserDid: string
@@ -22,7 +22,7 @@ type RewardScoresDialogProps = {
 }
 
 export default function RewardScoresDialog(props: RewardScoresDialogProps) {
-  const { toUserDid, control, extendInfo } = props
+  const {toUserDid, control, extendInfo} = props
 
   const confirmPromptControl = Prompt.usePromptControl()
   const resultPromptControl = Prompt.usePromptControl()
@@ -36,12 +36,12 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
     score: '',
   })
 
-  const { data: userInfo, refresh: refreshUser } = useRequest(
+  const {data: userInfo, refresh: refreshUser} = useRequest(
     async () => {
       const res = await server.dao('POST /user/login-user-detail')
       return res
     },
-    { refreshDeps: [control.isOpen] },
+    {refreshDeps: [control.isOpen]},
   )
 
   const onCheckAndOpenConfirm = async () => {
@@ -57,7 +57,7 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
         throw new Error('输入的稻米不能超过当前稻米')
       }
 
-      dispatch({ type: 'setMutationStatus', status: 'default' })
+      dispatch({type: 'setMutationStatus', status: 'default'})
 
       try {
         const historyStr = localStorage.getItem('reward_history')
@@ -68,7 +68,7 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
             (tx: any) =>
               tx.recipient === toUserDid &&
               tx.amount === score &&
-              now - tx.timestamp < 300000 // 5 minutes in ms
+              now - tx.timestamp < 300000, // 5 minutes in ms
           )
           if (isDuplicate) {
             duplicatePromptControl.open()
@@ -101,25 +101,25 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
           extendInfo: extendInfo || '',
           score: +state.score,
         },
-        { getWholeBizData: true },
+        {getWholeBizData: true},
       )
       if (!submitRes.data) {
         throw new Error(submitRes.message)
       }
-      
+
       setIsSuccess(true)
       setResultMessage(`成功打赏该用户 ${state.score} 稻米！`)
-      
+
       try {
         const amount = Number(state.score)
         const historyStr = localStorage.getItem('reward_history')
         const history = historyStr ? JSON.parse(historyStr) : []
-        history.push({ recipient: toUserDid, amount, timestamp: Date.now() })
+        history.push({recipient: toUserDid, amount, timestamp: Date.now()})
         localStorage.setItem('reward_history', JSON.stringify(history))
       } catch (e) {
         console.error('Failed to save reward history', e)
       }
-      
+
       dispatch({
         type: 'setMutationStatus',
         status: 'success',
@@ -148,7 +148,7 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
   }
 
   const onConfirmDuplicate = () => {
-    confirmPromptControl.open()
+    handleReward()
   }
 
   return (
@@ -156,7 +156,7 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label="打赏稻米"
-        style={web({ maxWidth: 400, marginTop: '25vh' })}>
+        style={web({maxWidth: 400, marginTop: '25vh'})}>
         <Dialog.Close />
 
         <View style={[a.gap_lg]}>
@@ -171,7 +171,7 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
                 onChangeText={
                   false
                     ? undefined
-                    : value => dispatch({ type: 'setScore', value })
+                    : value => dispatch({type: 'setScore', value})
                 }
                 keyboardType="number-pad"
                 // autoComplete="email"
@@ -236,17 +236,17 @@ type State = {
 
 type Action =
   | {
-    type: 'setError'
-    error: string
-  }
+      type: 'setError'
+      error: string
+    }
   | {
-    type: 'setMutationStatus'
-    status: State['mutationStatus']
-  }
+      type: 'setMutationStatus'
+      status: State['mutationStatus']
+    }
   | {
-    type: 'setScore'
-    value: string
-  }
+      type: 'setScore'
+      value: string
+    }
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
