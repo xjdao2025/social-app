@@ -1,18 +1,18 @@
-import {useReducer, useRef, useState} from 'react'
-import {KeyboardAvoidingView, View} from 'react-native'
-import {useRequest} from 'ahooks'
-import {isNaN, isNumber} from 'lodash'
+import { useReducer, useRef, useState } from 'react'
+import { KeyboardAvoidingView, View } from 'react-native'
+import { useRequest } from 'ahooks'
+import { isNaN, isNumber } from 'lodash'
 
-import {colors} from '#/lib/styles'
+import { colors } from '#/lib/styles'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, web} from '#/alf'
+import { atoms as a, web } from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import server from '#/server'
-import {Admonition} from '../Admonition'
-import {Button, ButtonIcon, ButtonText} from '../Button'
-import {Loader} from '../Loader'
-import {Text} from '../Typography'
+import { Admonition } from '../Admonition'
+import { Button, ButtonIcon, ButtonText } from '../Button'
+import { Loader } from '../Loader'
+import { Text } from '../Typography'
 
 type RewardScoresDialogProps = {
   toUserDid: string
@@ -21,7 +21,7 @@ type RewardScoresDialogProps = {
 }
 
 export default function RewardScoresDialog(props: RewardScoresDialogProps) {
-  const {toUserDid, control, extendInfo} = props
+  const { toUserDid, control, extendInfo } = props
 
   const [state, dispatch] = useReducer(reducer, {
     mutationStatus: 'default',
@@ -29,12 +29,12 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
     score: '',
   })
 
-  const {data: userInfo, refresh: refreshUser} = useRequest(
+  const { data: userInfo, refresh: refreshUser } = useRequest(
     async () => {
       const res = await server.dao('POST /user/login-user-detail')
       return res
     },
-    {refreshDeps: [control.isOpen]},
+    { refreshDeps: [control.isOpen] },
   )
 
   const onSendScore = async () => {
@@ -61,7 +61,7 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
           extendInfo: extendInfo || '',
           score: +state.score,
         },
-        {getWholeBizData: true},
+        { getWholeBizData: true },
       )
       if (!submitRes.data) {
         throw new Error(submitRes.message)
@@ -92,7 +92,7 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label="打赏稻米"
-        style={web({maxWidth: 400, marginTop: '25vh'})}>
+        style={web({ maxWidth: 400, marginTop: '25vh' })}>
         <Dialog.Close />
 
         <View style={[a.gap_lg]}>
@@ -107,7 +107,7 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
                 onChangeText={
                   false
                     ? undefined
-                    : value => dispatch({type: 'setScore', value})
+                    : value => dispatch({ type: 'setScore', value })
                 }
                 keyboardType="number-pad"
                 // autoComplete="email"
@@ -144,17 +144,17 @@ type State = {
 
 type Action =
   | {
-      type: 'setError'
-      error: string
-    }
+    type: 'setError'
+    error: string
+  }
   | {
-      type: 'setMutationStatus'
-      status: State['mutationStatus']
-    }
+    type: 'setMutationStatus'
+    status: State['mutationStatus']
+  }
   | {
-      type: 'setScore'
-      value: string
-    }
+    type: 'setScore'
+    value: string
+  }
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
