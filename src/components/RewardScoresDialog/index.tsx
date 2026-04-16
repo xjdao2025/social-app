@@ -7,6 +7,7 @@ import { colors } from '#/lib/styles'
 import * as Toast from '#/view/com/util/Toast'
 import { atoms as a, web } from '#/alf'
 import * as Dialog from '#/components/Dialog'
+import * as Prompt from '#/components/Prompt'
 import * as TextField from '#/components/forms/TextField'
 import server from '#/server'
 import { Admonition } from '../Admonition'
@@ -23,6 +24,12 @@ type RewardScoresDialogProps = {
 export default function RewardScoresDialog(props: RewardScoresDialogProps) {
   const { toUserDid, control, extendInfo } = props
 
+  const confirmPromptControl = Prompt.usePromptControl()
+  const resultPromptControl = Prompt.usePromptControl()
+  const duplicatePromptControl = Prompt.usePromptControl()
+  const [resultMessage, setResultMessage] = useState('')
+  const [isSuccess, setIsSuccess] = useState(false)
+
   const [state, dispatch] = useReducer(reducer, {
     mutationStatus: 'default',
     error: '',
@@ -37,10 +44,10 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
     { refreshDeps: [control.isOpen] },
   )
 
-  const onSendScore = async () => {
+  const onCheckAndOpenConfirm = async () => {
     try {
       const score = +state.score
-      const isValidNumber = !isNaN(score)
+      const isValidNumber = !isNaN(score) && score > 0
 
       if (!isValidNumber) {
         throw new Error('请输入有效的数字')
@@ -50,6 +57,39 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
         throw new Error('输入的稻米不能超过当前稻米')
       }
 
+      dispatch({ type: 'setMutationStatus', status: 'default' })
+
+      try {
+        const historyStr = localStorage.getItem('reward_history')
+        if (historyStr) {
+          const history = JSON.parse(historyStr)
+          const now = Date.now()
+          const isDuplicate = history.some(
+            (tx: any) =>
+              tx.recipient === toUserDid &&
+              tx.amount === score &&
+              now - tx.timestamp < 300000 // 5 minutes in ms
+          )
+          if (isDuplicate) {
+            duplicatePromptControl.open()
+            return
+          }
+        }
+      } catch (err) {
+        console.error('Failed to parse reward history', err)
+      }
+
+      confirmPromptControl.open()
+    } catch (e: any) {
+      dispatch({
+        type: 'setError',
+        error: e.message || '输入无效',
+      })
+    }
+  }
+
+  const handleReward = async () => {
+    try {
       dispatch({
         type: 'setMutationStatus',
         status: 'pending',
@@ -66,7 +106,20 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
       if (!submitRes.data) {
         throw new Error(submitRes.message)
       }
-      Toast.show('打赏成功', 'check', 'center')
+      
+      setIsSuccess(true)
+      setResultMessage(`成功打赏该用户 ${state.score} 稻米！`)
+      
+      try {
+        const amount = Number(state.score)
+        const historyStr = localStorage.getItem('reward_history')
+        const history = historyStr ? JSON.parse(historyStr) : []
+        history.push({ recipient: toUserDid, amount, timestamp: Date.now() })
+        localStorage.setItem('reward_history', JSON.stringify(history))
+      } catch (e) {
+        console.error('Failed to save reward history', e)
+      }
+      
       dispatch({
         type: 'setMutationStatus',
         status: 'success',
@@ -76,15 +129,26 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
         value: '',
       })
       refreshUser()
-      control.close()
+      resultPromptControl.open()
     } catch (e: any) {
-      // logger.error('EmailDialog: update email failed', { safeMessage: e })
-      // const { clean } = cleanError(e)
       dispatch({
-        type: 'setError',
-        error: e.message || '更新失败 (#544)',
+        type: 'setMutationStatus',
+        status: 'error',
       })
+      setIsSuccess(false)
+      setResultMessage(e.message || '打赏失败')
+      resultPromptControl.open()
     }
+  }
+
+  const handleResultClose = () => {
+    if (isSuccess) {
+      control.close()
+    }
+  }
+
+  const onConfirmDuplicate = () => {
+    confirmPromptControl.open()
   }
 
   return (
@@ -122,7 +186,7 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
             size="large"
             variant="solid"
             color="primary"
-            onPress={onSendScore}
+            onPress={onCheckAndOpenConfirm}
             style={[a.mt_xl]}
             disabled={!state.score || state.mutationStatus === 'pending'}>
             <ButtonText>确认</ButtonText>
@@ -130,6 +194,34 @@ export default function RewardScoresDialog(props: RewardScoresDialogProps) {
           </Button>
         </View>
       </Dialog.ScrollableInner>
+
+      <Prompt.Basic
+        control={duplicatePromptControl}
+        title="重复操作提醒"
+        description="系统检测到您在5分钟内向该用户打赏过同等金额的稻米。您确定要再次打赏吗？"
+        onConfirm={onConfirmDuplicate}
+        confirmButtonCta="继续打赏"
+        cancelButtonCta="取消"
+        confirmButtonColor="primary"
+      />
+
+      <Prompt.Basic
+        control={confirmPromptControl}
+        title="确认打赏"
+        description={`是否确认打赏该用户 ${state.score} 稻米？`}
+        onConfirm={handleReward}
+        confirmButtonCta="确认"
+        cancelButtonCta="取消"
+      />
+
+      <Prompt.Basic
+        control={resultPromptControl}
+        title={isSuccess ? '打赏成功' : '打赏失败'}
+        description={resultMessage}
+        onConfirm={handleResultClose}
+        confirmButtonCta="确认"
+        showCancel={false}
+      />
     </Dialog.Outer>
   )
 }

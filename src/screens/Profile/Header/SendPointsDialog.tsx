@@ -95,6 +95,7 @@ function DialogInner({
 
   const confirmPromptControl = Prompt.usePromptControl()
   const resultPromptControl = Prompt.usePromptControl()
+  const duplicatePromptControl = Prompt.usePromptControl()
   const [resultMessage, setResultMessage] = useState('')
   const [isSuccess, setIsSuccess] = useState(false)
 
@@ -122,6 +123,17 @@ function DialogInner({
         setResultMessage(
           `成功向 ${toUserId || giftAccount} 发送了 ${giftPoints} 稻米！`,
         )
+        
+        try {
+          const recipient = toUserId || giftAccount
+          const amount = Number(giftPoints)
+          const historyStr = localStorage.getItem('transfer_history')
+          const history = historyStr ? JSON.parse(historyStr) : []
+          history.push({ recipient, amount, timestamp: Date.now() })
+          localStorage.setItem('transfer_history', JSON.stringify(history))
+        } catch (e) {
+          console.error('Failed to save transfer history', e)
+        }
       } else {
         setIsSuccess(false)
         setResultMessage(flagRes.message || '发送失败')
@@ -143,6 +155,31 @@ function DialogInner({
   ])
 
   const onPressSave = useCallback(() => {
+    try {
+      const recipient = toUserId || giftAccount
+      const amount = Number(giftPoints)
+      const historyStr = localStorage.getItem('transfer_history')
+      if (historyStr) {
+        const history = JSON.parse(historyStr)
+        const now = Date.now()
+        const isDuplicate = history.some(
+          (tx: any) =>
+            tx.recipient === recipient &&
+            tx.amount === amount &&
+            now - tx.timestamp < 300000 // 5 mins in ms
+        )
+        if (isDuplicate) {
+          duplicatePromptControl.open()
+          return
+        }
+      }
+    } catch (e) {
+      console.error('Failed to parse transfer history', e)
+    }
+    confirmPromptControl.open()
+  }, [confirmPromptControl, duplicatePromptControl, toUserId, giftAccount, giftPoints])
+
+  const onConfirmDuplicate = useCallback(() => {
     confirmPromptControl.open()
   }, [confirmPromptControl])
 
@@ -314,6 +351,16 @@ function DialogInner({
           </Button>
         </View>
       </Dialog.ScrollableInner>
+
+      <Prompt.Basic
+        control={duplicatePromptControl}
+        title="重复操作提醒"
+        description="系统检测到您在5分钟内向该用户发送过同等金额的稻米。您确定要再次发送吗？"
+        onConfirm={onConfirmDuplicate}
+        confirmButtonCta="继续发送"
+        cancelButtonCta="取消"
+        confirmButtonColor="primary"
+      />
 
       <Prompt.Basic
         control={confirmPromptControl}
