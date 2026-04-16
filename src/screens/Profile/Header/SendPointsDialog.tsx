@@ -16,6 +16,7 @@ import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {QrCode_Scan} from '#/components/icons/QrCode'
+import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import server from '#/server'
 
@@ -92,11 +93,16 @@ function DialogInner({
   const [giftRemark, setGiftRemark] = useState('')
   const [toUserId] = useState(defaultToUserId)
 
+  const confirmPromptControl = Prompt.usePromptControl()
+  const resultPromptControl = Prompt.usePromptControl()
+  const [resultMessage, setResultMessage] = useState('')
+  const [isSuccess, setIsSuccess] = useState(false)
+
   const {data: userDetail} = useRequest(() =>
     server.dao('POST /user/login-user-detail'),
   )
 
-  const onPressSave = useCallback(async () => {
+  const handleSend = useCallback(async () => {
     try {
       const payload: APIDao.WebEndpointsScoreSendScoreReq = {
         score: Number(giftPoints),
@@ -112,15 +118,39 @@ function DialogInner({
       })
       if (flagRes.data) {
         onUpdate?.()
-        control.close()
-        Toast.show('发送成功', 'check', 'center')
-        return
+        setIsSuccess(true)
+        setResultMessage(
+          `成功向 ${toUserId || giftAccount} 发送了 ${giftPoints} 稻米！`,
+        )
+      } else {
+        setIsSuccess(false)
+        setResultMessage(flagRes.message || '发送失败')
       }
-      Toast.show(flagRes.message, 'xmark', 'center')
+      resultPromptControl.open()
     } catch (e: any) {
-      logger.error('Failed to update user profile', {message: String(e)})
+      setIsSuccess(false)
+      setResultMessage(String(e))
+      resultPromptControl.open()
+      logger.error('Failed to send points', {message: String(e)})
     }
-  }, [onUpdate, control, giftAccount, giftPoints, giftRemark, toUserId])
+  }, [
+    onUpdate,
+    resultPromptControl,
+    giftAccount,
+    giftPoints,
+    giftRemark,
+    toUserId,
+  ])
+
+  const onPressSave = useCallback(() => {
+    confirmPromptControl.open()
+  }, [confirmPromptControl])
+
+  const handleResultClose = useCallback(() => {
+    if (isSuccess) {
+      control.close()
+    }
+  }, [isSuccess, control])
 
   const displayNameInvalid = useMemo(() => {
     if (toUserId) return false
@@ -284,6 +314,26 @@ function DialogInner({
           </Button>
         </View>
       </Dialog.ScrollableInner>
+
+      <Prompt.Basic
+        control={confirmPromptControl}
+        title="确认发送"
+        description={`是否确认向 ${
+          toUserId || giftAccount
+        } 发送 ${giftPoints} 稻米？`}
+        onConfirm={handleSend}
+        confirmButtonCta="确认"
+        cancelButtonCta="取消"
+      />
+
+      <Prompt.Basic
+        control={resultPromptControl}
+        title={isSuccess ? '发送成功' : '发送失败'}
+        description={resultMessage}
+        onConfirm={handleResultClose}
+        confirmButtonCta="确认"
+        showCancel={false}
+      />
     </>
   )
 }
