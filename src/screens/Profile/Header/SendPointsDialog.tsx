@@ -121,7 +121,7 @@ function DialogInner({
         onUpdate?.()
         setIsSuccess(true)
         setResultMessage(
-          `成功向 ${toUserId || giftAccount} 发送了 ${giftPoints} 稻米！`,
+          `成功向 ${giftAccount || toUserId} 发送了 ${giftPoints} 稻米！`,
         )
         
         try {
@@ -355,7 +355,7 @@ function DialogInner({
       <Prompt.Basic
         control={duplicatePromptControl}
         title="重复操作提醒"
-        description="系统检测到您在5分钟内向该用户发送过同等金额的稻米。您确定要再次发送吗？"
+        description={`系统检测到您在5分钟内向该用户（${giftAccount || toUserId}）发送过同等金额的稻米。您确定要再次发送吗？`}
         onConfirm={onConfirmDuplicate}
         confirmButtonCta="继续发送"
         cancelButtonCta="取消"
@@ -365,9 +365,7 @@ function DialogInner({
       <Prompt.Basic
         control={confirmPromptControl}
         title="确认发送"
-        description={`是否确认向 ${
-          toUserId || giftAccount
-        } 发送 ${giftPoints} 稻米？`}
+        description={`是否确认向 ${giftAccount || toUserId} 发送 ${giftPoints} 稻米？`}
         onConfirm={handleSend}
         confirmButtonCta="确认"
         cancelButtonCta="取消"
