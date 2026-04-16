@@ -16,6 +16,7 @@ import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {QrCode_Scan} from '#/components/icons/QrCode'
+import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import server from '#/server'
 
@@ -92,11 +93,17 @@ function DialogInner({
   const [giftRemark, setGiftRemark] = useState('')
   const [toUserId] = useState(defaultToUserId)
 
+  const confirmPromptControl = Prompt.usePromptControl()
+  const resultPromptControl = Prompt.usePromptControl()
+  const duplicatePromptControl = Prompt.usePromptControl()
+  const [resultMessage, setResultMessage] = useState('')
+  const [isSuccess, setIsSuccess] = useState(false)
+
   const {data: userDetail} = useRequest(() =>
     server.dao('POST /user/login-user-detail'),
   )
 
-  const onPressSave = useCallback(async () => {
+  const handleSend = useCallback(async () => {
     try {
       const payload: APIDao.WebEndpointsScoreSendScoreReq = {
         score: Number(giftPoints),
@@ -112,15 +119,75 @@ function DialogInner({
       })
       if (flagRes.data) {
         onUpdate?.()
-        control.close()
-        Toast.show('发送成功', 'check', 'center')
-        return
+        setIsSuccess(true)
+        setResultMessage(
+          `成功向 ${toUserId || giftAccount} 发送了 ${giftPoints} 稻米！`,
+        )
+        
+        try {
+          const recipient = toUserId || giftAccount
+          const amount = Number(giftPoints)
+          const historyStr = localStorage.getItem('transfer_history')
+          const history = historyStr ? JSON.parse(historyStr) : []
+          history.push({ recipient, amount, timestamp: Date.now() })
+          localStorage.setItem('transfer_history', JSON.stringify(history))
+        } catch (e) {
+          console.error('Failed to save transfer history', e)
+        }
+      } else {
+        setIsSuccess(false)
+        setResultMessage(flagRes.message || '发送失败')
       }
-      Toast.show(flagRes.message, 'xmark', 'center')
+      resultPromptControl.open()
     } catch (e: any) {
-      logger.error('Failed to update user profile', {message: String(e)})
+      setIsSuccess(false)
+      setResultMessage(String(e))
+      resultPromptControl.open()
+      logger.error('Failed to send points', {message: String(e)})
     }
-  }, [onUpdate, control, giftAccount, giftPoints, giftRemark, toUserId])
+  }, [
+    onUpdate,
+    resultPromptControl,
+    giftAccount,
+    giftPoints,
+    giftRemark,
+    toUserId,
+  ])
+
+  const onPressSave = useCallback(() => {
+    try {
+      const recipient = toUserId || giftAccount
+      const amount = Number(giftPoints)
+      const historyStr = localStorage.getItem('transfer_history')
+      if (historyStr) {
+        const history = JSON.parse(historyStr)
+        const now = Date.now()
+        const isDuplicate = history.some(
+          (tx: any) =>
+            tx.recipient === recipient &&
+            tx.amount === amount &&
+            now - tx.timestamp < 300000 // 5 mins in ms
+        )
+        if (isDuplicate) {
+          duplicatePromptControl.open()
+          return
+        }
+      }
+    } catch (e) {
+      console.error('Failed to parse transfer history', e)
+    }
+    confirmPromptControl.open()
+  }, [confirmPromptControl, duplicatePromptControl, toUserId, giftAccount, giftPoints])
+
+  const onConfirmDuplicate = useCallback(() => {
+    confirmPromptControl.open()
+  }, [confirmPromptControl])
+
+  const handleResultClose = useCallback(() => {
+    if (isSuccess) {
+      control.close()
+    }
+  }, [isSuccess, control])
 
   const displayNameInvalid = useMemo(() => {
     if (toUserId) return false
@@ -284,6 +351,36 @@ function DialogInner({
           </Button>
         </View>
       </Dialog.ScrollableInner>
+
+      <Prompt.Basic
+        control={duplicatePromptControl}
+        title="重复操作提醒"
+        description="系统检测到您在5分钟内向该用户发送过同等金额的稻米。您确定要再次发送吗？"
+        onConfirm={onConfirmDuplicate}
+        confirmButtonCta="继续发送"
+        cancelButtonCta="取消"
+        confirmButtonColor="primary"
+      />
+
+      <Prompt.Basic
+        control={confirmPromptControl}
+        title="确认发送"
+        description={`是否确认向 ${
+          toUserId || giftAccount
+        } 发送 ${giftPoints} 稻米？`}
+        onConfirm={handleSend}
+        confirmButtonCta="确认"
+        cancelButtonCta="取消"
+      />
+
+      <Prompt.Basic
+        control={resultPromptControl}
+        title={isSuccess ? '发送成功' : '发送失败'}
+        description={resultMessage}
+        onConfirm={handleResultClose}
+        confirmButtonCta="确认"
+        showCancel={false}
+      />
     </>
   )
 }
