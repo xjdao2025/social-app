@@ -3,7 +3,7 @@ import {Pressable, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
 import {useNavigation} from '@react-navigation/native'
 import {useInfiniteScroll} from 'ahooks'
-import {format} from 'date-fns'
+import {format, parseISO} from 'date-fns'
 
 import displayNumber from '#/lib/displayNumber'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -104,7 +104,7 @@ export default function HallScoreDistributeRecordListScreen() {
             ) : recordsData?.list?.length ? (
               recordsData.list.map((record, index) => (
                 <View
-                  key={`${record.user_id}-${record.get_time}-${index}`}
+                  key={`${record.userId}-${record.getTime}-${index}`}
                   style={[
                     a.flex_row,
                     a.justify_between,
@@ -114,14 +114,19 @@ export default function HallScoreDistributeRecordListScreen() {
                   ]}>
                   <View style={[a.flex_col, a.justify_between, a.gap_sm]}>
                     <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                      {record.domain_name || record.user_id}
+                      {record.domainName || record.userId}
                     </Text>
                     <Text style={[t.atoms.text_contrast_low]}>
-                      {format(new Date(record.get_time), 'yyyy-MM-dd HH:mm:ss')}
+                      {format(parseISO(record.getTime), 'yyyy-MM-dd HH:mm:ss')}
                     </Text>
                   </View>
                   <Text
-                    style={[a.text_md, a.text_family_ddin, a.font_bold, styles.score]}>
+                    style={[
+                      a.text_md,
+                      a.text_family_ddin,
+                      a.font_bold,
+                      styles.score,
+                    ]}>
                     +{displayNumber(record.score)}
                   </Text>
                 </View>

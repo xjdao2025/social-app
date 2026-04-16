@@ -704,16 +704,16 @@ declare namespace APIDao {
 
   interface WebEndpointsScoreScoreDistributeRecordPageVo {
     /** 用户Id */
-    user_id: string
+    userId: string
 
     /** 完整用户名，域名 */
-    domain_name: string
+    domainName: string
 
     /** 发放稻米数量 */
     score: number
 
     /** 获取时间 {"format":"date-time"} */
-    get_time: string
+    getTime: string
   }
 
   /** 投票选项 {"x-enumNames":["Unknown","Agree","Oppose"]} */
